@@ -1,0 +1,3028 @@
+/*
+ * TITA/TripleVox file identification
+ * App: triplevox_platform
+ * File: triplevox_platform/triplevox_platform/public/css/triplevox_platform.css
+ * Purpose: Main Desk theme: dark sidebar, cards, form sidebar width, watermark.
+ */
+
+/* TripleVox Desk — enterprise UI inspired by clean dark-sidebar / green-accent apps */
+
+:root {
+	--tvx-sidebar: #0b1220;
+	--tvx-sidebar-2: #111827;
+	--tvx-green: #15803d;
+	--tvx-green-bright: #16a34a;
+	--tvx-green-soft: #dcfce7;
+	--tvx-ink: #0f172a;
+	--tvx-muted: #475569;
+	--tvx-border: #cbd5e1;
+	--tvx-surface: #ffffff;
+	--tvx-page: #ffffff;
+	--tvx-content-panel: #ffffff;
+	--tvx-label-size: 11.5px;
+	--tvx-body-size: 14px;
+	--tvx-list-size: 13.5px;
+	--tvx-field-border: 1.5px solid #cbd5e1;
+	--tvx-field-radius: 10px;
+	--tvx-field-bg: #ffffff;
+	--tvx-field-padding: 8px 12px;
+	--tvx-field-min-h: 40px;
+	--tvx-footer-h: 34px;
+	--tvx-logo-url: none;
+	--desktop-icon-dimension: 56px;
+	--tvx-tile-w: 118px;
+	--tvx-radius: 14px;
+	/* Frappe v16 centers forms/workspaces — force edge-to-edge */
+	--page-max-width: 100% !important;
+	/* Form right sidebar — narrower than Frappe default (277px / 38vw) */
+	--form-sidebar-width: 208px;
+	--form-sidebar-image-width: 64px;
+}
+
+/* ===== Full browser width — override Frappe v16 centered layout ===== */
+html,
+body,
+#body_div,
+.body-sidebar-container + .main-section,
+.main-section,
+.layout-main,
+.content.page-container,
+.page-container,
+.page-body,
+.layout-main-section-wrapper,
+.layout-main-section,
+.layout-main-section.frappe-card,
+.form-layout,
+.std-form-layout,
+.form-page,
+.form-footer,
+.desktop-wrapper,
+.desktop-wrapper .desktop-container {
+	max-width: none !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+.main-section {
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+}
+
+body.tvx-force-fullwidth,
+body.full-width {
+	--page-max-width: 100% !important;
+}
+
+.std-form-layout .section-head,
+.std-form-layout .section-body,
+.form-section .section-head,
+.form-section .section-body,
+.form-footer {
+	max-width: none !important;
+	width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.page-head .container,
+.page-head .container-fluid,
+.page-container > .page-head .container,
+.page-container > .page-head .container-fluid {
+	max-width: none !important;
+	width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.desktop-wrapper.tvx-desktop {
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.desktop-wrapper .desktop-container {
+	justify-content: stretch !important;
+	align-items: stretch !important;
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+}
+
+/* ===== Watermark — big centered blurry TVX + client-name pill ===== */
+#tvx-watermark {
+	position: fixed !important;
+	right: 28px !important;
+	bottom: calc(var(--tvx-footer-h) + 18px) !important;
+	left: auto !important;
+	top: auto !important;
+	z-index: 1015 !important;
+	pointer-events: none !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 10px !important;
+	opacity: 0.62 !important;
+	filter: blur(0.4px) !important;
+	user-select: none !important;
+	padding: 8px 14px 8px 8px !important;
+	border-radius: 999px !important;
+	background: rgba(255, 255, 255, 0.78) !important;
+	border: 1px solid rgba(226, 232, 240, 0.95) !important;
+	box-shadow: 0 6px 22px rgba(15, 23, 42, 0.1) !important;
+	backdrop-filter: blur(3px) !important;
+	visibility: visible !important;
+}
+
+#tvx-watermark img {
+	width: 32px !important;
+	height: 32px !important;
+	object-fit: contain !important;
+	border-radius: 50% !important;
+	opacity: 0.95 !important;
+	filter: none !important;
+	flex-shrink: 0 !important;
+}
+
+#tvx-watermark .tvx-wm-text {
+	font-size: 13px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.01em !important;
+	white-space: nowrap !important;
+	color: #166534 !important;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Large soft TripleVox mark — center of every Desk screen (above content, non-interactive) */
+#tvx-watermark-bg {
+	position: fixed !important;
+	inset: 0 0 0 var(--tvx-content-left, 0px) !important;
+	pointer-events: none !important;
+	z-index: 5 !important;
+	background-image: var(--tvx-logo-url) !important;
+	background-repeat: no-repeat !important;
+	background-position: center center !important;
+	background-size: min(560px, 56vw) !important;
+	opacity: 0.055 !important;
+	filter: blur(6px) saturate(0.55) !important;
+	visibility: visible !important;
+}
+
+/* Do not inject per-host pills into list/result (breaks layout) */
+.tvx-content-watermark {
+	display: none !important;
+}
+
+.layout-main-section,
+.form-layout,
+.codex-editor,
+.page-body,
+.layout-main-section-wrapper {
+	position: relative !important;
+}
+
+body.tvx-has-watermark {
+	background-color: var(--tvx-page) !important;
+}
+
+.desktop-wrapper.tvx-desktop,
+.main-section,
+.layout-main,
+.content.page-container,
+.page-container,
+#body_div,
+.layout-main-section-wrapper,
+.layout-center {
+	background-color: transparent !important;
+}
+
+.desktop-wrapper.tvx-desktop,
+.main-section,
+.body-sidebar-container,
+.page-container {
+	position: relative;
+	z-index: 2;
+}
+
+/* Hide Frappe product banners (Switch to Frappe CRM / Helpdesk) */
+.promotional-banners,
+.promotional-banner,
+.body-sidebar .promotional-banners,
+.body-sidebar .promotional-banner {
+	display: none !important;
+	height: 0 !important;
+	overflow: hidden !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+/* Hide thick sidebar scroll stick — real scroller is .body-sidebar-top */
+.body-sidebar,
+.body-sidebar-container .body-sidebar,
+.body-sidebar-top,
+.body-sidebar .sidebar-items,
+.desk-sidebar,
+.list-sidebar,
+.form-sidebar,
+.layout-side-section {
+	scrollbar-width: none !important;
+	-ms-overflow-style: none !important;
+}
+
+.body-sidebar::-webkit-scrollbar,
+.body-sidebar-container .body-sidebar::-webkit-scrollbar,
+.body-sidebar-top::-webkit-scrollbar,
+.body-sidebar .sidebar-items::-webkit-scrollbar,
+.body-sidebar *::-webkit-scrollbar,
+.desk-sidebar::-webkit-scrollbar,
+.list-sidebar::-webkit-scrollbar,
+.form-sidebar::-webkit-scrollbar,
+.layout-side-section::-webkit-scrollbar,
+.codex-editor__redactor::-webkit-scrollbar,
+.workspace-sidebar::-webkit-scrollbar {
+	width: 0 !important;
+	height: 0 !important;
+	display: none !important;
+	background: transparent !important;
+}
+
+/* Soften / hide resize “stick” on sidebar edge */
+.body-sidebar .sidebar-resize-handle::after {
+	background: transparent !important;
+	width: 0 !important;
+}
+
+/* ===== Form right sidebar — collapsed by default; toggle from header =====
+   Frappe sets min-width: calc(38vw - sidebar) below XL, which steals
+   a large strip on Job Card / Work Order / most Form screens. */
+body.tvx-form-sidebar-collapsed .layout-side-section:has(> .form-sidebar),
+body.tvx-form-sidebar-collapsed[data-route^="Form"] .layout-side-section:has(.form-sidebar),
+html.tvx-form-sidebar-collapsed body[data-route^="Form"] .layout-side-section:has(.form-sidebar) {
+	display: none !important;
+	width: 0 !important;
+	min-width: 0 !important;
+	max-width: 0 !important;
+	flex: 0 0 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	overflow: hidden !important;
+	border: none !important;
+}
+
+/* Toggle chip — top-right of page header */
+.tvx-form-sidebar-toggle {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 22px;
+	margin-left: 6px;
+	padding: 0;
+	border: 1px solid var(--tvx-border, #e2e8f0);
+	border-radius: 6px;
+	background: var(--tvx-surface, #fff);
+	color: var(--tvx-muted, #64748b);
+	cursor: pointer;
+	flex-shrink: 0;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.tvx-form-sidebar-toggle:hover {
+	background: var(--tvx-green-soft, #dcfce7);
+	border-color: var(--tvx-green, #15803d);
+	color: var(--tvx-green, #15803d);
+}
+.tvx-form-sidebar-toggle.is-open {
+	background: var(--tvx-green-soft, #dcfce7);
+	border-color: var(--tvx-green, #15803d);
+	color: var(--tvx-green, #15803d);
+}
+.tvx-form-sidebar-toggle svg {
+	width: 14px;
+	height: 14px;
+	display: block;
+}
+/* Only show toggle on form pages that have a right sidebar */
+body[data-route^="Form"] .page-head .tvx-form-sidebar-toggle,
+.page-container:has(.form-sidebar) .page-head .tvx-form-sidebar-toggle {
+	display: inline-flex;
+}
+
+/* When open: keep compact 208px sidebar */
+body:not(.tvx-form-sidebar-collapsed)[data-route^="Form"] .layout-side-section:has(> .form-sidebar),
+body:not(.tvx-form-sidebar-collapsed) .layout-side-section:has(> .form-sidebar) {
+	--form-sidebar-width: 208px;
+	width: var(--form-sidebar-width) !important;
+	min-width: var(--form-sidebar-width) !important;
+	max-width: var(--form-sidebar-width) !important;
+	flex: 0 0 var(--form-sidebar-width) !important;
+	box-sizing: border-box !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+
+/* Right sidebar on form screens (linked docs, tags). */body[data-route^="Form"] .layout-side-section,
+/* Right sidebar on form screens (linked docs, tags). */body[data-route*="/Form/"] .layout-side-section,
+/* Right sidebar on form screens (linked docs, tags). */.page-container:has(> .form-sidebar, .form-sidebar) .layout-side-section:has(.form-sidebar),
+/* Right sidebar on form screens (linked docs, tags). */.layout-side-section:has(> .form-sidebar) {
+	--form-sidebar-width: 208px;
+	width: var(--form-sidebar-width) !important;
+	min-width: var(--form-sidebar-width) !important;
+	max-width: var(--form-sidebar-width) !important;
+	flex: 0 0 var(--form-sidebar-width) !important;
+	box-sizing: border-box !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+
+/* Right sidebar on form screens (linked docs, tags). */body[data-route^="Form"] .layout-side-section .form-sidebar,
+/* Right sidebar on form screens (linked docs, tags). */.layout-side-section:has(> .form-sidebar) > .form-sidebar {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	box-sizing: border-box !important;
+}
+
+/* Kill the 38vw expansion at < XL so width stays fixed */
+@media (max-width: 1199.98px) {
+	/* Right sidebar on form screens (linked docs, tags). */	body[data-route^="Form"] .layout-side-section,
+	/* Right sidebar on form screens (linked docs, tags). */	.layout-side-section:has(> .form-sidebar) {
+		min-width: var(--form-sidebar-width) !important;
+		width: var(--form-sidebar-width) !important;
+		max-width: var(--form-sidebar-width) !important;
+	}
+}
+
+/* Give the main form column the reclaimed space */
+body[data-route^="Form"] .layout-main-section-wrapper,
+body[data-route^="Form"] .layout-main-section {
+	min-width: 0 !important;
+}
+
+/* Compact padding; keep labels/actions fully readable */
+.form-sidebar .sidebar-section {
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+}
+
+.form-sidebar .form-sidebar-items,
+.form-sidebar .sidebar-image-section,
+.form-sidebar .modified-by,
+.form-sidebar .created-by,
+.form-sidebar .form-shared,
+.form-sidebar .form-tags,
+.form-sidebar .form-assignments,
+.form-sidebar .form-attachments,
+.form-sidebar .user-actions {
+	max-width: 100% !important;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.form-sidebar .form-sidebar-items {
+	gap: 6px !important;
+}
+
+.form-sidebar .sidebar-label,
+.form-sidebar .form-sidebar-label,
+.form-sidebar .ellipsis,
+.form-sidebar .sidebar-info,
+.form-sidebar h4,
+.form-sidebar .title-text {
+	white-space: normal !important;
+	overflow: visible !important;
+	text-overflow: unset !important;
+	max-width: 100% !important;
+	line-height: 1.35 !important;
+}
+
+.form-sidebar .user-action-label {
+	white-space: normal !important;
+	overflow: visible !important;
+	text-overflow: unset !important;
+}
+
+/* Soft thin scrollbars only where content must scroll */
+.layout-main-section,
+.page-body,
+.frappe-list,
+.datatable {
+	scrollbar-width: thin;
+	scrollbar-color: #cbd5e1 transparent;
+}
+
+.layout-main-section::-webkit-scrollbar,
+.page-body::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+.layout-main-section::-webkit-scrollbar-thumb,
+.page-body::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 999px;
+}
+
+/* ===== Footer (Rooha-style split) ===== */
+#tvx-footer {
+	position: fixed;
+	left: var(--tvx-footer-left, 0px);
+	right: 0;
+	bottom: 0;
+	height: var(--tvx-footer-h);
+	z-index: 1030;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 0 18px;
+	background: #ffffff;
+	border-top: 1px solid var(--tvx-border);
+	box-sizing: border-box;
+	transition: left 0.2s ease;
+	font-size: 11px;
+}
+
+#tvx-footer .tvx-footer-left {
+	color: var(--tvx-muted);
+}
+
+#tvx-footer .tvx-footer-left strong {
+	color: var(--tvx-green);
+	font-weight: 700;
+	letter-spacing: 0.02em;
+}
+
+#tvx-footer .tvx-footer-right {
+	color: var(--tvx-green);
+	font-weight: 600;
+}
+
+body.tvx-has-footer {
+	padding-bottom: var(--tvx-footer-h) !important;
+}
+
+.user-onboarding,
+.onboarding-sidebar,
+.onboarding-widget,
+.onboarding-popup,
+.show-onboarding {
+	display: none !important;
+}
+
+/* ===== Sidebar — solid dark enterprise ===== */
+.body-sidebar-container .body-sidebar {
+	background: linear-gradient(180deg, var(--tvx-sidebar) 0%, var(--tvx-sidebar-2) 100%) !important;
+	border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.body-sidebar .sidebar-item-label,
+.body-sidebar .header-title,
+.body-sidebar .header-subtitle,
+.body-sidebar .item-anchor,
+.body-sidebar a,
+.body-sidebar .sidebar-item-control,
+.body-sidebar .standard-sidebar-label {
+	color: #e5e7eb !important;
+}
+
+.body-sidebar .standard-sidebar-label {
+	color: #94a3b8 !important;
+	font-size: 10px !important;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	font-weight: 700 !important;
+}
+
+.body-sidebar .standard-sidebar-item {
+	border-radius: 999px !important;
+	margin: 2px 4px;
+}
+
+.body-sidebar .standard-sidebar-item:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.body-sidebar .standard-sidebar-item.active-sidebar {
+	background: var(--tvx-green) !important;
+	box-shadow: 0 6px 16px rgba(21, 128, 61, 0.35);
+}
+
+.body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-label,
+.body-sidebar .standard-sidebar-item.active-sidebar a {
+	color: #fff !important;
+	font-weight: 600 !important;
+}
+
+.tvx-sidebar-brand {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+	height: 44px;
+	min-height: 44px;
+	padding: 6px 10px;
+	margin: 4px 6px 8px;
+	border-radius: 12px;
+	flex-shrink: 0;
+	overflow: hidden;
+	box-sizing: border-box;
+	text-decoration: none !important;
+	cursor: pointer;
+}
+
+.tvx-sidebar-brand:hover {
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.tvx-sidebar-brand .tvx-brand-logo {
+	width: 30px;
+	height: 30px;
+	object-fit: contain;
+	border-radius: 999px;
+	background: #fff;
+	padding: 3px;
+	flex-shrink: 0;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.tvx-sidebar-brand .tvx-brand-text {
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff !important;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.2;
+}
+
+.body-sidebar-container:not(.expanded) .tvx-sidebar-brand {
+	justify-content: center;
+	padding: 6px 0;
+	margin: 4px 2px 6px;
+}
+
+.body-sidebar-container:not(.expanded) .tvx-sidebar-brand .tvx-brand-text {
+	display: none;
+}
+
+.body-sidebar .sidebar-header {
+	align-items: center;
+	margin: 0 4px 6px;
+}
+
+.body-sidebar .sidebar-header .header-logo,
+.body-sidebar .sidebar-header .sidebar-item-icon {
+	width: 32px !important;
+	height: 32px !important;
+	min-width: 32px;
+	min-height: 32px;
+}
+
+.body-sidebar .sidebar-header .header-logo img,
+.body-sidebar .sidebar-header .header-logo svg,
+.body-sidebar .sidebar-header .header-logo .icon-container {
+	width: 32px !important;
+	height: 32px !important;
+	max-width: 32px;
+	max-height: 32px;
+}
+
+.body-sidebar .header-title {
+	font-size: 13px !important;
+	font-weight: 700 !important;
+	color: #fff !important;
+}
+
+.body-sidebar .header-subtitle {
+	font-size: 10px !important;
+	opacity: 0.75;
+}
+
+/* Soft green accents on primary actions (Desk pages) — keep readable */
+.btn-primary,
+.btn.btn-primary {
+	background-color: var(--tvx-green) !important;
+	border-color: var(--tvx-green) !important;
+	color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn.btn-primary:hover {
+	background-color: var(--tvx-green-bright) !important;
+	border-color: var(--tvx-green-bright) !important;
+}
+
+/* Hide left sidebar on Desktop — no flash on refresh */
+html.tvx-on-desktop .body-sidebar-container,
+body.tvx-desktop-fit .body-sidebar-container,
+body[data-route="desktop"] .body-sidebar-container,
+body[data-route^="desktop/"] .body-sidebar-container {
+	display: none !important;
+	visibility: hidden !important;
+	width: 0 !important;
+	min-width: 0 !important;
+	max-width: 0 !important;
+	overflow: hidden !important;
+	pointer-events: none !important;
+}
+
+html.tvx-on-desktop .main-section,
+body.tvx-desktop-fit .main-section,
+body[data-route="desktop"] .main-section {
+	margin-left: 0 !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+
+.desktop-wrapper.tvx-desktop {
+	height: calc(100dvh - var(--tvx-footer-h));
+	max-height: calc(100dvh - var(--tvx-footer-h));
+	min-height: 0;
+	overflow: hidden !important;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: #f4f7fa !important;
+}
+
+.desktop-wrapper .desktop-navbar,
+.desktop-wrapper .navbar-container {
+	background: #0b1220 !important;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.08);
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.tvx-nav-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	text-decoration: none !important;
+	margin-right: 8px;
+	padding: 4px 8px 4px 4px;
+	border-radius: 999px;
+	flex-shrink: 0;
+	cursor: pointer;
+}
+
+.tvx-nav-brand:hover {
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.tvx-nav-logo-wrap {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 999px;
+	background: #ffffff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	padding: 4px;
+}
+
+.tvx-nav-logo-wrap img,
+.tvx-nav-logo,
+.desktop-wrapper #brand-logo.tvx-nav-logo {
+	max-height: 26px !important;
+	max-width: 28px !important;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	display: block;
+}
+
+.tvx-nav-company {
+	font-size: 13px;
+	font-weight: 700;
+	color: #f8fafc;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	line-height: 1.2;
+}
+
+.desktop-wrapper .desktop-navbar-modal-search,
+.desktop-wrapper .desktop-notifications .nav-link,
+.desktop-wrapper .desktop-search-icon {
+	color: #cbd5e1 !important;
+}
+
+#tvx-desktop-clock {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	line-height: 1.15;
+	padding: 5px 11px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.08);
+	min-width: 108px;
+	margin-right: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#tvx-desktop-clock .tvx-clock-date {
+	font-size: 10px;
+	color: #94a3b8;
+}
+
+#tvx-desktop-clock .tvx-clock-time {
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+}
+
+.desktop-wrapper .desktop-container {
+	flex: 1 1 auto;
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) 248px;
+	grid-template-rows: auto minmax(0, 1fr);
+	align-content: stretch !important;
+	align-items: stretch !important;
+	justify-content: stretch !important;
+	padding: 12px 14px 14px 14px !important;
+	gap: 12px 14px !important;
+	position: relative;
+	z-index: 2;
+	min-height: 0;
+	height: auto;
+	max-height: calc(100dvh - var(--desktop-navbar-height, 52px) - var(--tvx-footer-h));
+	overflow: hidden !important;
+	box-sizing: border-box;
+	background:
+		radial-gradient(ellipse 70% 50% at 12% 0%, rgba(21, 128, 61, 0.07), transparent 55%),
+		radial-gradient(ellipse 50% 40% at 95% 10%, rgba(15, 23, 42, 0.04), transparent 50%),
+		#f4f7fa !important;
+}
+
+.tvx-welcome-card {
+	grid-column: 1 / -1;
+	grid-row: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: 12px 16px 12px 14px;
+	border-radius: 14px !important;
+	overflow: hidden;
+	background: linear-gradient(105deg, #ffffff 0%, #f8fafc 55%, #f0fdf4 100%) !important;
+	border: 1px solid #e2e8f0 !important;
+	border-left: 4px solid var(--tvx-green) !important;
+	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+	min-height: 0;
+}
+
+.tvx-welcome-left {
+	padding: 0;
+	background: transparent;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+	flex: 1;
+}
+
+.tvx-welcome-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 9px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--tvx-green);
+	background: var(--tvx-green-soft);
+	padding: 3px 8px;
+	border-radius: 999px;
+	margin-bottom: 2px;
+	width: fit-content;
+}
+
+.tvx-welcome-title {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 800;
+	line-height: 1.2;
+	color: var(--tvx-ink);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tvx-welcome-area {
+	margin: 0;
+	color: var(--tvx-muted);
+	font-size: 12px;
+}
+
+.tvx-welcome-hint {
+	display: none;
+}
+
+.tvx-welcome-right {
+	padding: 0;
+	background: transparent;
+	color: var(--tvx-ink);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+	flex-shrink: 0;
+}
+
+.tvx-welcome-user-block {
+	text-align: right;
+	line-height: 1.2;
+}
+
+.tvx-welcome-hello {
+	display: block;
+	font-size: 10px;
+	color: var(--tvx-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.tvx-welcome-user {
+	display: block;
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--tvx-ink);
+}
+
+.tvx-welcome-chips {
+	display: flex;
+	gap: 6px;
+	margin-top: 0;
+	flex-wrap: nowrap;
+}
+
+.tvx-chip {
+	border: 1px solid #dbe3ee;
+	background: #f8fafc;
+	color: #0f172a;
+	font-size: 11px;
+	font-weight: 650;
+	padding: 7px 12px;
+	border-radius: 999px;
+	cursor: pointer;
+	transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.tvx-chip:hover {
+	background: var(--tvx-green-soft);
+	border-color: #86efac;
+	color: var(--tvx-green);
+}
+
+/* Recent Activity — fits in grid, no absolute overlap scroll */
+.tvx-recent-card {
+	position: static;
+	top: auto;
+	right: auto;
+	z-index: 2;
+	grid-column: 2;
+	grid-row: 2;
+	width: auto;
+	max-height: none;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	border-radius: 14px !important;
+	background: #ffffff !important;
+	border: 1px solid #e2e8f0 !important;
+	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+}
+
+.tvx-recent-card .tvx-recent-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 11px 14px;
+	border-bottom: 1px solid #eef2f7;
+	background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+	border-radius: 14px 14px 0 0 !important;
+	position: static;
+	flex-shrink: 0;
+}
+
+.tvx-recent-card .tvx-recent-head h3 {
+	margin: 0;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--tvx-muted);
+}
+
+.tvx-recent-card .tvx-recent-count {
+	font-size: 10px;
+	font-weight: 700;
+	background: var(--tvx-green-soft);
+	color: var(--tvx-green);
+	padding: 2px 8px;
+	border-radius: 999px;
+}
+
+.tvx-recent-list {
+	list-style: none;
+	margin: 0;
+	padding: 6px;
+	overflow: hidden;
+	flex: 1;
+	min-height: 0;
+}
+
+.tvx-recent-list a {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 9px;
+	border-radius: 10px;
+	color: #1e293b;
+	text-decoration: none;
+	font-size: 12px;
+	font-weight: 500;
+	transition: background 0.12s ease;
+}
+
+.tvx-recent-list a::before {
+	content: "";
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #86efac;
+	flex-shrink: 0;
+}
+
+.tvx-recent-list a:hover {
+	background: #f0fdf4;
+	color: var(--tvx-green);
+}
+
+.tvx-recent-list .tvx-empty {
+	color: #94a3b8;
+	font-size: 12px;
+	padding: 16px 10px;
+	text-align: center;
+}
+
+/* Module launcher panel */
+.desktop-wrapper .desktop-container > .icons-container {
+	grid-column: 1;
+	grid-row: 2;
+	width: 100%;
+	max-width: none;
+	height: 100% !important;
+	min-height: 0 !important;
+	max-height: 100%;
+	margin: 0;
+	padding: 14px 16px 16px !important;
+	border-radius: 14px !important;
+	background: #ffffff !important;
+	border: 1px solid #e2e8f0 !important;
+	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.tvx-apps-heading {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+	margin: 0 0 10px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #eef2f7;
+	flex-shrink: 0;
+}
+
+.tvx-apps-heading strong {
+	display: block;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--tvx-ink);
+}
+
+.tvx-apps-heading p {
+	margin: 2px 0 0;
+	font-size: 11px;
+	color: var(--tvx-muted);
+}
+
+.tvx-apps-heading span {
+	font-size: 10px;
+	color: var(--tvx-green);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	background: var(--tvx-green-soft);
+	padding: 4px 8px;
+	border-radius: 999px;
+	white-space: nowrap;
+	font-weight: 700;
+}
+
+.desktop-wrapper .desktop-container > .icons-container > .icons {
+	gap: 10px 10px;
+	grid-template-columns: repeat(4, minmax(var(--tvx-tile-w), 1fr)) !important;
+	grid-template-rows: auto !important;
+	justify-items: stretch;
+	align-content: start;
+	width: 100%;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.desktop-wrapper .desktop-icon {
+	width: 100% !important;
+	height: auto !important;
+	min-height: 0;
+	gap: 8px;
+	padding: 10px 8px 9px;
+	border-radius: 14px;
+	border: 1px solid transparent;
+	box-sizing: border-box;
+	background: #f8fafc;
+}
+
+.desktop-wrapper .desktop-icon:hover {
+	background: #f0fdf4;
+	border-color: #bbf7d0;
+	transform: translateY(-1px);
+	box-shadow: 0 6px 14px rgba(21, 128, 61, 0.08);
+}
+
+.desktop-wrapper .icon-container.tvx-icon-well,
+.desktop-wrapper .icon-container {
+	width: 48px !important;
+	height: 48px !important;
+	padding: 0;
+	border-radius: 14px;
+	background: transparent;
+	border: 0;
+	box-shadow: 0 3px 10px rgba(15, 23, 42, 0.1);
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.desktop-wrapper .icon-container img {
+	width: 48px !important;
+	height: 48px !important;
+	object-fit: cover;
+	border-radius: 14px;
+}
+
+.desktop-wrapper .icon-container:hover {
+	transform: scale(1.04);
+	box-shadow: 0 6px 14px rgba(21, 128, 61, 0.16);
+}
+
+.desktop-wrapper .icon-caption {
+	width: 100%;
+	height: auto !important;
+}
+
+.desktop-wrapper .icon-title {
+	font-size: 12px;
+	font-weight: 650;
+	color: #1e293b;
+	white-space: normal;
+	line-height: 1.2;
+}
+
+.desktop-wrapper .icon-subtitle {
+	font-size: 10px;
+	color: #94a3b8;
+}
+
+.desktop-icon[data-tvx-accent] .icon-container {
+	background: transparent;
+	border-color: transparent;
+}
+
+/* Nested app modal icons (Manufacturing children etc.) */
+.desktop-modal .desktop-icon .icon-container,
+.desktop-icon-modal .icon-container,
+.modal .desktop-icon .icon-container {
+	width: 52px !important;
+	height: 52px !important;
+	border-radius: 14px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.desktop-modal .desktop-icon .icon-container img,
+.desktop-icon-modal .icon-container img,
+.modal .desktop-icon .icon-container img {
+	width: 52px !important;
+	height: 52px !important;
+	object-fit: cover;
+	border-radius: 14px;
+}
+
+@media (max-width: 1100px) {
+	.desktop-wrapper .desktop-container > .icons-container > .icons {
+		grid-template-columns: repeat(3, minmax(110px, 1fr)) !important;
+	}
+}
+
+@media (max-width: 960px) {
+	.desktop-wrapper .desktop-container {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto auto minmax(0, 1fr);
+		padding: 10px 12px 12px !important;
+		gap: 10px !important;
+		max-height: calc(100dvh - var(--desktop-navbar-height, 52px) - var(--tvx-footer-h));
+	}
+	.tvx-welcome-card {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.tvx-welcome-right {
+		width: 100%;
+		justify-content: space-between;
+	}
+	.tvx-nav-company {
+		font-size: 12px;
+	}
+	.tvx-recent-card {
+		grid-column: 1;
+		grid-row: 2;
+		max-height: 120px;
+	}
+	.desktop-wrapper .desktop-container > .icons-container {
+		grid-column: 1;
+		grid-row: 3;
+	}
+	#tvx-watermark {
+		right: 10px;
+		bottom: calc(var(--tvx-footer-h) + 8px);
+		opacity: 0.34;
+		padding: 6px 10px 6px 6px;
+	}
+	#tvx-watermark .tvx-wm-text {
+		font-size: 11px;
+	}
+}
+
+@media (max-width: 620px) {
+	.desktop-wrapper .desktop-container > .icons-container > .icons {
+		grid-template-columns: repeat(2, minmax(110px, 1fr)) !important;
+	}
+	.tvx-nav-company {
+		display: none;
+	}
+	.tvx-welcome-chips {
+		display: none;
+	}
+	#tvx-watermark-bg {
+		background-size: 200px;
+		opacity: 0.07;
+	}
+}
+
+/* ===== Uniform workspace polish (cards / labels / shortcuts) ===== */
+.codex-editor,
+.workspace-body,
+.layout-main-section,
+.page-form,
+.content.page-container .layout-main-section {
+	background: transparent !important;
+}
+
+.page-head,
+.page-head .page-title,
+.layout-main-section-wrapper {
+	background: transparent !important;
+}
+
+.widget-group {
+	margin-bottom: 18px;
+}
+
+/* Workspace section headers — distinct from card lists below */
+.widget-group .widget-group-head,
+.widget-group-head {
+	margin-bottom: 12px !important;
+	padding: 10px 14px 10px 12px !important;
+	background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%) !important;
+	border: 1px solid #e2e8f0 !important;
+	border-left: 3px solid var(--tvx-green) !important;
+	border-radius: 10px !important;
+	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+}
+
+.widget-group-title,
+.widget-group .widget-group-title {
+	font-size: 11.5px !important;
+	font-weight: 800 !important;
+	letter-spacing: 0.08em !important;
+	text-transform: uppercase !important;
+	color: #334155 !important;
+	margin: 0 !important;
+}
+
+/* Individual workspace card title bar (shortcuts, links, quick lists) */
+.widget .widget-head {
+	padding: 12px 14px !important;
+	margin: 0 !important;
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+	border-bottom: 1px solid #e2e8f0 !important;
+	border-radius: 14px 14px 0 0 !important;
+}
+
+.widget .widget-head .widget-title,
+.widget .widget-head .widget-label {
+	font-size: 12.5px !important;
+	font-weight: 750 !important;
+	letter-spacing: 0.04em !important;
+	text-transform: uppercase !important;
+	color: #475569 !important;
+}
+
+.widget .widget-body {
+	padding: 10px 12px 12px !important;
+}
+
+.widget,
+.widget.shortcut-widget-box,
+.widget.links-widget-box,
+.widget.number-widget-box,
+.widget.quick-list-widget-box,
+.widget.dashboard-widget-box,
+.widget.onboarding-widget-box,
+.widget.custom-block-widget-box,
+.widget.chart-widget,
+.widget.spacer {
+	border-radius: 14px !important;
+	border: 1px solid #e2e8f0 !important;
+	background: #ffffff !important;
+	box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
+	overflow: hidden;
+	margin: 6px !important;
+	transition:
+		transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+		box-shadow 0.22s ease,
+		border-color 0.22s ease,
+		background 0.22s ease !important;
+}
+
+/* Dashboard charts — rounded card shell */
+.widget.dashboard-widget-box,
+.widget.chart-widget,
+.dashboard-widget-box,
+.widget-group .widget.dashboard {
+	border-radius: 14px !important;
+	padding: 4px !important;
+	margin: 8px !important;
+	overflow: hidden !important;
+}
+
+.widget.dashboard-widget-box .widget-head,
+.widget.chart-widget .widget-head {
+	border-radius: 12px 12px 0 0 !important;
+}
+
+.widget.dashboard-widget-box .widget-body,
+.widget.chart-widget .chart-container,
+.widget .frappe-chart,
+.widget .chart-container {
+	border-radius: 0 0 12px 12px !important;
+	overflow: hidden !important;
+}
+
+.widget.links-widget-box {
+	position: relative;
+	isolation: isolate;
+}
+
+.widget.links-widget-box::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--tvx-green), #34d399 55%, transparent);
+	opacity: 0.9;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.widget.links-widget-box:hover,
+.widget.shortcut-widget-box:hover {
+	transform: translateY(-3px);
+	border-color: rgba(21, 128, 61, 0.35) !important;
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.65) inset,
+		0 16px 32px rgba(21, 128, 61, 0.12) !important;
+}
+
+.widget.shortcut-widget-box {
+	min-height: 76px;
+	cursor: pointer;
+}
+
+.widget.shortcut-widget-box:hover {
+	border-color: #86efac !important;
+}
+
+.widget .widget-head,
+.widget .widget-title,
+.shortcut-widget-box .widget-title,
+.links-widget-box .widget-title {
+	font-weight: 700 !important;
+	letter-spacing: -0.01em;
+	color: var(--tvx-ink) !important;
+}
+
+.widget .widget-control,
+.widget .widget-footer {
+	border-color: var(--tvx-border) !important;
+}
+
+/* Hide Frappe's trailing up-right arrows on card link labels */
+.links-widget-box .link-item .link-content > .icon,
+.links-widget-box .link-item .link-content > svg,
+.links-widget-box .link-item .link-content .es-icon,
+.links-widget-box .link-item .link-content .icon-xs,
+.links-widget-box a.link-item svg.icon {
+	display: none !important;
+}
+
+.link-item,
+.shortcut-widget-box .widget-body,
+.links-widget-box .link-item {
+	border-radius: 10px !important;
+}
+
+.links-widget-box .link-item {
+	display: flex !important;
+	align-items: center;
+	padding: 8px 10px !important;
+	margin: 2px 4px !important;
+	color: var(--tvx-ink) !important;
+	text-decoration: none !important;
+	transition:
+		background 0.18s ease,
+		transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+		color 0.18s ease,
+		padding-left 0.18s ease !important;
+}
+
+.links-widget-box .link-item:hover {
+	background: var(--tvx-green-soft) !important;
+	transform: translateX(3px);
+	padding-left: 12px !important;
+	color: var(--tvx-green) !important;
+}
+
+.links-widget-box .link-item .link-text,
+.links-widget-box .link-item .link-content {
+	font-size: 12.5px !important;
+	font-weight: 550 !important;
+	color: inherit !important;
+}
+
+.links-widget-box .widget-body {
+	padding: 6px 4px 10px !important;
+}
+
+.number-widget-box .widget-content,
+.number-widget-box .number {
+	color: var(--tvx-ink) !important;
+}
+
+/* Rounded filter / control bars like clean roster UI */
+.page-form .form-group .control-input,
+.frappe-control .control-input,
+.filter-button,
+.btn-group-sm > .btn,
+.btn-default,
+.btn.btn-default,
+.custom-actions .btn,
+.list-row-head,
+.search-input,
+.awesomplete > input,
+input.form-control,
+select.form-control,
+.form-control {
+	border-radius: 10px !important;
+}
+
+.page-actions .btn,
+.standard-actions .btn,
+.custom-actions .btn {
+	border-radius: 999px !important;
+	font-weight: 600;
+}
+
+.btn.btn-default,
+.btn-secondary {
+	background: #f1f5f9 !important;
+	border-color: #e2e8f0 !important;
+	color: #0f172a !important;
+}
+
+/* Soft cards — not list rows (list rows must stay flat for column layout) */
+.frappe-card,
+.form-dashboard-section {
+	border-radius: 12px;
+}
+
+.frappe-card {
+	border: 1px solid var(--tvx-border) !important;
+	box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Hide thick custom horizontal scroll sticks in grids when present */
+.dt-scrollable::-webkit-scrollbar,
+.datatable .dt-scrollable::-webkit-scrollbar {
+	height: 6px !important;
+}
+
+.dt-scrollable::-webkit-scrollbar-thumb,
+.datatable .dt-scrollable::-webkit-scrollbar-thumb {
+	background: #cbd5e1 !important;
+	border-radius: 999px !important;
+}
+
+/* ===== Scroll: sidebar + chrome fixed; ONLY main workspace scrolls ===== */
+html,
+body {
+	height: 100% !important;
+	max-height: 100dvh !important;
+	overflow: hidden !important;
+}
+
+body {
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
+	align-items: stretch !important;
+}
+
+.body-sidebar-container {
+	height: 100dvh !important;
+	max-height: 100dvh !important;
+	overflow: hidden !important;
+	flex: 0 0 auto !important;
+	align-self: stretch !important;
+}
+
+.body-sidebar-container .body-sidebar,
+.body-sidebar-container .body-sidebar-top {
+	max-height: 100% !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+}
+
+/* Desk page shell — main column is the only page scroller */
+.main-section {
+	background: #ffffff !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: none !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+	height: 100dvh !important;
+	max-height: 100dvh !important;
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+	scrollbar-gutter: stable !important;
+}
+
+body.tvx-has-footer .main-section {
+	height: calc(100dvh - var(--tvx-footer-h, 34px)) !important;
+	max-height: calc(100dvh - var(--tvx-footer-h, 34px)) !important;
+}
+
+body.tvx-has-footer {
+	padding-bottom: 0 !important;
+}
+
+.body-sidebar-container + .main-section,
+.layout-main {
+	background: #ffffff !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Sticky page header inside the scrolling main column */
+.page-head.tvx-page-head,
+.page-container > .page-head {
+	position: sticky !important;
+	top: 0 !important;
+	z-index: 6 !important;
+}
+
+/* List: horizontal scroll for columns; vertical uses main-section */
+.frappe-list .result-container,
+.frappe-list .result {
+	overflow-x: auto !important;
+	overflow-y: visible !important;
+	max-height: none !important;
+}
+
+/* Desktop home — own layout, no body scroll */
+body.tvx-desktop-fit,
+html:has(body.tvx-desktop-fit) {
+	overflow: hidden !important;
+}
+
+body.tvx-desktop-fit .main-section {
+	overflow: hidden !important;
+}
+
+/* ===== List view — compact, readable, fields L→R (native layout preserved) ===== */
+.page-title .title-text,
+.page-head .title-text {
+	font-weight: 700 !important;
+	color: var(--tvx-ink) !important;
+	font-size: 1.2rem !important;
+}
+
+.page-actions .btn-primary,
+.standard-actions .btn-primary,
+.primary-action {
+	border-radius: 999px !important;
+	background: var(--tvx-green) !important;
+	border-color: var(--tvx-green) !important;
+	font-weight: 600 !important;
+	box-shadow: 0 4px 12px rgba(21, 128, 61, 0.18) !important;
+}
+
+/* Soft page shell only — do NOT break Frappe list column width/scroll */
+.frappe-list {
+	background: transparent !important;
+}
+
+.frappe-list .result-container,
+.frappe-list .result {
+	background: #fff !important;
+	border: 1px solid var(--tvx-border) !important;
+	border-radius: 12px !important;
+	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+	/* horizontal only — vertical scroll is page-body (one scrollbar) */
+	overflow-x: auto !important;
+	overflow-y: visible !important;
+	max-height: none !important;
+}
+
+.frappe-list .list-row-container {
+	/* restore native width behavior — do not clip columns */
+	overflow: visible !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	border: 0 !important;
+	background: transparent !important;
+	padding-inline: 4px !important;
+}
+
+.frappe-list .list-row-container:first-child {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: #f8fafc !important;
+	border-bottom: 1px solid #eef2f7 !important;
+}
+
+.list-row-head,
+.list-row {
+	font-size: 12px !important;
+	min-height: 34px !important;
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
+	align-items: center !important;
+}
+
+.list-row-head {
+	font-size: 10.5px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.03em !important;
+	text-transform: uppercase !important;
+	color: var(--tvx-muted) !important;
+	background: transparent !important;
+}
+
+.list-row {
+	border-bottom: 1px solid #f1f5f9 !important;
+	background: transparent !important;
+}
+
+.list-row:hover {
+	background: #f0fdf4 !important;
+}
+
+.list-row .list-subject,
+.list-row .list-row-col,
+.list-row .level-left,
+.list-row .level-right,
+.list-row a {
+	font-size: 12px !important;
+	line-height: 1.25 !important;
+	color: #1e293b !important;
+}
+
+.list-row .list-subject {
+	font-weight: 600 !important;
+}
+
+/* Keep column cells readable and side-by-side */
+.frappe-list .result .list-row-container .level-left .list-row-col {
+	min-width: 120px !important;
+	max-width: 280px !important;
+	padding-right: 10px !important;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.list-row .avatar,
+.list-row .avatar-frame {
+	width: 22px !important;
+	height: 22px !important;
+	font-size: 10px !important;
+}
+
+.filter-section,
+.list-filters,
+.page-form {
+	background: transparent !important;
+	border: 0 !important;
+}
+
+.filter-button,
+.sort-selector .btn-group .btn,
+.btn-group-sm > .btn {
+	border-radius: 8px !important;
+	font-size: 12px !important;
+	padding: 4px 10px !important;
+}
+
+/* Form view — soft card sections (lighter touch) */
+.form-section {
+	border: 1px solid var(--tvx-border) !important;
+	border-radius: 12px !important;
+	background: #fff !important;
+	box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03) !important;
+	margin-bottom: 12px !important;
+}
+
+.form-section .section-head {
+	background: #f8fafc !important;
+	border-bottom: 1px solid #eef2f7 !important;
+	font-weight: 700 !important;
+	color: var(--tvx-ink) !important;
+	font-size: 12.5px !important;
+}
+
+.widget-group .widget-group-body {
+	gap: 10px !important;
+}
+
+/* ===== Tabler launcher icons — consistent, vivid, and readable ===== */
+.desktop-wrapper .desktop-icon .icon-container.tvx-icon-well {
+	background: linear-gradient(145deg, #334155, #0f172a) !important;
+	border: 1px solid rgba(255, 255, 255, 0.32) !important;
+	box-shadow:
+		0 8px 18px rgba(15, 23, 42, 0.2),
+		inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="indigo"] .icon-container {
+	background: linear-gradient(145deg, #6366f1, #4338ca) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="blue"] .icon-container {
+	background: linear-gradient(145deg, #3b82f6, #1d4ed8) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="violet"] .icon-container {
+	background: linear-gradient(145deg, #a855f7, #7e22ce) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="sky"] .icon-container {
+	background: linear-gradient(145deg, #06b6d4, #0369a1) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="emerald"] .icon-container {
+	background: linear-gradient(145deg, #34d399, #047857) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="orange"] .icon-container {
+	background: linear-gradient(145deg, #fb923c, #c2410c) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="cyan"] .icon-container {
+	background: linear-gradient(145deg, #22d3ee, #0e7490) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="green"] .icon-container {
+	background: linear-gradient(145deg, #4ade80, #15803d) !important;
+}
+
+.desktop-wrapper .desktop-icon[data-tvx-accent="teal"] .icon-container {
+	background: linear-gradient(145deg, #2dd4bf, #0f766e) !important;
+}
+
+.desktop-wrapper .icon-container img.tvx-tabler-icon {
+	width: 48px !important;
+	height: 48px !important;
+	padding: 11px !important;
+	object-fit: contain !important;
+	box-sizing: border-box !important;
+	border-radius: 14px !important;
+	filter: brightness(0) invert(1) !important;
+	opacity: 1 !important;
+}
+
+/* ===== Page header — flush bar, no floating card / no gap above workspace ===== */
+.page-head.tvx-page-head {
+	margin: 0 !important;
+	padding: 0 !important;
+	border: none !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	background: var(--tvx-content-panel, #ffffff) !important;
+	overflow: visible !important;
+	width: 100% !important;
+}
+
+.page-head.tvx-page-head .container,
+.page-head.tvx-page-head .container-fluid {
+	max-width: none !important;
+	min-height: 48px !important;
+	padding: 10px 12px !important;
+	display: flex !important;
+	align-items: center !important;
+	border: none !important;
+	border-radius: 0 !important;
+}
+
+/* Seamless join: header flows into workspace (no divider line) */
+.page-container > .page-head.tvx-page-head + .page-body,
+.page-container .page-head.tvx-page-head ~ .page-body {
+	margin-top: 0 !important;
+	padding-top: 0 !important;
+	border-top: none !important;
+}
+
+.page-head.tvx-page-head ~ .page-body .layout-main-section-wrapper,
+.page-head.tvx-page-head ~ .page-body .layout-main-section,
+.page-head.tvx-page-head ~ .page-body .form-layout,
+.page-head.tvx-page-head ~ .page-body .workspace-body {
+	border-top: none !important;
+	margin-top: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+body.tvx-readable .page-container:has(.page-head.tvx-page-head) .layout-main-section-wrapper,
+body.tvx-readable .page-container:has(.page-head.tvx-page-head) .layout-main-section.frappe-card,
+body.tvx-readable .page-container:has(.page-head.tvx-page-head) .form-layout,
+body.tvx-readable .page-container:has(.page-head.tvx-page-head) .page-body .layout-main,
+body.tvx-readable .page-container:has(.page-head.tvx-page-head) .workspace-body {
+	border-radius: 0 !important;
+	border-top: none !important;
+	margin-top: 0 !important;
+	padding-top: 0 !important;
+}
+
+.page-head.tvx-page-head .page-head-content {
+	width: 100%;
+	min-width: 0;
+}
+
+.page-head.tvx-page-head .page-title {
+	min-width: 0;
+	margin: 0 !important;
+	flex: 1 1 auto !important;
+}
+
+/* ===== Left header — refined breadcrumb band (subtle, no blur) ===== */
+.page-head.tvx-page-head .page-title.tvx-head-left {
+	min-width: 0;
+	max-width: 72%;
+	padding: 8px 14px 8px 12px !important;
+	margin: 0 0 0 12px !important;
+	background: linear-gradient(90deg, #f8fafc 0%, rgba(248, 250, 252, 0.35) 100%) !important;
+	border: 1px solid #e8edf3 !important;
+	border-left: 3px solid var(--tvx-green) !important;
+	border-radius: 8px !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.page-head.tvx-page-head .page-title.tvx-head-left::after {
+	display: none !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb {
+	display: flex !important;
+	align-items: center !important;
+	gap: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item,
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item a,
+.page-head.tvx-page-head .tvx-head-left .title-area,
+.page-head.tvx-page-head .tvx-head-left .title-area .title-text,
+.page-head.tvx-page-head .tvx-head-left > .title-text {
+	font-family: inherit !important;
+	font-size: 13.5px !important;
+	font-weight: 500 !important;
+	line-height: 1.4 !important;
+	letter-spacing: 0 !important;
+	color: #64748b !important;
+	text-decoration: none !important;
+	text-shadow: none !important;
+	filter: none !important;
+	-webkit-text-fill-color: currentColor !important;
+	background: none !important;
+	opacity: 1 !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item {
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:last-child,
+.page-head.tvx-page-head .tvx-head-left:not(:has(.breadcrumb)) .title-text,
+.page-head.tvx-page-head .tvx-head-left:not(:has(.breadcrumb)) .title-area {
+	font-size: 14px !important;
+	font-weight: 650 !important;
+	color: #0f172a !important;
+	text-shadow: none !important;
+	filter: none !important;
+	-webkit-text-fill-color: currentColor !important;
+	background: none !important;
+	letter-spacing: -0.015em !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item + .breadcrumb-item::before {
+	content: "›" !important;
+	color: #94a3b8 !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	padding: 0 7px !important;
+	opacity: 1 !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:first-child a,
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:first-child .icon,
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:first-child svg {
+	color: var(--tvx-green) !important;
+	filter: none !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:first-child .icon,
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:first-child svg {
+	width: 14px !important;
+	height: 14px !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:not(:last-child) a:hover {
+	color: #334155 !important;
+}
+
+.page-head.tvx-page-head .tvx-head-left .breadcrumb-item:last-child a {
+	color: #0f172a !important;
+	font-weight: 650 !important;
+	pointer-events: none;
+}
+
+.page-head.tvx-page-head .page-actions,
+.page-head.tvx-page-head .standard-actions,
+.page-head.tvx-page-head .custom-actions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+.page-head.tvx-page-head .indicator-pill,
+.page-head.tvx-page-head .indicator {
+	border-radius: 999px !important;
+	padding: 4px 9px !important;
+	font-size: 10px !important;
+	font-weight: 700 !important;
+}
+
+.page-head.tvx-page-head .btn {
+	min-height: 30px;
+	border-radius: 9px !important;
+	font-size: 12px !important;
+}
+
+@media (max-width: 767px) {
+	.page-head.tvx-page-head {
+		margin: 0 !important;
+		border-radius: 0 !important;
+	}
+
+	.page-head.tvx-page-head .container,
+	.page-head.tvx-page-head .container-fluid {
+		padding: 8px 12px !important;
+	}
+
+	.page-head.tvx-page-head .tvx-head-left .breadcrumb-item {
+		max-width: 100px;
+	}
+}
+
+/* ===== Dark mode — Frappe [data-theme="dark"] ===== */
+[data-theme="dark"] {
+	--tvx-ink: #e8eef7;
+	--tvx-muted: #94a3b8;
+	--tvx-border: rgba(148, 163, 184, 0.18);
+	--tvx-surface: rgba(30, 41, 59, 0.92);
+	--tvx-page: #0b1220;
+	--tvx-green-soft: rgba(34, 197, 94, 0.16);
+	--tvx-sidebar: #070b14;
+	--tvx-sidebar-2: #0d1524;
+}
+
+[data-theme="dark"] #tvx-watermark {
+	background: rgba(17, 24, 39, 0.94) !important;
+	border-color: rgba(148, 163, 184, 0.2) !important;
+	box-shadow:
+		0 10px 30px rgba(0, 0, 0, 0.38),
+		inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+	opacity: 1 !important;
+	filter: none !important;
+	backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="dark"] #tvx-watermark-bg {
+	opacity: 0.025 !important;
+	filter: grayscale(1) brightness(1.35) !important;
+	background-size: min(460px, 46vw) !important;
+}
+
+[data-theme="dark"] #tvx-watermark .tvx-wm-text {
+	color: #dbe5f1 !important;
+	text-shadow: none !important;
+}
+
+[data-theme="dark"] #tvx-watermark img {
+	opacity: 1 !important;
+	filter: none !important;
+}
+
+[data-theme="dark"] #tvx-footer,
+[data-theme="dark"] .tvx-footer {
+	background: rgba(7, 11, 20, 0.94) !important;
+	border-top-color: rgba(148, 163, 184, 0.14) !important;
+	color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .tvx-welcome-card {
+	background: var(--card-bg, #171f2e) !important;
+	border-color: rgba(148, 163, 184, 0.16) !important;
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
+}
+
+[data-theme="dark"] .desktop-wrapper.tvx-desktop {
+	background:
+		radial-gradient(circle at 10% 12%, rgba(34, 197, 94, 0.08), transparent 32%),
+		var(--bg-color, #0b111b) !important;
+}
+
+[data-theme="dark"] .desktop-wrapper .desktop-container > .icons-container,
+[data-theme="dark"] .tvx-recent-card {
+	background: var(--card-bg, #171f2e) !important;
+	border-color: var(--border-color, rgba(148, 163, 184, 0.16)) !important;
+	box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .tvx-recent-card .tvx-recent-head {
+	background: var(--subtle-accent, rgba(255, 255, 255, 0.035)) !important;
+	border-bottom-color: var(--border-color, rgba(148, 163, 184, 0.14)) !important;
+}
+
+[data-theme="dark"] .tvx-recent-list a {
+	color: var(--text-color, #dbe5f1) !important;
+}
+
+[data-theme="dark"] .tvx-recent-list a:hover {
+	background: rgba(34, 197, 94, 0.11) !important;
+	color: #4ade80 !important;
+}
+
+[data-theme="dark"] .tvx-apps-heading {
+	border-bottom-color: var(--border-color, rgba(148, 163, 184, 0.14)) !important;
+}
+
+[data-theme="dark"] .desktop-wrapper .desktop-icon {
+	background: var(--subtle-accent, rgba(255, 255, 255, 0.035)) !important;
+	border-color: transparent !important;
+}
+
+[data-theme="dark"] .desktop-wrapper .desktop-icon:hover {
+	background: rgba(34, 197, 94, 0.1) !important;
+	border-color: rgba(74, 222, 128, 0.28) !important;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22) !important;
+}
+
+[data-theme="dark"] .tvx-chip {
+	background: var(--subtle-accent, rgba(255, 255, 255, 0.05)) !important;
+	border-color: var(--border-color, rgba(148, 163, 184, 0.18)) !important;
+	color: var(--text-color, #dbe5f1) !important;
+}
+
+[data-theme="dark"] .tvx-chip:hover {
+	background: rgba(34, 197, 94, 0.13) !important;
+	border-color: rgba(74, 222, 128, 0.3) !important;
+	color: #4ade80 !important;
+}
+
+[data-theme="dark"] .tvx-welcome-title,
+[data-theme="dark"] .tvx-welcome-right,
+[data-theme="dark"] .tvx-clock,
+[data-theme="dark"] .desktop-wrapper .icon-title {
+	color: var(--tvx-ink) !important;
+}
+
+[data-theme="dark"] .page-head.tvx-page-head {
+	background: var(--tvx-surface) !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item a,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-area {
+	color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item:last-child,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left:not(:has(.breadcrumb)) .title-text,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left:not(:has(.breadcrumb)) .title-area {
+	color: #e8eef7 !important;
+}
+
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item + .breadcrumb-item::before {
+	color: #475569 !important;
+}
+
+[data-theme="dark"] .form-section {
+	background: rgba(30, 41, 59, 0.85) !important;
+	border-color: rgba(148, 163, 184, 0.16) !important;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .form-section .section-head {
+	background: rgba(15, 23, 42, 0.65) !important;
+	border-bottom-color: rgba(148, 163, 184, 0.12) !important;
+	color: var(--tvx-ink) !important;
+}
+
+[data-theme="dark"] .frappe-list .list-row-head,
+[data-theme="dark"] .list-row-head {
+	background: var(--subtle-accent, rgba(255, 255, 255, 0.04)) !important;
+	border-color: rgba(148, 163, 184, 0.12) !important;
+	color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .frappe-list .result-container,
+[data-theme="dark"] .frappe-list .result {
+	background: var(--card-bg, #171f2e) !important;
+	border-color: var(--border-color, rgba(148, 163, 184, 0.16)) !important;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24) !important;
+}
+
+[data-theme="dark"] .frappe-list .list-row-container:first-child {
+	background: var(--subtle-accent, #202a3a) !important;
+	border-bottom-color: var(--border-color, rgba(148, 163, 184, 0.14)) !important;
+}
+
+[data-theme="dark"] .frappe-list .list-row,
+[data-theme="dark"] .list-row-container {
+	border-color: rgba(148, 163, 184, 0.1) !important;
+}
+
+[data-theme="dark"] .list-row .list-subject,
+[data-theme="dark"] .list-row .list-row-col,
+[data-theme="dark"] .list-row .level-left,
+[data-theme="dark"] .list-row .level-right,
+[data-theme="dark"] .list-row a {
+	color: var(--text-color, #dbe5f1) !important;
+}
+
+[data-theme="dark"] .frappe-list .list-row:hover,
+[data-theme="dark"] .list-row-container:hover {
+	background: rgba(34, 197, 94, 0.08) !important;
+}
+
+[data-theme="dark"] .list-row:hover {
+	background: rgba(34, 197, 94, 0.08) !important;
+}
+
+[data-theme="dark"] .frappe-list .result-container,
+[data-theme="dark"] .frappe-list .result,
+[data-theme="dark"] .frappe-list .list-row-container,
+[data-theme="dark"] .frappe-list .list-row {
+	color-scheme: dark;
+}
+
+[data-theme="dark"] .widget,
+[data-theme="dark"] .widget.shortcut-widget-box,
+[data-theme="dark"] .widget.links-widget-box,
+[data-theme="dark"] .widget.number-widget-box,
+[data-theme="dark"] .widget.quick-list-widget-box,
+[data-theme="dark"] .widget.dashboard-widget-box {
+	background: linear-gradient(160deg, rgba(36, 48, 68, 0.95), rgba(22, 32, 48, 0.98)) !important;
+	border-color: rgba(148, 163, 184, 0.16) !important;
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.04) inset,
+		0 10px 28px rgba(0, 0, 0, 0.28) !important;
+}
+
+[data-theme="dark"] .widget.links-widget-box::before {
+	background: linear-gradient(90deg, #22c55e, #2dd4bf 55%, transparent);
+}
+
+[data-theme="dark"] .widget.links-widget-box:hover,
+[data-theme="dark"] .widget.shortcut-widget-box:hover {
+	border-color: rgba(34, 197, 94, 0.45) !important;
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.06) inset,
+		0 18px 36px rgba(16, 185, 129, 0.16) !important;
+}
+
+[data-theme="dark"] .links-widget-box .link-item:hover {
+	background: rgba(34, 197, 94, 0.14) !important;
+	color: #4ade80 !important;
+}
+
+[data-theme="dark"] .widget .widget-title,
+[data-theme="dark"] .shortcut-widget-box .widget-title,
+[data-theme="dark"] .links-widget-box .widget-title,
+[data-theme="dark"] .widget-group-title {
+	color: var(--tvx-ink) !important;
+}
+
+[data-theme="dark"] .page-head.tvx-page-head .page-title.tvx-head-left {
+	background: linear-gradient(90deg, rgba(30, 41, 59, 0.85) 0%, transparent 100%) !important;
+	border-color: rgba(148, 163, 184, 0.2) !important;
+	border-left-color: #22c55e !important;
+}
+
+[data-theme="dark"] .widget-group .widget-group-head,
+[data-theme="dark"] .widget-group-head {
+	background: linear-gradient(90deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.5) 100%) !important;
+	border-color: rgba(148, 163, 184, 0.18) !important;
+	border-left-color: #22c55e !important;
+}
+
+[data-theme="dark"] .widget .widget-head {
+	background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+	border-bottom-color: rgba(148, 163, 184, 0.15) !important;
+}
+
+[data-theme="dark"] .widget .widget-head .widget-title {
+	color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .widget .widget-control,
+[data-theme="dark"] .widget .widget-footer {
+	border-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+[data-theme="dark"] .codex-editor,
+[data-theme="dark"] .workspace-page,
+[data-theme="dark"] .layout-main-section,
+[data-theme="dark"] .page-container {
+	color: var(--tvx-ink);
+}
+
+[data-theme="dark"] .body-sidebar .standard-sidebar-item.selected,
+[data-theme="dark"] .body-sidebar .standard-sidebar-item:hover {
+	background: rgba(34, 197, 94, 0.14) !important;
+}
+
+[data-theme="dark"] .btn-default,
+[data-theme="dark"] .btn.btn-default,
+[data-theme="dark"] .filter-button {
+	background: rgba(30, 41, 59, 0.9) !important;
+	border-color: rgba(148, 163, 184, 0.2) !important;
+	color: var(--tvx-ink) !important;
+}
+
+[data-theme="dark"] .desktop-wrapper .desktop-icon .icon-container.tvx-icon-well {
+	border-color: rgba(255, 255, 255, 0.22) !important;
+	box-shadow:
+		0 10px 22px rgba(0, 0, 0, 0.35),
+		inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Soft entrance for workspace cards */
+@keyframes tvx-card-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px) scale(0.985);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+.widget.links-widget-box,
+.widget.shortcut-widget-box {
+	animation: tvx-card-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.widget.links-widget-box:nth-child(2),
+.widget.shortcut-widget-box:nth-child(2) {
+	animation-delay: 0.04s;
+}
+.widget.links-widget-box:nth-child(3),
+.widget.shortcut-widget-box:nth-child(3) {
+	animation-delay: 0.08s;
+}
+.widget.links-widget-box:nth-child(4),
+.widget.shortcut-widget-box:nth-child(4) {
+	animation-delay: 0.12s;
+}
+.widget.links-widget-box:nth-child(5),
+.widget.shortcut-widget-box:nth-child(5) {
+	animation-delay: 0.16s;
+}
+.widget.links-widget-box:nth-child(6),
+.widget.shortcut-widget-box:nth-child(6) {
+	animation-delay: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.widget.links-widget-box,
+	.widget.shortcut-widget-box,
+	.links-widget-box .link-item {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
+/* ===== Readability — clearer fields & text; watermark stays (softer behind content) ===== */
+body.tvx-readable.tvx-has-watermark {
+	font-size: var(--tvx-body-size);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Corner brand pill — keep visible, slightly clearer for older eyes */
+body.tvx-readable #tvx-watermark {
+	opacity: 0.78 !important;
+	filter: none !important;
+	background: rgba(255, 255, 255, 0.92) !important;
+	border: 1px solid #cbd5e1 !important;
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
+}
+
+body.tvx-readable #tvx-watermark .tvx-wm-text {
+	font-size: 14px !important;
+	color: #14532d !important;
+	font-weight: 750 !important;
+}
+
+/* Content panels — solid, edge-to-edge (no rounded inset card) */
+body.tvx-readable .layout-main-section-wrapper,
+body.tvx-readable .layout-main-section.frappe-card,
+body.tvx-readable .form-layout,
+body.tvx-readable .page-body .layout-main,
+body.tvx-readable .workspace-body,
+body.tvx-readable .codex-editor {
+	background: var(--tvx-content-panel) !important;
+	border-radius: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Full-bleed desk shell — flush with left sidebar and right edge */
+body.tvx-readable .main-section,
+body.tvx-readable .layout-main,
+body.tvx-readable .content.page-container,
+body.tvx-readable .page-container,
+body.tvx-readable .page-body {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	max-width: none !important;
+	width: 100% !important;
+}
+
+body.tvx-readable .main-section {
+	background: var(--tvx-content-panel) !important;
+}
+
+body.tvx-readable .layout-main-section,
+body.tvx-readable[data-page-route^="Workspaces"] .layout-main-section {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+body.tvx-readable .layout-main,
+body.tvx-readable[data-page-route^="Workspaces"] .layout-main,
+body.full-width .layout-main {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	max-width: none !important;
+	width: 100% !important;
+}
+
+body.tvx-readable .codex-editor .codex-editor__redactor {
+	padding-left: 12px !important;
+	padding-right: 12px !important;
+}
+
+body.tvx-readable .frappe-list .result,
+body.tvx-readable .form-section,
+body.tvx-readable .frappe-card,
+body.tvx-readable .form-dashboard-section,
+body.tvx-readable .widget,
+body.tvx-readable .page-head.tvx-page-head {
+	background: var(--tvx-content-panel) !important;
+	border: none !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+}
+
+/* Readable mode — keep fancy left header; do not flatten breadcrumb */
+body.tvx-readable .page-head.tvx-page-head .indicator-pill,
+body.tvx-readable .page-head.tvx-page-head .indicator {
+	font-size: 11px !important;
+	font-weight: 650 !important;
+}
+
+/* List / workspace titles outside the compact header bar */
+body.tvx-readable .page-title .title-text:not(.page-head.tvx-page-head .title-text),
+body.tvx-readable .workspace-title {
+	font-size: 1.2rem !important;
+	font-weight: 700 !important;
+	color: #0f172a !important;
+}
+
+/* Form labels — uniform caps style (matches list filter / page-head hierarchy) */
+body.tvx-readable .frappe-control .control-label,
+body.tvx-readable .form-group .control-label,
+body.tvx-readable label.control-label {
+	display: block !important;
+	font-size: var(--tvx-label-size) !important;
+	font-weight: 750 !important;
+	letter-spacing: 0.07em !important;
+	text-transform: uppercase !important;
+	color: #64748b !important;
+	line-height: 1.35 !important;
+	margin-bottom: 6px !important;
+}
+
+body.tvx-readable .frappe-control .control-label .reqd,
+body.tvx-readable .frappe-control .control-label .text-extra-muted {
+	color: #dc2626 !important;
+	font-weight: 800 !important;
+}
+
+/* Checkbox / toggle — sentence case, not uppercase */
+body.tvx-readable .frappe-control[data-fieldtype="Check"] .control-label,
+body.tvx-readable .frappe-control[data-fieldtype="Check"] label,
+body.tvx-readable .frappe-control[data-fieldtype="Check"] .checkbox label {
+	text-transform: none !important;
+	letter-spacing: 0.01em !important;
+	font-size: var(--tvx-body-size) !important;
+	font-weight: 600 !important;
+	color: #0f172a !important;
+	line-height: 1.45 !important;
+	white-space: normal !important;
+}
+
+body.tvx-readable .grid-heading-row,
+body.tvx-readable .grid-heading-row .grid-static-col {
+	font-size: 11px !important;
+	font-weight: 750 !important;
+	letter-spacing: 0.06em !important;
+	text-transform: uppercase !important;
+	color: #64748b !important;
+	line-height: 1.35 !important;
+}
+
+body.tvx-readable .section-head,
+body.tvx-readable .form-section .section-head {
+	font-size: 0.95rem !important;
+	font-weight: 750 !important;
+	letter-spacing: -0.01em !important;
+	text-transform: none !important;
+	color: #0f172a !important;
+	line-height: 1.35 !important;
+	padding: 10px 14px !important;
+	margin-bottom: 4px !important;
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+	border-bottom: 2px solid #e2e8f0 !important;
+	border-radius: 10px 10px 0 0 !important;
+}
+
+body.tvx-readable .help-box,
+body.tvx-readable .text-muted,
+body.tvx-readable small,
+body.tvx-readable .frappe-control .help {
+	font-size: 12.5px !important;
+	color: #475569 !important;
+	line-height: 1.45 !important;
+}
+
+/* ===== Form fields — style INPUT/SELECT only, never the .control-input wrapper ===== */
+body.tvx-readable .frappe-control .control-input,
+body.tvx-readable .frappe-control .control-input-wrapper {
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	min-height: unset !important;
+	display: block !important;
+	width: 100% !important;
+}
+
+/* Editable inputs only — do NOT style .control-value when an input exists (prevents double boxes) */
+body.tvx-readable .frappe-control input.form-control:not([type="checkbox"]):not([type="radio"]),
+body.tvx-readable .frappe-control input.input-with-feedback:not([type="checkbox"]):not([type="radio"]),
+body.tvx-readable .frappe-control textarea,
+body.tvx-readable .frappe-control select:not(.ql-toolbar select),
+body.tvx-readable .frappe-control .awesomplete > input {
+	font-size: var(--tvx-body-size) !important;
+	min-height: var(--tvx-field-min-h) !important;
+	padding: var(--tvx-field-padding) !important;
+	color: #0f172a !important;
+	background: var(--tvx-field-bg) !important;
+	border: var(--tvx-field-border) !important;
+	border-radius: var(--tvx-field-radius) !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+	line-height: 1.4 !important;
+	width: 100% !important;
+	box-sizing: border-box !important;
+	display: block !important;
+}
+
+/* Read-only / display-only — bordered box only when no real input in the cell */
+body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .control-value,
+body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .like-disabled-input:not(input) {
+	font-size: var(--tvx-body-size) !important;
+	min-height: var(--tvx-field-min-h) !important;
+	padding: var(--tvx-field-padding) !important;
+	color: #0f172a !important;
+	font-weight: 550 !important;
+	background: var(--tvx-field-bg) !important;
+	border: var(--tvx-field-border) !important;
+	border-radius: var(--tvx-field-radius) !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+	line-height: 1.4 !important;
+	width: 100% !important;
+	box-sizing: border-box !important;
+	display: block !important;
+}
+
+/* Hide duplicate value layer when Frappe also renders an input/select */
+body.tvx-readable .frappe-control .control-input:has(input, textarea, select) .control-value,
+body.tvx-readable .frappe-control .control-input:has(input, textarea, select) > .like-disabled-input:not(input) {
+	display: none !important;
+}
+
+/* List / filter bar inputs — same bordered look as form fields */
+body.tvx-readable .filter-section input.form-control,
+body.tvx-readable .standard-filter-section input.form-control,
+body.tvx-readable .list-filters input.form-control,
+body.tvx-readable .page-form input.form-control {
+	min-height: 36px !important;
+	padding: 6px 11px !important;
+	border: var(--tvx-field-border) !important;
+	border-radius: var(--tvx-field-radius) !important;
+	background: var(--tvx-field-bg) !important;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Link fields — room for open-link button on the right */
+body.tvx-readable .frappe-control[data-fieldtype="Link"] input.form-control,
+body.tvx-readable .frappe-control[data-fieldtype="Link"] .awesomplete > input {
+	padding-right: 36px !important;
+}
+
+/* Select — hide duplicate option text; Frappe renders options in <select> only */
+body.tvx-readable .frappe-control[data-fieldtype="Select"]:has(select) .control-value,
+.frappe-control[data-fieldtype="Select"]:has(select) .control-value {
+	display: none !important;
+}
+
+body.tvx-readable .frappe-control[data-fieldtype="Select"] select {
+	padding-right: 28px !important;
+}
+
+body.tvx-readable .frappe-control[data-fieldtype="Select"] .select-icon {
+	display: flex !important;
+	align-items: center !important;
+	pointer-events: none !important;
+}
+
+/* Link open button — keep inside field, do not overlap select arrows */
+body.tvx-readable .frappe-control[data-fieldtype="Link"] .link-btn,
+body.tvx-readable .frappe-control[data-fieldtype="Dynamic Link"] .link-btn {
+	position: absolute !important;
+	right: 6px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	z-index: 2 !important;
+	margin: 0 !important;
+}
+
+body.tvx-readable .frappe-control[data-fieldtype="Link"] .control-input,
+body.tvx-readable .frappe-control[data-fieldtype="Dynamic Link"] .control-input {
+	position: relative !important;
+}
+
+body.tvx-readable .frappe-control input.form-control:focus,
+body.tvx-readable .frappe-control input.input-with-feedback:focus,
+body.tvx-readable .frappe-control textarea:focus,
+body.tvx-readable .frappe-control select:focus,
+body.tvx-readable .frappe-control .awesomplete > input:focus,
+body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .control-value:focus-within {
+	border-color: var(--tvx-green) !important;
+	box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.16) !important;
+	outline: none !important;
+}
+
+/* Check fields — native Frappe v16 (no theme overrides on inputs/toggles) */
+
+/* List view — bigger row text & headers */
+body.tvx-readable .list-row-head {
+	font-size: 12px !important;
+	color: #334155 !important;
+	font-weight: 750 !important;
+	letter-spacing: 0.04em !important;
+}
+
+body.tvx-readable .list-row,
+body.tvx-readable .list-row .list-subject,
+body.tvx-readable .list-row .list-row-col,
+body.tvx-readable .list-row a {
+	font-size: var(--tvx-list-size) !important;
+	line-height: 1.4 !important;
+	color: #0f172a !important;
+}
+
+body.tvx-readable .list-row {
+	min-height: 40px !important;
+}
+
+body.tvx-readable .list-row .list-subject {
+	font-weight: 650 !important;
+}
+
+body.tvx-readable .frappe-list .list-row-container:first-child {
+	background: #f1f5f9 !important;
+	border-bottom: 1.5px solid #e2e8f0 !important;
+}
+
+body.tvx-readable .filter-button,
+body.tvx-readable .btn-group-sm > .btn,
+body.tvx-readable .sort-selector .btn-group .btn {
+	font-size: 13px !important;
+	min-height: 34px !important;
+	padding: 6px 12px !important;
+}
+
+/* Dashboard / workspace widgets */
+body.tvx-readable .widget-group-title,
+body.tvx-readable .widget-group .widget-group-title {
+	font-size: 12px !important;
+	color: #334155 !important;
+	font-weight: 800 !important;
+	letter-spacing: 0.08em !important;
+}
+
+body.tvx-readable .widget .widget-head .widget-title {
+	font-size: 13px !important;
+	font-weight: 750 !important;
+	color: #475569 !important;
+}
+
+body.tvx-readable .widget .widget-head,
+body.tvx-readable .widget .widget-title,
+body.tvx-readable .shortcut-widget-box .widget-title,
+body.tvx-readable .links-widget-box .widget-title {
+	font-size: 14.5px !important;
+	font-weight: 750 !important;
+}
+
+body.tvx-readable .links-widget-box .link-item .link-text,
+body.tvx-readable .links-widget-box .link-item .link-content {
+	font-size: 14px !important;
+	font-weight: 600 !important;
+}
+
+body.tvx-readable .number-widget-box .number,
+body.tvx-readable .number-widget-box .widget-content {
+	font-size: 1.65rem !important;
+	font-weight: 750 !important;
+	color: #0f172a !important;
+}
+
+/* Buttons — clearer labels */
+body.tvx-readable .btn {
+	font-size: 13px !important;
+	font-weight: 650 !important;
+	min-height: 34px !important;
+}
+
+body.tvx-readable .page-actions .btn,
+body.tvx-readable .standard-actions .btn,
+body.tvx-readable .page-head.tvx-page-head .btn {
+	font-size: 13px !important;
+	min-height: 36px !important;
+}
+
+/* Sidebar form links (document view right panel) */
+body.tvx-readable .form-sidebar .sidebar-label,
+body.tvx-readable .form-sidebar .form-sidebar-items .label-area,
+body.tvx-readable .layout-side-section .sidebar-label {
+	font-size: 13px !important;
+	font-weight: 650 !important;
+	color: #0f172a !important;
+}
+
+body.tvx-readable .form-sidebar .form-sidebar-items .badge,
+body.tvx-readable .layout-side-section .badge {
+	font-size: 12px !important;
+	font-weight: 650 !important;
+}
+
+/* Report / query views */
+body.tvx-readable .dt-scrollable .dt-cell__content,
+body.tvx-readable .datatable .dt-cell__content {
+	font-size: 13.5px !important;
+	color: #0f172a !important;
+}
+
+body.tvx-readable .dt-scrollable .dt-cell__content--header,
+body.tvx-readable .datatable .dt-cell__content--header {
+	font-size: 12px !important;
+	font-weight: 750 !important;
+	color: #334155 !important;
+}
+
+/* Dark mode readability (watermark stays very soft) */
+[data-theme="dark"] body.tvx-readable {
+	--tvx-muted: #b6c2d3;
+	--tvx-content-panel: rgba(23, 31, 46, 0.97);
+}
+
+[data-theme="dark"] body.tvx-readable #tvx-watermark-bg {
+	opacity: 0.02 !important;
+}
+
+[data-theme="dark"] body.tvx-readable .frappe-control .control-label,
+[data-theme="dark"] body.tvx-readable label.control-label,
+[data-theme="dark"] body.tvx-readable .section-head {
+	color: #e8eef7 !important;
+}
+
+[data-theme="dark"] body.tvx-readable .frappe-control input.form-control,
+[data-theme="dark"] body.tvx-readable .frappe-control input.input-with-feedback,
+[data-theme="dark"] body.tvx-readable .frappe-control select,
+[data-theme="dark"] body.tvx-readable .frappe-control textarea,
+[data-theme="dark"] body.tvx-readable .frappe-control .awesomplete > input,
+[data-theme="dark"] body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .control-value {
+	color: #e8eef7 !important;
+	background: rgba(15, 23, 42, 0.85) !important;
+	border-color: rgba(148, 163, 184, 0.35) !important;
+}
+
+[data-theme="dark"] body.tvx-readable .frappe-control .control-label,
+[data-theme="dark"] body.tvx-readable label.control-label {
+	color: #94a3b8 !important;
+}
+
+[data-theme="dark"] body.tvx-readable .section-head {
+	color: #e8eef7 !important;
+	background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+	border-bottom-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+[data-theme="dark"] body.tvx-readable .list-row,
+[data-theme="dark"] body.tvx-readable .list-row a,
+[data-theme="dark"] body.tvx-readable .list-row .list-row-col {
+	color: #e8eef7 !important;
+}
+
+@media (max-width: 767px) {
+	body.tvx-readable #tvx-watermark {
+		opacity: 0.72 !important;
+	}
+	body.tvx-readable #tvx-watermark-bg {
+		opacity: 0.04 !important;
+	}
+}
+
+/* ===== Select fields — Frappe v16 native (wrapper only, no menulist override) ===== */
+.frappe-control[data-fieldtype="Select"] .control-input {
+	position: relative !important;
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	min-height: unset !important;
+	display: block !important;
+	width: 100% !important;
+}
+
+.frappe-control[data-fieldtype="Select"] select {
+	width: 100% !important;
+	box-sizing: border-box !important;
+}
+
+/* Link field wrapper — no outer box; input carries the border */
+.frappe-control[data-fieldtype="Link"] .control-input,
+.frappe-control[data-fieldtype="Dynamic Link"] .control-input {
+	position: relative !important;
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	display: block !important;
+	width: 100% !important;
+}
+
+.frappe-control[data-fieldtype="Link"] .link-btn,
+.frappe-control[data-fieldtype="Dynamic Link"] .link-btn {
+	position: absolute !important;
+	right: 6px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	z-index: 2 !important;
+}
+
+/* Grid / child table select cells */
+.grid-row .col[data-fieldtype="Select"] select,
+.form-grid .grid-static-col select {
+	min-height: 34px !important;
+	padding-right: 30px !important;
+}
+
+[data-theme="dark"] .frappe-control[data-fieldtype="Select"] select,
+[data-theme="dark"] select.form-control {
+	background-color: rgba(15, 23, 42, 0.9) !important;
+	color: #e8eef7 !important;
+}
+
+/* ===== FINAL: full-bleed shell (must stay last — beats earlier theme rules) ===== */
+html {
+	--page-max-width: 100% !important;
+	--tvx-page: #ffffff !important;
+	--tvx-content-panel: #ffffff !important;
+}
+
+body.full-width .std-form-layout .section-head,
+body.full-width .std-form-layout .section-body,
+body.tvx-force-fullwidth .std-form-layout .section-head,
+body.tvx-force-fullwidth .std-form-layout .section-body,
+body.full-width .form-footer,
+body.tvx-force-fullwidth .form-footer,
+[data-page-route^="Workspaces"] .layout-main,
+[data-page-route^="Workspaces"] .layout-main-section {
+	max-width: none !important;
+	width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.main-section,
+.body-sidebar-container + .main-section,
+.page-container,
+.page-body,
+.layout-main,
+.layout-main-section-wrapper,
+.layout-main-section,
+.form-layout,
+.workspace-body,
+.codex-editor,
+.desktop-wrapper,
+.desktop-wrapper.tvx-desktop {
+	max-width: none !important;
+	width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.main-section,
+.body-sidebar-container + .main-section,
+.page-container,
+.page-body,
+.layout-main,
+.layout-main-section-wrapper,
+.form-layout {
+	background-color: #ffffff !important;
+}
+
+/* Desktop keeps soft page tint + inner breathing room */
+body.tvx-desktop-fit .desktop-wrapper.tvx-desktop,
+.desktop-wrapper.tvx-desktop {
+	background-color: #f4f7fa !important;
+}
+
+.desktop-wrapper .desktop-container {
+	max-width: none !important;
+	width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding: 12px 14px 14px 14px !important;
+	gap: 12px 14px !important;
+	justify-content: stretch !important;
+	background: transparent !important;
+}
+
+.page-head,
+.page-head.tvx-page-head {
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+}
+
+/* Gap between left sidebar and breadcrumb header band */
+.page-head.tvx-page-head .page-title.tvx-head-left,
+body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
+	margin-left: 12px !important;
+	margin-right: 8px !important;
+}
+
+/* Workspace cards — rounded shells (widgets themselves) */
+.widget,
+.widget.shortcut-widget-box,
+.widget.links-widget-box,
+.widget.number-widget-box,
+.widget.quick-list-widget-box,
+.widget.dashboard-widget-box,
+.widget.onboarding-widget-box,
+.widget.custom-block-widget-box,
+.widget.chart-widget,
+.codex-editor .widget {
+	border-radius: 14px !important;
+	overflow: hidden !important;
+}
+
+.widget .widget-head {
+	border-radius: 14px 14px 0 0 !important;
+}
+
+/* MTO list title emphasis */
+.tita-mto-list-title {
+	font-weight: 700 !important;
+	color: #0f172a !important;
+	letter-spacing: 0.01em;
+}
+
+.codex-editor .codex-editor__redactor,
+.workspace-body .codex-editor__redactor {
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+}
+
+/* ===== Quill / ToDo / Comment editors — undo form-select CSS that breaks toolbars ===== */
+.ql-toolbar.ql-snow,
+.ql-toolbar.ql-bubble,
+.comment-input-wrapper .ql-toolbar,
+.modal-dialog .ql-toolbar {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	align-items: center !important;
+	gap: 2px 4px !important;
+	padding: 6px 8px !important;
+	border-radius: 8px 8px 0 0 !important;
+}
+
+.ql-toolbar .ql-formats {
+	display: inline-flex !important;
+	align-items: center !important;
+	flex-wrap: wrap !important;
+	margin-right: 8px !important;
+	vertical-align: middle !important;
+}
+
+.ql-toolbar button,
+.ql-toolbar .ql-picker {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: auto !important;
+	min-width: 28px !important;
+	min-height: 28px !important;
+	height: 28px !important;
+	margin: 0 !important;
+	padding: 3px 5px !important;
+	float: none !important;
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	vertical-align: middle !important;
+}
+
+.ql-toolbar .ql-picker {
+	position: relative !important;
+}
+
+.ql-toolbar .ql-picker-label {
+	display: inline-flex !important;
+	align-items: center !important;
+	padding: 2px 4px !important;
+	border: none !important;
+	width: auto !important;
+	min-height: 24px !important;
+}
+
+.ql-toolbar .ql-picker-options {
+	position: absolute !important;
+	top: 100% !important;
+	left: 0 !important;
+	z-index: 100 !important;
+	background: #fff !important;
+	border: 1px solid #e2e8f0 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12) !important;
+	min-width: 120px !important;
+	padding: 4px 0 !important;
+}
+
+.ql-toolbar select,
+.ql-toolbar .ql-picker select,
+.modal-dialog .ql-toolbar select,
+.comment-box select,
+.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+	width: auto !important;
+	min-width: 0 !important;
+	min-height: 0 !important;
+	height: auto !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	display: inline-block !important;
+	font-size: 12px !important;
+}
+
+.ql-container.ql-snow,
+.ql-container.ql-bubble {
+	border-radius: 0 0 8px 8px !important;
+	min-height: 120px !important;
+}
+
+.ql-editor {
+	min-height: 100px !important;
+	font-size: 14px !important;
+	line-height: 1.5 !important;
+	padding: 10px 12px !important;
+}
+
+/* Never apply desk form field chrome inside Quill / comment editors */
+.ql-toolbar select.form-control,
+.ql-toolbar .form-control,
+.modal-dialog .ql-toolbar .form-control {
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	min-height: unset !important;
+	padding: 0 !important;
+	width: auto !important;
+	display: inline-block !important;
+}
+

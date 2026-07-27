@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Env / IDE
+.env
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Frappe / node
+node_modules/
+sites/
+*.pyc
+
+# Local dumps / secrets
+*.pem
+credentials.json
