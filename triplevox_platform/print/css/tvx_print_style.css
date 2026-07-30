@@ -1,0 +1,99 @@
+/*
+ * TripleVox Brand — global Print Style
+ * Applied to ALL Standard print formats site-wide.
+ * Accent tokens are replaced at install time from client_theme / company.
+ */
+
+:root {
+	--tvx-print-accent: {{ACCENT}};
+	--tvx-print-accent-deep: {{ACCENT_DEEP}};
+	--tvx-print-accent-soft: {{ACCENT_SOFT}};
+	--tvx-print-ink: {{INK}};
+	--tvx-print-muted: {{MUTED}};
+	--tvx-print-border: {{BORDER}};
+}
+
+.print-format,
+.print-format-preview {
+	font-family: "Segoe UI", Calibri, Arial, sans-serif !important;
+	color: var(--tvx-print-ink) !important;
+	line-height: 1.35 !important;
+}
+
+.print-format .print-heading,
+.print-format h1,
+.print-format h2,
+.print-format h3,
+.print-format .document-header {
+	color: var(--tvx-print-accent-deep) !important;
+	border-bottom: 2px solid var(--tvx-print-accent) !important;
+	padding-bottom: 6px !important;
+	margin-bottom: 12px !important;
+	font-weight: 700 !important;
+	letter-spacing: -0.01em !important;
+}
+
+.print-format .label,
+.print-format .section-head,
+.print-format .form-section .section-head {
+	color: var(--tvx-print-muted) !important;
+	font-size: 7.5pt !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.06em !important;
+	font-weight: 700 !important;
+}
+
+.print-format .value,
+.print-format .data-field .value {
+	color: var(--tvx-print-ink) !important;
+	font-weight: 600 !important;
+}
+
+.print-format table {
+	border-collapse: collapse !important;
+	width: 100% !important;
+	font-size: 9pt !important;
+}
+
+.print-format table th {
+	background: var(--tvx-print-accent-soft) !important;
+	color: var(--tvx-print-accent-deep) !important;
+	border: 1px solid #a7f3d0 !important;
+	padding: 6px 8px !important;
+	font-weight: 700 !important;
+	text-align: left !important;
+}
+
+.print-format table td {
+	border: 1px solid var(--tvx-print-border) !important;
+	padding: 6px 8px !important;
+	vertical-align: top !important;
+}
+
+.print-format table tr:nth-child(even) td {
+	background: #f8fafc !important;
+}
+
+.print-format .total-row td,
+.print-format .grand-total td,
+.print-format tr.total-row td {
+	background: #f1f5f9 !important;
+	font-weight: 700 !important;
+	border-top: 2px solid #cbd5e1 !important;
+}
+
+.print-format .section-break,
+.print-format .form-section {
+	margin-top: 10px !important;
+	margin-bottom: 8px !important;
+}
+
+.print-format hr {
+	border: none !important;
+	border-top: 1px solid var(--tvx-print-border) !important;
+}
+
+/* Hide noisy empty / zero clutter where possible */
+.print-format .page-break + .page-break {
+	display: none !important;
+}

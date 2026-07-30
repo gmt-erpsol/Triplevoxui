@@ -1,0 +1,53 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "STOCK ENTRY", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Type</span><span class="tvx-value">{{ doc.stock_entry_type or doc.purpose or "—" }}</span></td>
+      <td><span class="tvx-label">Date</span><span class="tvx-value">{{ tvx_date(doc.posting_date) }}</span></td>
+      <td><span class="tvx-label">From Warehouse</span><span class="tvx-value">{{ doc.from_warehouse or "—" }}</span></td>
+      <td><span class="tvx-label">To Warehouse</span><span class="tvx-value">{{ doc.to_warehouse or "—" }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">Work Order</span><span class="tvx-value">{{ doc.work_order or "—" }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+      <td><span class="tvx-label">Status</span><span class="tvx-value">{{ doc.docstatus and (doc.docstatus == 1 and "Submitted" or "Cancelled") or "Draft" }}</span></td>
+      <td><span class="tvx-label">Remarks</span><span class="tvx-value">{{ doc.remarks or "—" }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Items</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th style="width:6%">#</th>
+        <th>Item</th>
+        <th>Source / Target WH</th>
+        <th class="tvx-amt" style="width:14%">Qty</th>
+        <th class="tvx-amt" style="width:16%">Basic Rate</th>
+        <th class="tvx-amt" style="width:16%">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in (doc.items or []) %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.item_name or row.item_code }}{% if row.s_warehouse or row.t_warehouse %}<br><span style="font-size:8pt;color:#64748b;">{{ row.s_warehouse or "" }}{% if row.s_warehouse and row.t_warehouse %} → {% endif %}{{ row.t_warehouse or "" }}</span>{% endif %}</td>
+        <td>{{ row.s_warehouse or "—" }} / {{ row.t_warehouse or "—" }}</td>
+        <td class="tvx-amt">{{ row.qty }} {{ row.uom or row.stock_uom or "" }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.basic_rate or row.valuation_rate or 0, doc.currency or "ETB", doc) }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.amount or row.basic_amount or 0, doc.currency or "ETB", doc) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

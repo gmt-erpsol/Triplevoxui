@@ -55,7 +55,7 @@ ICON = {
     "Buying": "/assets/erpnext/icons/desktop_icons/solid/buying.svg",
     "Stock": "/assets/erpnext/icons/desktop_icons/solid/stock.svg",
     "Assets": "/assets/erpnext/icons/desktop_icons/solid/assets.svg",
-    "TITA Manufacturing": "/assets/titacustom/images/tita-logo.svg",
+    "TITA Manufacturing": NATIVE_MFG,
     "TITA Production": f"{BASE}/production.svg",
     "Other": f"{TABLER}/apps.svg",
     "HRMS": f"{TABLER}/users.svg",
@@ -190,14 +190,34 @@ def _ensure_employee_hub():
     if frappe.db.exists("Desktop Icon", "Employee Hub"):
         # Update field(s) directly in database without opening form.
         frappe.db.set_value("Desktop Icon", "Employee Hub", vals, update_modified=False)
-        return
-    frappe.get_doc(
-        {
-            "doctype": "Desktop Icon",
-            "label": "Employee Hub",
-            **vals,
-        }
-    ).insert(ignore_permissions=True)
+    else:
+        frappe.get_doc(
+            {
+                "doctype": "Desktop Icon",
+                "label": "Employee Hub",
+                **vals,
+            }
+        ).insert(ignore_permissions=True)
+
+    hub_roles = [
+        r
+        for r in (
+            "Employee",
+            "Employee Self Service",
+            "HR User",
+            "HR Manager",
+            "System Manager",
+            "Administrator",
+        )
+        if frappe.db.exists("Role", r)
+    ]
+    _set_desktop_icon_roles("Employee Hub", hub_roles)
+    try:
+        from triplevox_platform.sync_employee_hub import _grant_employee_hub_access
+
+        _grant_employee_hub_access()
+    except Exception:
+        pass
 
 
 def _ensure_system_administration():

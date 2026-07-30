@@ -1,0 +1,56 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{% set currency = doc.paid_to_account_currency or doc.paid_from_account_currency or doc.currency or "ETB" %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "PAYMENT RECEIPT", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Payment Type</span><span class="tvx-value">{{ doc.payment_type }}</span></td>
+      <td><span class="tvx-label">Mode</span><span class="tvx-value">{{ doc.mode_of_payment or "—" }}</span></td>
+      <td><span class="tvx-label">Date</span><span class="tvx-value">{{ tvx_date(doc.posting_date) }}</span></td>
+      <td><span class="tvx-label">Party</span><span class="tvx-value">{{ doc.party_name or doc.party or "—" }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-hero">
+    <div class="tvx-hero-left">
+      <div class="tvx-hero-label">Paid Amount</div>
+      <div style="margin-top:4px;font-size:8.5pt;font-style:italic;">
+        {{ frappe.utils.money_in_words(doc.paid_amount or doc.received_amount or 0, currency) }}
+      </div>
+    </div>
+    <div class="tvx-hero-right">
+      <div class="tvx-hero-amount">{{ tvx_money(doc.paid_amount or doc.received_amount or 0, currency, doc) }}</div>
+    </div>
+  </div>
+
+  {% if doc.references %}
+  <div class="tvx-section">References</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th class="tvx-amt">Allocated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.references %}
+      <tr>
+        <td>{{ row.reference_doctype }}</td>
+        <td>{{ row.reference_name }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.allocated_amount, currency, doc) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

@@ -1,0 +1,55 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "JOB CARD", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Work Order</span><span class="tvx-value">{{ doc.work_order or "—" }}</span></td>
+      <td><span class="tvx-label">Operation</span><span class="tvx-value">{{ doc.operation or "—" }}</span></td>
+      <td><span class="tvx-label">Workstation</span><span class="tvx-value">{{ doc.workstation or "—" }}</span></td>
+      <td><span class="tvx-label">Status</span><span class="tvx-value">{{ doc.status or "—" }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">Item</span><span class="tvx-value">{{ doc.item_name or doc.production_item or "—" }}</span></td>
+      <td><span class="tvx-label">For Qty</span><span class="tvx-value">{{ doc.for_quantity or doc.total_completed_qty or "—" }}</span></td>
+      <td><span class="tvx-label">Posting Date</span><span class="tvx-value">{{ tvx_date(doc.posting_date or doc.expected_start_date) }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+    </tr>
+  </table>
+
+  {% if doc.time_logs %}
+  <div class="tvx-section">Time Logs</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th style="width:6%">#</th>
+        <th>Employee</th>
+        <th>From</th>
+        <th>To</th>
+        <th class="tvx-amt" style="width:14%">Completed Qty</th>
+        <th class="tvx-amt" style="width:14%">Time (mins)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.time_logs %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.employee_name or row.employee or "—" }}</td>
+        <td>{{ row.from_time or "—" }}</td>
+        <td>{{ row.to_time or "—" }}</td>
+        <td class="tvx-amt">{{ row.completed_qty or 0 }}</td>
+        <td class="tvx-amt">{{ row.time_in_mins or 0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

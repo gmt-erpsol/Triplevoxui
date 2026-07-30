@@ -1,0 +1,51 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{% set currency = doc.currency or "ETB" %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "JOURNAL ENTRY", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Entry Type</span><span class="tvx-value">{{ doc.voucher_type or "—" }}</span></td>
+      <td><span class="tvx-label">Posting Date</span><span class="tvx-value">{{ tvx_date(doc.posting_date) }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+      <td><span class="tvx-label">User Remark</span><span class="tvx-value">{{ doc.user_remark or doc.cheque_no or "—" }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Accounting Entries</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th style="width:6%">#</th>
+        <th>Account</th>
+        <th>Party / Cost Center</th>
+        <th class="tvx-amt" style="width:16%">Debit</th>
+        <th class="tvx-amt" style="width:16%">Credit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in (doc.accounts or []) %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.account }}{% if row.account_type %}<br><span style="font-size:8pt;color:#64748b;">{{ row.account_type }}</span>{% endif %}</td>
+        <td>{{ row.party or row.party_type or "—" }}{% if row.cost_center %}<br><span style="font-size:8pt;color:#64748b;">{{ row.cost_center }}</span>{% endif %}</td>
+        <td class="tvx-amt">{{ tvx_money(row.debit_in_account_currency or row.debit or 0, currency, doc) }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.credit_in_account_currency or row.credit or 0, currency, doc) }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="tvx-total">
+        <td colspan="3" style="text-align:right">Total</td>
+        <td class="tvx-amt">{{ tvx_money(doc.total_debit or 0, currency, doc) }}</td>
+        <td class="tvx-amt">{{ tvx_money(doc.total_credit or 0, currency, doc) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

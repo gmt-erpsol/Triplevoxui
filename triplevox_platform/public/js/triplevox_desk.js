@@ -21,12 +21,135 @@
 			return false;
 		}
 	}
-	function sync() {
-		document.documentElement.classList.toggle("tvx-on-desktop", isDesktopRoute());
+
+	function injectEarlyDesktopCss() {
+		if (document.getElementById("tvx-early-desktop-css")) return;
+		const style = document.createElement("style");
+		style.id = "tvx-early-desktop-css";
+		style.textContent = `
+			/* Until route is known — hide sidebar to prevent theme/desktop flash */
+			html:not(.tvx-chrome-ready) .body-sidebar-container {
+				visibility: hidden !important;
+				pointer-events: none !important;
+			}
+			html.tvx-on-desktop,
+			html.tvx-on-desktop body {
+				overflow: hidden !important;
+			}
+			/* Hide left sidebar before paint — stops blink on Desktop refresh */
+			html.tvx-on-desktop .body-sidebar-container {
+				display: none !important;
+				visibility: hidden !important;
+				width: 0 !important;
+				min-width: 0 !important;
+				max-width: 0 !important;
+				overflow: hidden !important;
+				pointer-events: none !important;
+			}
+			html.tvx-on-desktop .main-section {
+				margin-left: 0 !important;
+				width: 100% !important;
+				max-width: 100% !important;
+			}
+			html.tvx-on-desktop .desktop-wrapper {
+				height: calc(100dvh - var(--tvx-footer-h, 34px));
+				max-height: calc(100dvh - var(--tvx-footer-h, 34px));
+				overflow: hidden !important;
+			}
+			html.tvx-on-desktop .desktop-wrapper .desktop-container {
+				display: grid !important;
+				grid-template-columns: minmax(0, 1fr) 220px !important;
+				grid-template-rows: minmax(172px, auto) minmax(0, 1fr) !important;
+				overflow: hidden !important;
+				min-height: 0 !important;
+				max-height: calc(100dvh - var(--desktop-navbar-height, 52px) - var(--tvx-footer-h, 34px)) !important;
+			}
+			html.tvx-on-desktop .desktop-wrapper .desktop-container > .icons-container {
+				grid-column: 1 !important;
+				grid-row: 2 !important;
+				align-self: stretch !important;
+			}
+			html.tvx-on-desktop .desktop-wrapper #tvx-welcome-card {
+				grid-column: 1 / -1 !important;
+				grid-row: 1 !important;
+			}
+			html.tvx-on-desktop .desktop-wrapper:not(.tvx-desktop-ready) .desktop-container > .icons-container {
+				opacity: 0 !important;
+				visibility: hidden !important;
+			}
+			html.tvx-on-desktop .desktop-wrapper:not(.tvx-desktop-ready) .desktop-container {
+				opacity: 1;
+			}
+			html.tvx-on-desktop .desktop-wrapper.tvx-desktop-ready .desktop-container > .icons-container {
+				opacity: 1 !important;
+				visibility: visible !important;
+				transition: opacity 0.15s ease;
+			}
+		`;
+		(document.head || document.documentElement).appendChild(style);
 	}
+
+	function markDesktopEarly() {
+		injectEarlyDesktopCss();
+		if (isDesktopRoute()) {
+			document.documentElement.classList.add("tvx-on-desktop");
+		}
+		document.documentElement.classList.add("tvx-chrome-ready");
+	}
+
+	function injectWelcomeSkeleton() {
+		const container = document.querySelector(".desktop-wrapper .desktop-container");
+		if (!container || container.querySelector("#tvx-welcome-card")) return;
+		const sk = document.createElement("section");
+		sk.id = "tvx-welcome-card";
+		sk.className =
+			"tvx-welcome-card tvx-welcome-hero tvx-desk-stage tvx-welcome-skeleton";
+		sk.setAttribute("aria-hidden", "true");
+		sk.innerHTML =
+			'<div class="tvx-welcome-skeleton-inner" aria-hidden="true"></div>';
+		container.insertBefore(sk, container.firstChild);
+	}
+
+	function primeDesktopShell() {
+		if (!isDesktopRoute()) return;
+		injectEarlyDesktopCss();
+		document.body && document.body.classList.add("tvx-desktop-fit");
+		const wrap = document.querySelector(".desktop-wrapper");
+		if (wrap) {
+			wrap.classList.add("tvx-desktop");
+			injectWelcomeSkeleton();
+		}
+	}
+
+	function sync() {
+		const onDesktop = isDesktopRoute();
+		document.documentElement.classList.toggle("tvx-on-desktop", onDesktop);
+		document.documentElement.classList.add("tvx-chrome-ready");
+		if (onDesktop) {
+			primeDesktopShell();
+		} else {
+			document.body && document.body.classList.remove("tvx-desktop-fit");
+			document.querySelectorAll(".desktop-wrapper.tvx-desktop-ready").forEach((el) => {
+				el.classList.remove("tvx-desktop", "tvx-desktop-ready");
+			});
+		}
+	}
+
+	// Mark desktop + inject hide-CSS before first paint when possible
+	markDesktopEarly();
 	sync();
 	window.addEventListener("hashchange", sync);
 	window.addEventListener("popstate", sync);
+
+	if (!window.__tvx_desktop_shell_obs) {
+		window.__tvx_desktop_shell_obs = new MutationObserver(() => primeDesktopShell());
+		const boot = () => {
+			const root = document.body || document.documentElement;
+			window.__tvx_desktop_shell_obs.observe(root, { childList: true, subtree: true });
+		};
+		if (document.body) boot();
+		else document.addEventListener("DOMContentLoaded", boot);
+	}
 
 	// Form right sidebar: collapsed unless user opened it this session
 	try {
@@ -56,6 +179,7 @@ triplevox.platform.init = function () {
 	window.__tvx_ready = true;
 	triplevox.platform.cfg = frappe.boot.triplevox || {};
 	triplevox.platform.apply_client_theme();
+	triplevox.platform.observe_frappe_theme();
 	triplevox.platform.force_full_width();
 	triplevox.platform.clear_stale_desktop_layout();
 	triplevox.platform.ensure_watermark();
@@ -67,36 +191,121 @@ triplevox.platform.init = function () {
 	triplevox.platform.patch_workspace_sidebar_routes();
 	triplevox.platform.polish_page_chrome();
 	triplevox.platform.setup_form_sidebar_toggle();
+	triplevox.platform.setup_workspace_viewer();
 	$(window).on("resize", () => triplevox.platform.sync_footer_offset());
 };
 
 /**
  * Push client theme tokens from boot → CSS variables.
+ * Color tokens follow Frappe light/dark; only structural tokens stay pinned.
  * Profiles live in client_theme.py; site_config can override per site.
  */
 triplevox.platform.apply_client_theme = function () {
 	const cfg = triplevox.platform.cfg || {};
 	const theme = cfg.theme || {};
 	const root = document.documentElement;
-	const map = {
-		sidebar: "--tvx-sidebar",
-		sidebar_2: "--tvx-sidebar-2",
-		green: "--tvx-green",
-		green_bright: "--tvx-green-bright",
-		green_soft: "--tvx-green-soft",
-		ink: "--tvx-ink",
-		muted: "--tvx-muted",
-		border: "--tvx-border",
-		surface: "--tvx-surface",
-		page: "--tvx-page",
+	const structural = {
 		radius: "--tvx-radius",
 	};
-	Object.keys(map).forEach((key) => {
-		if (theme[key]) root.style.setProperty(map[key], theme[key]);
+	// Brand accent stays across modes
+	if (theme.green) root.style.setProperty("--tvx-green", theme.green);
+	if (theme.green_bright) root.style.setProperty("--tvx-green-bright", theme.green_bright);
+
+	Object.keys(structural).forEach((key) => {
+		if (theme[key]) root.style.setProperty(structural[key], theme[key]);
 	});
+
 	if (cfg.client_key) {
 		root.setAttribute("data-tvx-client", cfg.client_key);
 	}
+	triplevox.platform.sync_dark_mode_tokens();
+};
+
+/** Align TripleVox tokens with native Frappe data-theme (light / dark / automatic). */
+triplevox.platform.is_dark_mode = function () {
+	const root = document.documentElement;
+	const mode = root.getAttribute("data-theme-mode") || "";
+	const theme = root.getAttribute("data-theme") || "";
+	if (theme === "dark") return true;
+	if (theme === "light") return false;
+	if (mode === "dark") return true;
+	if (mode === "light") return false;
+	if (mode === "automatic") {
+		try {
+			return window.matchMedia("(prefers-color-scheme: dark)").matches;
+		} catch (e) {
+			return false;
+		}
+	}
+	return false;
+};
+
+triplevox.platform.sync_dark_mode_tokens = function () {
+	const root = document.documentElement;
+	const cfg = triplevox.platform.cfg || {};
+	const theme = cfg.theme || {};
+	const dark = triplevox.platform.is_dark_mode();
+	document.body && document.body.classList.toggle("tvx-dark", dark);
+
+	// Clear light-mode color pins so CSS [data-theme=dark] can win
+	[
+		"--tvx-sidebar",
+		"--tvx-sidebar-2",
+		"--tvx-green-soft",
+		"--tvx-ink",
+		"--tvx-muted",
+		"--tvx-border",
+		"--tvx-surface",
+		"--tvx-page",
+		"--tvx-content-panel",
+		"--tvx-field-bg",
+		"--tvx-field-border",
+	].forEach((prop) => root.style.removeProperty(prop));
+
+	if (!dark) {
+		// Re-apply light profile colors from boot (optional client branding)
+		const lightMap = {
+			sidebar: "--tvx-sidebar",
+			sidebar_2: "--tvx-sidebar-2",
+			green_soft: "--tvx-green-soft",
+			ink: "--tvx-ink",
+			muted: "--tvx-muted",
+			border: "--tvx-border",
+			surface: "--tvx-surface",
+			page: "--tvx-page",
+		};
+		Object.keys(lightMap).forEach((key) => {
+			if (theme[key]) root.style.setProperty(lightMap[key], theme[key]);
+		});
+	}
+};
+
+triplevox.platform.observe_frappe_theme = function () {
+	if (window.__tvx_theme_obs) return;
+	const root = document.documentElement;
+	const sync = () => triplevox.platform.sync_dark_mode_tokens();
+	window.__tvx_theme_obs = new MutationObserver(sync);
+	window.__tvx_theme_obs.observe(root, {
+		attributes: true,
+		attributeFilter: ["data-theme", "data-theme-mode", "class"],
+	});
+	try {
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", sync);
+	} catch (e) {
+		/* ignore */
+	}
+	// Hook Frappe theme switcher if present
+	if (frappe.ui && typeof frappe.ui.set_theme === "function" && !frappe.ui.__tvx_set_theme) {
+		const orig = frappe.ui.set_theme.bind(frappe.ui);
+		frappe.ui.__tvx_set_theme = true;
+		frappe.ui.set_theme = function (theme) {
+			const out = orig(theme);
+			setTimeout(sync, 0);
+			setTimeout(sync, 80);
+			return out;
+		};
+	}
+	sync();
 };
 
 /** Drop cached desktop layouts that may hide nested Manufacturing icons */
@@ -508,11 +717,13 @@ triplevox.platform.on_desktop = function () {
 	triplevox.platform.inject_recent($wrap);
 	triplevox.platform.patch_workspace_sidebar_routes();
 	triplevox.platform.sync_footer_offset();
+	$wrap.addClass("tvx-desktop-ready");
 };
 
 triplevox.platform.leave_desktop = function () {
 	document.documentElement.classList.remove("tvx-on-desktop");
 	document.body.classList.remove("tvx-desktop-fit");
+	$(".desktop-wrapper").removeClass("tvx-desktop tvx-desktop-ready");
 };
 
 triplevox.platform.polish_desktop_navbar = function ($wrap) {
@@ -600,45 +811,125 @@ triplevox.platform.inject_welcome = function ($wrap) {
 	const hour = new Date().getHours();
 	const greeting =
 		hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+	const now = new Date();
+	const timeStr = now.toLocaleTimeString(undefined, {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+	const dateStr = now.toLocaleDateString(undefined, {
+		weekday: "short",
+		month: "short",
+		day: "numeric",
+	});
+
+	const hubs = [
+		{
+			route: "TITA Manufacturing",
+			title: "Manufacturing",
+			sub: "Plan production, Job Cards & QC in one flow.",
+			accent: "mfg",
+			alt: "Manufacturing",
+		},
+		{
+			route: "Inventory & Assets",
+			title: "Inventory",
+			sub: "Manage stock, warehouses & assets with ease.",
+			accent: "stock",
+		},
+		{
+			route: "Employee Hub",
+			title: "People & Finance",
+			sub: "HR, payroll & accounts staying in sync.",
+			accent: "people",
+			alt: "Accounting",
+		},
+	];
+
+	const cardHtml = (h, i) => `
+		<button type="button" class="tvx-mugdha-card tvx-mugdha-card--${h.accent}" data-route="${frappe.utils.escape_html(
+			h.route
+		)}" ${h.alt ? `data-alt-route="${frappe.utils.escape_html(h.alt)}"` : ""}>
+			<span class="tvx-mugdha-node" aria-hidden="true"></span>
+			<span class="tvx-mugdha-ico" aria-hidden="true"></span>
+			<span class="tvx-desk-hub-copy">
+				<strong>${frappe.utils.escape_html(h.title)}</strong>
+				<small>${frappe.utils.escape_html(h.sub)}</small>
+			</span>
+		</button>`;
 
 	const html = `
-		<section id="tvx-welcome-card" class="tvx-welcome-card">
-			<div class="tvx-welcome-left">
-				<div class="tvx-welcome-kicker">${frappe.utils.escape_html(
-					cfg.welcome_kicker || "Operations Desk"
-				)}</div>
-				<h1 class="tvx-welcome-title">${frappe.utils.escape_html(
-					cfg.client_full_name || cfg.product_name || "TripleVox ERP"
-				)}</h1>
-				<p class="tvx-welcome-area">${frappe.utils.escape_html(cfg.factory_area || "")}</p>
-			</div>
-			<div class="tvx-welcome-right">
+		<section id="tvx-welcome-card" class="tvx-welcome-card tvx-welcome-hero tvx-desk-stage">
+			<div class="tvx-desk-stage-top">
+				<div class="tvx-welcome-left">
+					<div class="tvx-welcome-kicker">${frappe.utils.escape_html(
+						cfg.welcome_kicker || "Operations Desk"
+					)}</div>
+					<h1 class="tvx-welcome-title">${frappe.utils.escape_html(
+						cfg.product_name || "TripleVox ERP"
+					)}</h1>
+					<p class="tvx-welcome-sub">${frappe.utils.escape_html(
+						cfg.client_full_name || ""
+					)}${cfg.factory_area ? " · " + frappe.utils.escape_html(cfg.factory_area) : ""}</p>
+				</div>
 				<div class="tvx-welcome-user-block">
 					<span class="tvx-welcome-hello">${greeting}</span>
 					<strong class="tvx-welcome-user">${frappe.utils.escape_html(user)}</strong>
 				</div>
-				<div class="tvx-welcome-chips">
-					<button type="button" class="tvx-chip" data-route="Manufacturing">Manufacturing</button>
-					<button type="button" class="tvx-chip" data-route="CRM">CRM</button>
-					<button type="button" class="tvx-chip" data-route="HRMS">HRMS</button>
+			</div>
+			<div class="tvx-desk-stage-body">
+				<div class="tvx-mugdha-hub" aria-label="All-in-One ERP">
+					<div class="tvx-mugdha-core">
+						<span class="tvx-mugdha-ring" aria-hidden="true"></span>
+						<div class="tvx-mugdha-core-inner">
+							<span class="tvx-mugdha-line">All-in-One</span>
+							<strong>ERP</strong>
+							<span class="tvx-mugdha-line">Solution</span>
+						</div>
+					</div>
+					<div class="tvx-mugdha-rail" aria-hidden="true">
+						<span class="tvx-mugdha-arc"></span>
+					</div>
+					<div class="tvx-mugdha-cards">${hubs.map(cardHtml).join("")}</div>
 				</div>
+				<aside class="tvx-desk-spotlight" aria-label="Factory spotlight">
+					<div class="tvx-spot-time">${frappe.utils.escape_html(timeStr)}</div>
+					<div class="tvx-spot-date">${frappe.utils.escape_html(dateStr)}</div>
+					<p class="tvx-spot-client">${frappe.utils.escape_html(
+						cfg.client_full_name || "TITA PP Plastic PLC"
+					)}</p>
+					<div class="tvx-spot-lines">
+						<span>Tape</span>
+						<span>Fabric</span>
+						<span>Bag</span>
+					</div>
+					<p class="tvx-spot-tag">Woven precision — from resin to ready bags.</p>
+				</aside>
 			</div>
 		</section>
 	`;
 
 	const $existing = $wrap.find("#tvx-welcome-card");
 	if ($existing.length) {
+		$existing.removeClass("tvx-welcome-skeleton").removeAttr("aria-hidden");
 		$existing.replaceWith(html);
 	} else {
 		$container.prepend(html);
 	}
 
-	$wrap.find(".tvx-chip").off("click").on("click", function () {
-		const label = $(this).data("route");
+	const openRoute = (label) => {
+		if (!label) return false;
 		const $icon = $wrap.find(`.desktop-icon[data-id="${label}"]`).first();
 		if ($icon.length) {
 			$icon.trigger("click");
+			return true;
 		}
+		return false;
+	};
+
+	$wrap.find(".tvx-mugdha-card").off("click").on("click", function () {
+		const route = $(this).data("route");
+		const alt = $(this).data("alt-route");
+		if (!openRoute(route)) openRoute(alt);
 	});
 };
 
@@ -649,15 +940,17 @@ triplevox.platform.inject_icon_heading = function ($wrap) {
 	const heading = `
 		<div class="tvx-apps-heading">
 			<div>
-				<strong>Modules</strong>
-				<p>Open a tile — folders expand to related workspaces</p>
+				<strong>Your workspace</strong>
+				<p>Tap a module — folders open nested apps</p>
 			</div>
-			<span>${count} apps</span>
+			<span>${count}</span>
 		</div>
 	`;
 	const $h = $icons.find(".tvx-apps-heading");
 	if ($h.length) {
-		$h.replaceWith(heading);
+		if ($h.find("span").last().text() !== String(count)) {
+			$h.replaceWith(heading);
+		}
 	} else {
 		$icons.prepend(heading);
 	}
@@ -689,15 +982,17 @@ triplevox.platform.polish_desktop_icons = function ($wrap) {
 	};
 	$wrap.find(".desktop-container > .icons-container .desktop-icon").each(function () {
 		const $el = $(this);
+		if ($el.attr("data-tvx-polished") === "1") return;
 		const id = $el.attr("data-id") || $el.find(".icon-title").text().trim();
 		const accent = accents[id] || "slate";
 		$el.attr("data-tvx-accent", accent);
 		const $well = $el.find(".icon-container").first().addClass("tvx-icon-well");
-		if (iconUrls[id]) {
+		if (iconUrls[id] && !$well.find(".tvx-tabler-icon").length) {
 			$well.html(
 				`<img class="tvx-tabler-icon" src="${iconUrls[id]}" alt="" aria-hidden="true" />`
 			);
 		}
+		$el.attr("data-tvx-polished", "1");
 	});
 };
 
@@ -881,6 +1176,31 @@ triplevox.platform.render_recent = function () {
 
 triplevox.platform.setup_form_sidebar_toggle = function () {
 	const KEY = "tvx_form_sidebar_open";
+	const TOGGLE_SVG = `
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+			<rect x="3" y="4" width="18" height="16" rx="2"/>
+			<path d="M15 4v16"/>
+		</svg>
+	`;
+
+	const isFormRoute = () => {
+		try {
+			const route = frappe.get_route && frappe.get_route();
+			if (route && route[0] === "Form") return true;
+		} catch (e) {
+			/* ignore */
+		}
+		const dataRoute = document.body && document.body.getAttribute("data-route");
+		return Boolean(dataRoute && String(dataRoute).indexOf("Form") === 0);
+	};
+
+	const hasSidebar = () =>
+		Boolean(
+			document.querySelector(
+				".layout-side-section .form-sidebar, .layout-side-section .form-assignments, .form-sidebar"
+			)
+		);
+
 	const apply = (open) => {
 		document.documentElement.classList.toggle("tvx-form-sidebar-collapsed", !open);
 		document.body.classList.toggle("tvx-form-sidebar-collapsed", !open);
@@ -889,47 +1209,61 @@ triplevox.platform.setup_form_sidebar_toggle = function () {
 		} catch (e) {
 			/* ignore */
 		}
-		const $btn = $(".tvx-form-sidebar-toggle");
-		$btn.toggleClass("is-open", open);
-		$btn.attr("title", open ? __("Hide side panel") : __("Show side panel"));
-		$btn.attr("aria-pressed", open ? "true" : "false");
+		const $btns = $(".tvx-form-sidebar-toggle");
+		$btns.toggleClass("is-open", open);
+		$btns.attr("title", open ? __("Hide side panel") : __("Show side panel"));
+		$btns.attr("aria-pressed", open ? "true" : "false");
+		const onForm = isFormRoute();
+		$(".tvx-form-sidebar-toggle-float").toggle(onForm && !open);
+	};
+
+	const toggleSidebar = (e) => {
+		if (e) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+		const open = document.body.classList.contains("tvx-form-sidebar-collapsed");
+		apply(open);
 	};
 
 	const ensureBtn = () => {
-		const $head = $(".page-head .page-head-content, .page-head .flex").last();
-		const $actions =
-			$(".page-head .page-actions, .page-head .standard-actions, .page-head .flex.col").last() ||
-			$(".page-head").first();
-		const $host = $actions.length ? $actions : $head;
-		if (!$host.length) return;
-
-		const hasSidebar = Boolean(
-			document.querySelector(".layout-side-section .form-sidebar, .form-sidebar")
-		);
-		let $btn = $(".tvx-form-sidebar-toggle");
-		if (!hasSidebar) {
-			$btn.hide();
+		if (!isFormRoute()) {
+			$(".tvx-form-sidebar-toggle").hide();
+			$(".tvx-form-sidebar-toggle-float").hide();
 			return;
 		}
+
+		const $hosts = $(
+			".page-head .page-actions, .page-head .standard-actions, .page-head .custom-actions, .page-head .page-head-content .flex"
+		).filter(":visible");
+		const $host = $hosts.last().length ? $hosts.last() : $(".page-head").first();
+
+		let $btn = $(".tvx-form-sidebar-toggle:not(.tvx-form-sidebar-toggle-float)");
 		if (!$btn.length) {
 			$btn = $(`
 				<button type="button" class="tvx-form-sidebar-toggle" aria-label="Toggle side panel">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-						<rect x="3" y="4" width="18" height="16" rx="2"/>
-						<path d="M15 4v16"/>
-					</svg>
+					${TOGGLE_SVG}
 				</button>
 			`);
-			$btn.on("click", (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				const open = document.body.classList.contains("tvx-form-sidebar-collapsed");
-				apply(open);
-			});
-			// Prefer far right of header actions
-			$host.append($btn);
+			$btn.on("click", toggleSidebar);
+			if ($host.length) $host.append($btn);
+			else $(".page-head").first().append($btn);
+		} else if ($host.length && !$host.find(".tvx-form-sidebar-toggle:not(.tvx-form-sidebar-toggle-float)").length) {
+			$host.append($btn.first());
 		}
 		$btn.show();
+
+		let $float = $(".tvx-form-sidebar-toggle-float");
+		if (!$float.length) {
+			$float = $(`
+				<button type="button" class="tvx-form-sidebar-toggle tvx-form-sidebar-toggle-float" aria-label="Show side panel" title="Show side panel">
+					${TOGGLE_SVG}
+				</button>
+			`);
+			$float.on("click", toggleSidebar);
+			$("body").append($float);
+		}
+
 		let open = false;
 		try {
 			open = sessionStorage.getItem(KEY) === "1";
@@ -940,15 +1274,19 @@ triplevox.platform.setup_form_sidebar_toggle = function () {
 	};
 
 	ensureBtn();
-	[40, 120, 280].forEach((ms) => setTimeout(ensureBtn, ms));
+	[40, 120, 280, 600, 1200].forEach((ms) => setTimeout(ensureBtn, ms));
+
+	if (frappe.router && frappe.router.on) {
+		frappe.router.on("change", () => setTimeout(ensureBtn, 60));
+	}
 
 	if (!window.__tvx_form_side_obs) {
 		let timer = null;
 		window.__tvx_form_side_obs = new MutationObserver(() => {
 			clearTimeout(timer);
-			timer = setTimeout(ensureBtn, 200);
+			timer = setTimeout(ensureBtn, 150);
 		});
-		window.__tvx_form_side_obs.observe(document.body, { childList: true, subtree: false });
+		window.__tvx_form_side_obs.observe(document.body, { childList: true, subtree: true });
 	}
 };
 
@@ -1018,6 +1356,187 @@ triplevox.platform.fix_app_subtitles = function () {
 	triplevox.platform.scrub_vendor_branding(document.body);
 };
 
+triplevox.platform.is_workspace_viewer = function () {
+	const cfg = frappe.boot.triplevox || triplevox.platform.cfg || {};
+	// Only the explicit Workspace Viewer flag/role — do NOT treat every non-editor as viewer
+	if (cfg.workspace_viewer === true) return true;
+	try {
+		const roles = frappe.boot.user?.roles || frappe.user_roles || [];
+		const hasViewer = roles.includes("Workspace Viewer");
+		const editors = ["System Manager", "Administrator", "Workspace Manager"];
+		if (hasViewer && !roles.some((r) => editors.includes(r))) return true;
+	} catch (e) {
+		/* ignore */
+	}
+	return false;
+};
+
+/**
+ * Frappe sets is_editable = !public || has_access — so private pages stay editable.
+ * Patch Workspace class so Workspace Viewer never gets Edit/New.
+ */
+triplevox.platform.patch_workspace_class_for_viewer = function () {
+	if (!frappe.views || !frappe.views.Workspace) return false;
+	if (frappe.views.Workspace.__tvx_viewer_patched) return true;
+
+	const proto = frappe.views.Workspace.prototype;
+	const lock = function (ctx, pages) {
+		if (!triplevox.platform.is_workspace_viewer()) return;
+		ctx.has_access = false;
+		ctx.has_create_access = false;
+		(pages || ctx.workspaces || []).forEach((p) => {
+			if (p) p.is_editable = false;
+		});
+	};
+
+	const orig_setup = proto.setup;
+	proto.setup = function () {
+		lock(this);
+		const out = orig_setup.apply(this, arguments);
+		lock(this);
+		return out;
+	};
+
+	const orig_setup_pages = proto.setup_pages;
+	proto.setup_pages = function (all_pages) {
+		const out = orig_setup_pages.apply(this, arguments);
+		lock(this, all_pages);
+		return out;
+	};
+
+	if (proto.setup_actions) {
+		const orig_setup_actions = proto.setup_actions;
+		proto.setup_actions = function (page) {
+			lock(this);
+			if (page) page.is_editable = false;
+			return orig_setup_actions.apply(this, arguments);
+		};
+	}
+
+	if (proto.show) {
+		const orig_show = proto.show;
+		proto.show = function () {
+			lock(this);
+			const out = orig_show.apply(this, arguments);
+			lock(this);
+			return out;
+		};
+	}
+
+	frappe.views.Workspace.__tvx_viewer_patched = true;
+	return true;
+};
+
+/**
+ * Workspace Viewer: can open/use workspaces, cannot edit layout.
+ * Hide Edit / New Workspace controls and force read-only boot flags.
+ */
+triplevox.platform.setup_workspace_viewer = function () {
+	const enforce = () => {
+		if (!triplevox.platform.is_workspace_viewer()) return false;
+		document.documentElement.classList.add("tvx-workspace-viewer");
+		document.body && document.body.classList.add("tvx-workspace-viewer");
+		triplevox.platform.patch_workspace_class_for_viewer();
+
+		if (frappe.boot.triplevox) {
+			frappe.boot.triplevox.workspace_viewer = true;
+			frappe.boot.triplevox.can_edit_workspaces = false;
+		}
+		if (frappe.boot.workspaces && typeof frappe.boot.workspaces === "object") {
+			frappe.boot.workspaces.has_access = false;
+			frappe.boot.workspaces.has_create_access = false;
+			(frappe.boot.workspaces.pages || []).forEach((p) => {
+				if (p) p.is_editable = false;
+			});
+		}
+		if (frappe.workspace) {
+			frappe.workspace.has_access = false;
+			frappe.workspace.has_create_access = false;
+			(frappe.workspace.workspaces || []).forEach((w) => {
+				if (w) w.is_editable = false;
+			});
+			if (frappe.workspace.body) {
+				frappe.workspace.body.removeClass("edit-mode");
+			}
+		}
+		return true;
+	};
+
+	if (!enforce()) return;
+
+	const hideEditChrome = () => {
+		if (!enforce()) return;
+		const sel =
+			".btn-edit-workspace, .btn-new-workspace, .edit-mode-actions, " +
+			"button[data-label='Edit'], .page-icon-group button[title*='Edit'], " +
+			".layout-side-section .btn-edit-workspace";
+		$(sel).addClass("hide").attr("disabled", true).hide();
+		// Also hide Frappe "Edit" in workspace page actions by label
+		$(".page-actions .btn, .standard-actions .btn, .custom-actions .btn").each(function () {
+			const label = (($(this).text() || "") + ($(this).attr("title") || "")).toLowerCase();
+			if (
+				label.includes("edit") ||
+				label.includes("new workspace") ||
+				label.includes("create workspace")
+			) {
+				$(this).addClass("hide").hide();
+			}
+		});
+		// Hide ellipsis menu Edit entries
+		$(".dropdown-menu .dropdown-item, .menu-item, .popover .menu-item-label").each(function () {
+			const t = ($(this).text() || "").trim().toLowerCase();
+			if (t === "edit" || t === "new") {
+				$(this).closest(".dropdown-item, .menu-item, li, button").hide();
+			}
+		});
+	};
+
+	hideEditChrome();
+	[80, 250, 600, 1200, 2500].forEach((ms) => setTimeout(hideEditChrome, ms));
+	// Workspace class may load after desk.js
+	[100, 500, 1500, 3000].forEach((ms) =>
+		setTimeout(() => triplevox.platform.patch_workspace_class_for_viewer(), ms)
+	);
+
+	if (frappe.router && frappe.router.on) {
+		frappe.router.on("change", () => setTimeout(hideEditChrome, 80));
+	}
+
+	// Block client-side save attempts
+	if (frappe.call && !frappe.call.__tvx_viewer_wrapped) {
+		const orig = frappe.call;
+		frappe.call = function (opts) {
+			const method = (opts && (opts.method || opts)) || "";
+			const m = String(method);
+			if (
+				triplevox.platform.is_workspace_viewer() &&
+				(m.includes("frappe.desk.doctype.workspace.workspace") ||
+					m.includes("new_page") ||
+					m.includes("update_page") ||
+					m.includes("delete_page") ||
+					m.includes("save_customization"))
+			) {
+				frappe.show_alert({
+					message: __("Workspace Viewer cannot edit workspace layouts"),
+					indicator: "orange",
+				});
+				return null;
+			}
+			return orig.apply(this, arguments);
+		};
+		frappe.call.__tvx_viewer_wrapped = true;
+	}
+
+	if (!window.__tvx_ws_viewer_obs) {
+		let timer = null;
+		window.__tvx_ws_viewer_obs = new MutationObserver(() => {
+			clearTimeout(timer);
+			timer = setTimeout(hideEditChrome, 120);
+		});
+		window.__tvx_ws_viewer_obs.observe(document.body, { childList: true, subtree: true });
+	}
+};
+
 $(document).on("app_ready", () => {
 	triplevox.platform.init();
 	triplevox.platform.hide_frappe_promos();
@@ -1034,8 +1553,9 @@ $(document).on("sidebar_setup", () => {
 	);
 });
 $(document).on("desktop_screen", () => {
-	setTimeout(() => triplevox.platform.on_desktop(), 60);
-	setTimeout(() => triplevox.platform.fix_app_subtitles(), 80);
+	triplevox.platform.on_desktop();
+	requestAnimationFrame(() => triplevox.platform.on_desktop());
+	setTimeout(() => triplevox.platform.fix_app_subtitles(), 0);
 });
 $(document).on("page-change", () => {
 	setTimeout(() => triplevox.platform.fix_app_subtitles(), 80);
@@ -1054,7 +1574,8 @@ $(document).on("page-change", () => {
 	triplevox.platform.patch_workspace_sidebar_routes();
 	triplevox.platform.polish_page_chrome();
 	if (onDesktop) {
-		setTimeout(() => triplevox.platform.on_desktop(), 80);
+		triplevox.platform.on_desktop();
+		requestAnimationFrame(() => triplevox.platform.on_desktop());
 	} else {
 		triplevox.platform.leave_desktop();
 		if ($(".body-sidebar").length) {
@@ -1066,14 +1587,13 @@ $(document).on("page-change", () => {
 });
 
 $(() => {
-	setTimeout(() => {
-		triplevox.platform.init();
-		triplevox.platform.hide_frappe_promos();
-		if ($(".body-sidebar").length) {
-			triplevox.platform.on_sidebar_setup();
-		}
-		if ($(".desktop-wrapper").length) {
-			triplevox.platform.on_desktop();
-		}
-	}, 300);
+	triplevox.platform.init();
+	triplevox.platform.hide_frappe_promos();
+	if ($(".body-sidebar").length) {
+		triplevox.platform.on_sidebar_setup();
+	}
+	if ($(".desktop-wrapper").length) {
+		triplevox.platform.on_desktop();
+		requestAnimationFrame(() => triplevox.platform.on_desktop());
+	}
 });

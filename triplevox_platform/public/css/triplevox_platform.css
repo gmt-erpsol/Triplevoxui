@@ -2,14 +2,21 @@
  * TITA/TripleVox file identification
  * App: triplevox_platform
  * File: triplevox_platform/triplevox_platform/public/css/triplevox_platform.css
- * Purpose: Main Desk theme: dark sidebar, cards, form sidebar width, watermark.
+ * Purpose: Main Desk theme: theme-based sidebar, cards, form sidebar, watermark.
  */
 
-/* TripleVox Desk — enterprise UI inspired by clean dark-sidebar / green-accent apps */
+/* TripleVox Desk — light/dark sidebar follows Frappe theme */
 
 :root {
-	--tvx-sidebar: #0b1220;
-	--tvx-sidebar-2: #111827;
+	/* Light sidebar (matches Employee Hub light screenshot) */
+	--tvx-sidebar: #f8fafc;
+	--tvx-sidebar-2: #f1f5f9;
+	--tvx-sidebar-text: #334155;
+	--tvx-sidebar-muted: #64748b;
+	--tvx-sidebar-border: #e2e8f0;
+	--tvx-sidebar-hover: rgba(15, 23, 42, 0.05);
+	--tvx-sidebar-active-bg: #dcfce7;
+	--tvx-sidebar-active-text: #15803d;
 	--tvx-green: #15803d;
 	--tvx-green-bright: #16a34a;
 	--tvx-green-soft: #dcfce7;
@@ -30,13 +37,37 @@
 	--tvx-footer-h: 34px;
 	--tvx-logo-url: none;
 	--desktop-icon-dimension: 56px;
-	--tvx-tile-w: 118px;
+	--tvx-tile-w: 96px;
 	--tvx-radius: 14px;
 	/* Frappe v16 centers forms/workspaces — force edge-to-edge */
 	--page-max-width: 100% !important;
 	/* Form right sidebar — narrower than Frappe default (277px / 38vw) */
 	--form-sidebar-width: 208px;
 	--form-sidebar-image-width: 64px;
+}
+
+/* Native Frappe dark mode — remap TripleVox tokens */
+html[data-theme="dark"],
+[data-theme="dark"] {
+	--tvx-ink: var(--text-color);
+	--tvx-muted: var(--text-muted);
+	--tvx-border: var(--border-color);
+	--tvx-surface: var(--card-bg);
+	--tvx-page: var(--bg-color);
+	--tvx-content-panel: var(--fg-color);
+	--tvx-field-bg: var(--control-bg);
+	--tvx-field-border: 1px solid var(--border-color);
+	--tvx-green-soft: var(--bg-green, rgba(34, 197, 94, 0.18));
+	/* Dark navy sidebar (matches Employee Hub dark screenshot) */
+	--tvx-sidebar: #0b1220;
+	--tvx-sidebar-2: #111827;
+	--tvx-sidebar-text: #e5e7eb;
+	--tvx-sidebar-muted: #94a3b8;
+	--tvx-sidebar-border: rgba(148, 163, 184, 0.14);
+	--tvx-sidebar-hover: rgba(255, 255, 255, 0.08);
+	--tvx-sidebar-active-bg: #16a34a;
+	--tvx-sidebar-active-text: #ffffff;
+	color-scheme: dark;
 }
 
 /* ===== Full browser width — override Frappe v16 centered layout ===== */
@@ -152,17 +183,18 @@ body.full-width {
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
-/* Large soft TripleVox mark — center of every Desk screen (above content, non-interactive) */
+/* Large soft TripleVox mark — overlay above opaque panels, below freeze/modals.
+   pointer-events:none + no page z-index trap keeps grid row editor usable. */
 #tvx-watermark-bg {
 	position: fixed !important;
 	inset: 0 0 0 var(--tvx-content-left, 0px) !important;
 	pointer-events: none !important;
-	z-index: 5 !important;
+	z-index: 50 !important;
 	background-image: var(--tvx-logo-url) !important;
 	background-repeat: no-repeat !important;
 	background-position: center center !important;
 	background-size: min(560px, 56vw) !important;
-	opacity: 0.055 !important;
+	opacity: 0.08 !important;
 	filter: blur(6px) saturate(0.55) !important;
 	visibility: visible !important;
 }
@@ -195,12 +227,14 @@ body.tvx-has-watermark {
 	background-color: transparent !important;
 }
 
+/* Do NOT set z-index here — it traps Frappe's position:fixed .form-in-grid
+   (z-index 1021) under #freeze.grid-form (1020) and causes blurry locked table edits. */
 .desktop-wrapper.tvx-desktop,
 .main-section,
 .body-sidebar-container,
 .page-container {
 	position: relative;
-	z-index: 2;
+	z-index: auto;
 }
 
 /* Hide Frappe product banners (Switch to Frappe CRM / Helpdesk) */
@@ -302,9 +336,42 @@ html.tvx-form-sidebar-collapsed body[data-route^="Form"] .layout-side-section:ha
 	display: block;
 }
 /* Only show toggle on form pages that have a right sidebar */
-body[data-route^="Form"] .page-head .tvx-form-sidebar-toggle,
-.page-container:has(.form-sidebar) .page-head .tvx-form-sidebar-toggle {
+body[data-route^="Form"] .page-head .tvx-form-sidebar-toggle:not(.tvx-form-sidebar-toggle-float),
+.page-container:has(.form-sidebar) .page-head .tvx-form-sidebar-toggle:not(.tvx-form-sidebar-toggle-float) {
 	display: inline-flex;
+}
+
+/* Floating fallback — visible when sidebar collapsed (Salary Slip, etc.) */
+.tvx-form-sidebar-toggle-float {
+	display: none !important;
+	position: fixed !important;
+	right: 0 !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	z-index: 1040 !important;
+	width: 34px !important;
+	height: 52px !important;
+	margin: 0 !important;
+	border-radius: 10px 0 0 10px !important;
+	border-right: none !important;
+	box-shadow: -4px 0 14px rgba(15, 23, 42, 0.12) !important;
+	background: var(--tvx-green, #15803d) !important;
+	border-color: var(--tvx-green, #15803d) !important;
+	color: #fff !important;
+}
+.tvx-form-sidebar-toggle-float:hover,
+.tvx-form-sidebar-toggle-float.is-open {
+	background: var(--tvx-green-deep, #166534) !important;
+	border-color: var(--tvx-green-deep, #166534) !important;
+	color: #fff !important;
+}
+.tvx-form-sidebar-toggle-float svg {
+	width: 16px !important;
+	height: 16px !important;
+}
+body.tvx-form-sidebar-collapsed[data-route^="Form"] .tvx-form-sidebar-toggle-float,
+html.tvx-form-sidebar-collapsed body[data-route^="Form"] .tvx-form-sidebar-toggle-float {
+	display: inline-flex !important;
 }
 
 /* When open: keep compact 208px sidebar */
@@ -469,10 +536,10 @@ body.tvx-has-footer {
 	display: none !important;
 }
 
-/* ===== Sidebar — solid dark enterprise ===== */
+/* ===== Sidebar — theme-based (light / dark) ===== */
 .body-sidebar-container .body-sidebar {
 	background: linear-gradient(180deg, var(--tvx-sidebar) 0%, var(--tvx-sidebar-2) 100%) !important;
-	border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+	border-right: 1px solid var(--tvx-sidebar-border) !important;
 }
 
 .body-sidebar .sidebar-item-label,
@@ -481,12 +548,16 @@ body.tvx-has-footer {
 .body-sidebar .item-anchor,
 .body-sidebar a,
 .body-sidebar .sidebar-item-control,
-.body-sidebar .standard-sidebar-label {
-	color: #e5e7eb !important;
+.body-sidebar .standard-sidebar-label,
+.body-sidebar .sidebar-item-icon,
+.body-sidebar .es-icon,
+.body-sidebar svg {
+	color: var(--tvx-sidebar-text) !important;
+	stroke: currentColor;
 }
 
 .body-sidebar .standard-sidebar-label {
-	color: #94a3b8 !important;
+	color: var(--tvx-sidebar-muted) !important;
 	font-size: 10px !important;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
@@ -499,17 +570,22 @@ body.tvx-has-footer {
 }
 
 .body-sidebar .standard-sidebar-item:hover {
-	background: rgba(255, 255, 255, 0.08) !important;
+	background: var(--tvx-sidebar-hover) !important;
 }
 
-.body-sidebar .standard-sidebar-item.active-sidebar {
-	background: var(--tvx-green) !important;
-	box-shadow: 0 6px 16px rgba(21, 128, 61, 0.35);
+.body-sidebar .standard-sidebar-item.active-sidebar,
+.body-sidebar .standard-sidebar-item.selected {
+	background: var(--tvx-sidebar-active-bg) !important;
+	box-shadow: none;
 }
 
 .body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-label,
-.body-sidebar .standard-sidebar-item.active-sidebar a {
-	color: #fff !important;
+.body-sidebar .standard-sidebar-item.active-sidebar a,
+.body-sidebar .standard-sidebar-item.active-sidebar .sidebar-item-icon,
+.body-sidebar .standard-sidebar-item.active-sidebar svg,
+.body-sidebar .standard-sidebar-item.selected .sidebar-item-label,
+.body-sidebar .standard-sidebar-item.selected a {
+	color: var(--tvx-sidebar-active-text) !important;
 	font-weight: 600 !important;
 }
 
@@ -531,7 +607,7 @@ body.tvx-has-footer {
 }
 
 .tvx-sidebar-brand:hover {
-	background: rgba(255, 255, 255, 0.06);
+	background: var(--tvx-sidebar-hover);
 }
 
 .tvx-sidebar-brand .tvx-brand-logo {
@@ -542,13 +618,13 @@ body.tvx-has-footer {
 	background: #fff;
 	padding: 3px;
 	flex-shrink: 0;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
 }
 
 .tvx-sidebar-brand .tvx-brand-text {
 	font-size: 13px;
 	font-weight: 700;
-	color: #fff !important;
+	color: var(--tvx-sidebar-text) !important;
 	letter-spacing: 0.01em;
 	white-space: nowrap;
 	overflow: hidden;
@@ -591,12 +667,19 @@ body.tvx-has-footer {
 .body-sidebar .header-title {
 	font-size: 13px !important;
 	font-weight: 700 !important;
-	color: #fff !important;
+	color: var(--tvx-sidebar-text) !important;
 }
 
 .body-sidebar .header-subtitle {
 	font-size: 10px !important;
-	opacity: 0.75;
+	color: var(--tvx-sidebar-muted) !important;
+	opacity: 1;
+}
+
+/* Dark: solid green active pill + soft glow */
+html[data-theme="dark"] .body-sidebar .standard-sidebar-item.active-sidebar,
+[data-theme="dark"] .body-sidebar .standard-sidebar-item.active-sidebar {
+	box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
 }
 
 /* Soft green accents on primary actions (Desk pages) — keep readable */
@@ -627,6 +710,11 @@ body[data-route^="desktop/"] .body-sidebar-container {
 	pointer-events: none !important;
 }
 
+/* Brief pre-ready gate (also injected early via JS) */
+html:not(.tvx-chrome-ready) .body-sidebar-container {
+	visibility: hidden !important;
+}
+
 html.tvx-on-desktop .main-section,
 body.tvx-desktop-fit .main-section,
 body[data-route="desktop"] .main-section {
@@ -648,7 +736,10 @@ body[data-route="desktop"] .main-section {
 	max-width: none !important;
 	margin: 0 !important;
 	padding: 0 !important;
-	background: #f4f7fa !important;
+	background:
+		radial-gradient(ellipse 55% 40% at 8% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
+		radial-gradient(ellipse 45% 35% at 95% 10%, rgba(45, 212, 191, 0.14), transparent 55%),
+		linear-gradient(180deg, #f4fbfd 0%, #eef6f3 100%) !important;
 }
 
 .desktop-wrapper .desktop-navbar,
@@ -742,8 +833,8 @@ body[data-route="desktop"] .main-section {
 .desktop-wrapper .desktop-container {
 	flex: 1 1 auto;
 	display: grid !important;
-	grid-template-columns: minmax(0, 1fr) 248px;
-	grid-template-rows: auto minmax(0, 1fr);
+	grid-template-columns: minmax(0, 1fr) 220px;
+	grid-template-rows: minmax(172px, auto) minmax(0, 1fr);
 	align-content: stretch !important;
 	align-items: stretch !important;
 	justify-content: stretch !important;
@@ -762,24 +853,295 @@ body[data-route="desktop"] .main-section {
 		#f4f7fa !important;
 }
 
+/* ===== Desktop Mugdha-style hub (left) + factory spotlight (right) ===== */
 .tvx-welcome-card {
 	grid-column: 1 / -1;
 	grid-row: 1;
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 8px;
 	width: 100%;
 	max-width: none;
 	margin: 0;
-	padding: 12px 16px 12px 14px;
-	border-radius: 14px !important;
+	padding: 10px 14px 12px;
+	border-radius: 18px !important;
 	overflow: hidden;
-	background: linear-gradient(105deg, #ffffff 0%, #f8fafc 55%, #f0fdf4 100%) !important;
-	border: 1px solid #e2e8f0 !important;
-	border-left: 4px solid var(--tvx-green) !important;
-	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+	position: relative;
+	isolation: isolate;
+	background:
+		radial-gradient(ellipse 50% 60% at 8% 20%, rgba(56, 189, 248, 0.2), transparent 55%),
+		radial-gradient(ellipse 45% 50% at 92% 12%, rgba(45, 212, 191, 0.18), transparent 55%),
+		radial-gradient(ellipse 40% 45% at 70% 95%, rgba(251, 146, 60, 0.12), transparent 55%),
+		linear-gradient(145deg, #f7fcfd 0%, #eef8f5 55%, #f8f4ef 100%) !important;
+	border: 1px solid rgba(255, 255, 255, 0.9) !important;
+	box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07) !important;
 	min-height: 0;
+	animation: tvx-welcome-in 0.55s ease-out both;
+}
+
+.tvx-welcome-card::before { content: none; }
+
+.tvx-desk-stage-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	position: relative;
+	z-index: 1;
+}
+
+.tvx-desk-stage-body {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: minmax(0, 1.35fr) minmax(200px, 0.65fr);
+	gap: 12px 16px;
+	align-items: center;
+	min-height: 168px;
+}
+
+/* Mugdha hub — core left, arc, cards right */
+.tvx-mugdha-hub {
+	display: grid;
+	grid-template-columns: 118px 28px minmax(0, 1fr);
+	align-items: center;
+	gap: 0;
+	min-width: 0;
+	justify-self: start;
+	width: min(560px, 100%);
+	margin-right: auto;
+}
+
+.tvx-mugdha-core {
+	position: relative;
+	width: 112px;
+	height: 112px;
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+}
+
+.tvx-mugdha-ring {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: conic-gradient(from 200deg, #14b8a6, #38bdf8, #a78bfa, #fb923c, #34d399, #14b8a6);
+	-webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+	mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+	animation: tvx-desk-spin 18s linear infinite;
+}
+
+.tvx-mugdha-core-inner {
+	position: relative;
+	z-index: 1;
+	width: 92px;
+	height: 92px;
+	border-radius: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background: #fff;
+	border: 1px solid rgba(226, 232, 240, 0.9);
+	box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.tvx-mugdha-core-inner strong {
+	font-size: 1.15rem;
+	font-weight: 850;
+	color: #0f1b2d;
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.tvx-mugdha-line {
+	font-size: 0.62rem;
+	font-weight: 650;
+	color: #64748b;
+	line-height: 1.1;
+}
+
+.tvx-mugdha-rail {
+	position: relative;
+	height: 140px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tvx-mugdha-arc {
+	display: block;
+	width: 22px;
+	height: 128px;
+	border: 2px solid #1e293b;
+	border-left: 0;
+	border-radius: 0 999px 999px 0;
+	opacity: 0.55;
+}
+
+.tvx-mugdha-cards {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+	padding-left: 2px;
+}
+
+.tvx-mugdha-card {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	max-width: 340px;
+	padding: 9px 12px 9px 14px;
+	border-radius: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.98);
+	background: #fff;
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+	text-align: left;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tvx-mugdha-card:nth-child(1) { margin-left: 0; }
+.tvx-mugdha-card:nth-child(2) { margin-left: 10px; max-width: 330px; }
+.tvx-mugdha-card:nth-child(3) { margin-left: 20px; max-width: 320px; }
+
+.tvx-mugdha-card:hover {
+	transform: translateX(4px);
+	box-shadow: 0 12px 26px rgba(15, 23, 42, 0.12);
+}
+
+.tvx-mugdha-node {
+	position: absolute;
+	left: -18px;
+	top: 50%;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	transform: translateY(-50%);
+	box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+.tvx-mugdha-card--mfg .tvx-mugdha-node { background: #14b8a6; }
+.tvx-mugdha-card--stock .tvx-mugdha-node { background: #fb923c; }
+.tvx-mugdha-card--people .tvx-mugdha-node { background: #38bdf8; }
+
+.tvx-mugdha-card::before {
+	content: "";
+	position: absolute;
+	left: -14px;
+	top: 50%;
+	width: 14px;
+	height: 1px;
+	background: #cbd5e1;
+	transform: translateY(-50%);
+}
+
+.tvx-mugdha-ico {
+	width: 34px;
+	height: 34px;
+	border-radius: 10px;
+	flex-shrink: 0;
+}
+
+.tvx-mugdha-card--mfg .tvx-mugdha-ico {
+	background: #d8f5e8 url("/assets/triplevox_platform/images/module_icons/tabler/building-factory-2.svg") center / 20px no-repeat;
+}
+.tvx-mugdha-card--stock .tvx-mugdha-ico {
+	background: #ffe8dc url("/assets/triplevox_platform/images/module_icons/tabler/packages.svg") center / 20px no-repeat;
+}
+.tvx-mugdha-card--people .tvx-mugdha-ico {
+	background: #d6eef8 url("/assets/triplevox_platform/images/module_icons/tabler/users.svg") center / 20px no-repeat;
+}
+
+.tvx-desk-hub-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	min-width: 0;
+}
+.tvx-desk-hub-copy strong { font-size: 0.86rem; color: #0f1b2d; line-height: 1.15; }
+.tvx-desk-hub-copy small {
+	font-size: 0.7rem;
+	color: #64748b;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.tvx-mugdha-card--mfg .tvx-desk-hub-copy strong { color: #0f766e; }
+.tvx-mugdha-card--stock .tvx-desk-hub-copy strong { color: #c2410c; }
+.tvx-mugdha-card--people .tvx-desk-hub-copy strong { color: #0369a1; }
+
+@keyframes tvx-desk-spin { to { transform: rotate(360deg); } }
+
+/* Right — factory spotlight (new idea) */
+.tvx-desk-spotlight {
+	min-width: 0;
+	height: 100%;
+	min-height: 152px;
+	padding: 14px 16px;
+	border-radius: 18px;
+	background:
+		radial-gradient(ellipse 90% 80% at 100% 0%, rgba(20, 184, 166, 0.2), transparent 55%),
+		linear-gradient(160deg, rgba(15, 27, 45, 0.92) 0%, #122033 55%, #0f2918 100%);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 4px;
+	color: #f8fafc;
+}
+
+.tvx-spot-time {
+	font-size: 1.55rem;
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	line-height: 1;
+}
+
+.tvx-spot-date {
+	font-size: 0.75rem;
+	color: #94a3b8;
+	font-weight: 600;
+}
+
+.tvx-spot-client {
+	margin: 6px 0 0;
+	font-size: 0.82rem;
+	font-weight: 700;
+	color: #e2e8f0;
+}
+
+.tvx-spot-lines {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+.tvx-spot-lines span {
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 4px 9px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	color: #cbd5e1;
+}
+
+.tvx-spot-tag {
+	margin: 8px 0 0;
+	font-size: 0.72rem;
+	color: #86efac;
+	line-height: 1.35;
 }
 
 .tvx-welcome-left {
@@ -787,103 +1149,88 @@ body[data-route="desktop"] .main-section {
 	background: transparent;
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 1px;
 	min-width: 0;
 	flex: 1;
+	position: relative;
+	z-index: 1;
 }
 
 .tvx-welcome-kicker {
 	display: inline-flex;
-	align-items: center;
-	gap: 6px;
 	font-size: 9px;
 	font-weight: 700;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.12em;
 	text-transform: uppercase;
-	color: var(--tvx-green);
-	background: var(--tvx-green-soft);
-	padding: 3px 8px;
-	border-radius: 999px;
-	margin-bottom: 2px;
-	width: fit-content;
+	color: #0f9f6e !important;
 }
 
 .tvx-welcome-title {
 	margin: 0;
-	font-size: 18px;
-	font-weight: 800;
-	line-height: 1.2;
-	color: var(--tvx-ink);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	font-size: clamp(1.05rem, 1.6vw, 1.35rem) !important;
+	font-weight: 800 !important;
+	letter-spacing: -0.02em;
+	color: #0f1b2d !important;
+	line-height: 1.15;
 }
 
+.tvx-welcome-sub,
 .tvx-welcome-area {
 	margin: 0;
-	color: var(--tvx-muted);
-	font-size: 12px;
-}
-
-.tvx-welcome-hint {
-	display: none;
-}
-
-.tvx-welcome-right {
-	padding: 0;
-	background: transparent;
-	color: var(--tvx-ink);
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 12px;
-	flex-shrink: 0;
-}
-
-.tvx-welcome-user-block {
-	text-align: right;
-	line-height: 1.2;
+	font-size: 0.75rem;
+	color: #5a6b7d !important;
 }
 
 .tvx-welcome-hello {
-	display: block;
-	font-size: 10px;
-	color: var(--tvx-muted);
+	color: #64748b !important;
+	font-size: 0.68rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
 }
 
 .tvx-welcome-user {
-	display: block;
-	font-size: 14px;
-	font-weight: 700;
-	color: var(--tvx-ink);
+	color: #0f1b2d !important;
+	font-size: 0.88rem;
 }
 
-.tvx-welcome-chips {
-	display: flex;
-	gap: 6px;
-	margin-top: 0;
-	flex-wrap: nowrap;
+.tvx-chip,
+.tvx-welcome-chips,
+.tvx-welcome-hint { display: none; }
+
+.tvx-welcome-user-block {
+	text-align: right;
+	line-height: 1.15;
+	position: relative;
+	z-index: 1;
 }
 
-.tvx-chip {
-	border: 1px solid #dbe3ee;
-	background: #f8fafc;
-	color: #0f172a;
-	font-size: 11px;
-	font-weight: 650;
-	padding: 7px 12px;
-	border-radius: 999px;
-	cursor: pointer;
-	transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+@keyframes tvx-welcome-in {
+	from { opacity: 0; transform: translateY(8px); }
+	to { opacity: 1; transform: translateY(0); }
 }
 
-.tvx-chip:hover {
-	background: var(--tvx-green-soft);
-	border-color: #86efac;
-	color: var(--tvx-green);
+@media (max-width: 960px) {
+	.tvx-desk-stage-body {
+		grid-template-columns: 1fr;
+		min-height: 0;
+	}
+	.tvx-mugdha-hub {
+		width: 100%;
+		grid-template-columns: 100px 22px minmax(0, 1fr);
+	}
+	.tvx-mugdha-card:nth-child(2),
+	.tvx-mugdha-card:nth-child(3) {
+		margin-left: 0;
+		max-width: none;
+	}
+	.tvx-desk-spotlight {
+		min-height: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tvx-mugdha-ring { animation: none !important; }
 }
 
 /* Recent Activity — fits in grid, no absolute overlap scroll */
@@ -992,15 +1339,16 @@ body[data-route="desktop"] .main-section {
 	min-height: 0 !important;
 	max-height: 100%;
 	margin: 0;
-	padding: 14px 16px 16px !important;
-	border-radius: 14px !important;
-	background: #ffffff !important;
-	border: 1px solid #e2e8f0 !important;
-	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+	padding: 10px 12px 12px !important;
+	border-radius: 16px !important;
+	background: rgba(255, 255, 255, 0.88) !important;
+	border: 1px solid rgba(255, 255, 255, 0.95) !important;
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06) !important;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
+	backdrop-filter: blur(8px);
 }
 
 .tvx-apps-heading {
@@ -1008,8 +1356,8 @@ body[data-route="desktop"] .main-section {
 	align-items: flex-end;
 	justify-content: space-between;
 	gap: 12px;
-	margin: 0 0 10px;
-	padding-bottom: 8px;
+	margin: 0 0 6px;
+	padding-bottom: 6px;
 	border-bottom: 1px solid #eef2f7;
 	flex-shrink: 0;
 }
@@ -1040,45 +1388,55 @@ body[data-route="desktop"] .main-section {
 }
 
 .desktop-wrapper .desktop-container > .icons-container > .icons {
-	gap: 10px 10px;
-	grid-template-columns: repeat(4, minmax(var(--tvx-tile-w), 1fr)) !important;
-	grid-template-rows: auto !important;
+	gap: 8px;
+	grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+	grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
 	justify-items: stretch;
-	align-content: start;
+	align-content: stretch;
+	align-items: stretch;
 	width: 100%;
 	flex: 1;
 	min-height: 0;
 	overflow: hidden;
+	height: 100%;
 }
 
 .desktop-wrapper .desktop-icon {
 	width: 100% !important;
-	height: auto !important;
+	height: 100% !important;
 	min-height: 0;
-	gap: 8px;
-	padding: 10px 8px 9px;
+	max-height: none;
+	gap: 4px;
+	padding: 8px 6px 6px;
 	border-radius: 14px;
-	border: 1px solid transparent;
+	border: 1px solid rgba(15, 23, 42, 0.06);
 	box-sizing: border-box;
-	background: #f8fafc;
+	background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+	transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .desktop-wrapper .desktop-icon:hover {
-	background: #f0fdf4;
-	border-color: #bbf7d0;
+	background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
+	border-color: #86efac;
 	transform: translateY(-1px);
-	box-shadow: 0 6px 14px rgba(21, 128, 61, 0.08);
+	box-shadow: 0 8px 16px rgba(21, 128, 61, 0.1);
 }
 
 .desktop-wrapper .icon-container.tvx-icon-well,
 .desktop-wrapper .icon-container {
-	width: 48px !important;
-	height: 48px !important;
+	width: 40px !important;
+	height: 40px !important;
 	padding: 0;
-	border-radius: 14px;
+	border-radius: 12px;
 	background: transparent;
 	border: 0;
-	box-shadow: 0 3px 10px rgba(15, 23, 42, 0.1);
+	box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
 	overflow: hidden;
 	display: flex;
 	align-items: center;
@@ -1086,10 +1444,10 @@ body[data-route="desktop"] .main-section {
 }
 
 .desktop-wrapper .icon-container img {
-	width: 48px !important;
-	height: 48px !important;
+	width: 40px !important;
+	height: 40px !important;
 	object-fit: cover;
-	border-radius: 14px;
+	border-radius: 12px;
 }
 
 .desktop-wrapper .icon-container:hover {
@@ -1103,11 +1461,12 @@ body[data-route="desktop"] .main-section {
 }
 
 .desktop-wrapper .icon-title {
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: 650;
 	color: #1e293b;
 	white-space: normal;
-	line-height: 1.2;
+	line-height: 1.15;
+	text-align: center;
 }
 
 .desktop-wrapper .icon-subtitle {
@@ -1153,14 +1512,60 @@ body[data-route="desktop"] .main-section {
 		padding: 10px 12px 12px !important;
 		gap: 10px !important;
 		max-height: calc(100dvh - var(--desktop-navbar-height, 52px) - var(--tvx-footer-h));
+		overflow-y: auto !important;
 	}
 	.tvx-welcome-card {
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: stretch;
+		padding: 14px !important;
+	}
+	.tvx-welcome-title {
+		white-space: normal !important;
+		font-size: 1.25rem !important;
+	}
+	.tvx-desk-hub {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		max-width: none;
+	}
+	.tvx-desk-hubs {
+		grid-template-columns: 1fr;
+	}
+	.tvx-desk-stage-body {
+		grid-template-columns: 1fr;
+	}
+	.tvx-desk-orbit {
+		height: 200px;
+	}
+	.tvx-desk-hub-cards {
+		width: 100%;
+	}
+	.tvx-desk-hub-card,
+	.tvx-desk-hub-card:nth-child(2),
+	.tvx-desk-hub-card:nth-child(3) {
+		margin-left: 0;
+		max-width: none;
+	}
+	.tvx-desk-hub-core {
+		width: 96px;
+		height: 96px;
+	}
+	.tvx-desk-hub-core-inner {
+		width: 74px;
+		height: 74px;
 	}
 	.tvx-welcome-right {
 		width: 100%;
 		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+	.tvx-welcome-chips {
+		width: 100%;
+		justify-content: flex-start;
+	}
+	.tvx-chip {
+		min-height: 40px;
+		padding: 0 16px !important;
 	}
 	.tvx-nav-company {
 		font-size: 12px;
@@ -1171,8 +1576,19 @@ body[data-route="desktop"] .main-section {
 		max-height: 120px;
 	}
 	.desktop-wrapper .desktop-container > .icons-container {
-		grid-column: 1;
 		grid-row: 3;
+		overflow: visible;
+	}
+	.desktop-wrapper .desktop-container > .icons-container > .icons {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+		gap: 10px !important;
+	}
+	.desktop-wrapper .desktop-icon {
+		min-height: 96px;
+		padding: 12px 8px !important;
+	}
+	.desktop-wrapper .desktop-icon .icon-title {
+		font-size: 12px !important;
 	}
 	#tvx-watermark {
 		right: 10px;
@@ -1546,12 +1962,74 @@ body.tvx-has-footer {
 
 /* Desktop home — own layout, no body scroll */
 body.tvx-desktop-fit,
-html:has(body.tvx-desktop-fit) {
+html:has(body.tvx-desktop-fit),
+html.tvx-on-desktop {
 	overflow: hidden !important;
 }
 
 body.tvx-desktop-fit .main-section {
 	overflow: hidden !important;
+}
+
+/* Prevent icon flash before desk JS finishes — early IIFE mirrors this */
+html.tvx-on-desktop .desktop-wrapper:not(.tvx-desktop-ready) .desktop-container > .icons-container {
+	opacity: 0 !important;
+	visibility: hidden !important;
+}
+
+html.tvx-on-desktop .desktop-wrapper.tvx-desktop-ready .desktop-container > .icons-container {
+	opacity: 1 !important;
+	visibility: visible !important;
+	transition: opacity 0.15s ease;
+}
+
+html.tvx-on-desktop .desktop-wrapper .desktop-container {
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) 220px !important;
+	grid-template-rows: minmax(172px, auto) minmax(0, 1fr) !important;
+	overflow: hidden !important;
+	min-height: 0 !important;
+}
+
+html.tvx-on-desktop .desktop-wrapper .desktop-container > .icons-container {
+	grid-column: 1 !important;
+	grid-row: 2 !important;
+}
+
+html.tvx-on-desktop .desktop-wrapper #tvx-welcome-card {
+	grid-column: 1 / -1 !important;
+	grid-row: 1 !important;
+}
+
+body[data-route="desktop"] .desktop-wrapper .desktop-container,
+body[data-route^="desktop/"] .desktop-wrapper .desktop-container {
+	display: grid !important;
+	grid-template-rows: minmax(172px, auto) minmax(0, 1fr) !important;
+}
+
+body[data-route="desktop"] .desktop-wrapper .desktop-container > .icons-container,
+body[data-route^="desktop/"] .desktop-wrapper .desktop-container > .icons-container {
+	grid-row: 2 !important;
+}
+
+/* Welcome skeleton — reserves row 1 before full JS inject */
+.tvx-welcome-skeleton {
+	min-height: 160px;
+	pointer-events: none;
+}
+
+.tvx-welcome-skeleton-inner {
+	width: 100%;
+	height: 148px;
+	border-radius: 18px;
+	background: linear-gradient(90deg, #eef2f7 0%, #f8fafc 45%, #eef2f7 90%);
+	background-size: 200% 100%;
+	animation: tvx-sk-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes tvx-sk-pulse {
+	0% { background-position: 100% 0; }
+	100% { background-position: -100% 0; }
 }
 
 /* ===== List view — compact, readable, fields L→R (native layout preserved) ===== */
@@ -1965,8 +2443,14 @@ body.tvx-readable .page-container:has(.page-head.tvx-page-head) .workspace-body 
 	--tvx-surface: rgba(30, 41, 59, 0.92);
 	--tvx-page: #0b1220;
 	--tvx-green-soft: rgba(34, 197, 94, 0.16);
-	--tvx-sidebar: #070b14;
-	--tvx-sidebar-2: #0d1524;
+	--tvx-sidebar: #0b1220;
+	--tvx-sidebar-2: #111827;
+	--tvx-sidebar-text: #e5e7eb;
+	--tvx-sidebar-muted: #94a3b8;
+	--tvx-sidebar-border: rgba(148, 163, 184, 0.14);
+	--tvx-sidebar-hover: rgba(255, 255, 255, 0.08);
+	--tvx-sidebar-active-bg: #16a34a;
+	--tvx-sidebar-active-text: #ffffff;
 }
 
 [data-theme="dark"] #tvx-watermark {
@@ -1981,7 +2465,7 @@ body.tvx-readable .page-container:has(.page-head.tvx-page-head) .workspace-body 
 }
 
 [data-theme="dark"] #tvx-watermark-bg {
-	opacity: 0.025 !important;
+	opacity: 0.06 !important;
 	filter: grayscale(1) brightness(1.35) !important;
 	background-size: min(460px, 46vw) !important;
 }
@@ -2004,9 +2488,31 @@ body.tvx-readable .page-container:has(.page-head.tvx-page-head) .workspace-body 
 }
 
 [data-theme="dark"] .tvx-welcome-card {
-	background: var(--card-bg, #171f2e) !important;
+	background:
+		radial-gradient(ellipse 50% 60% at 12% 20%, rgba(45, 212, 191, 0.12), transparent 55%),
+		var(--card-bg, #171f2e) !important;
 	border-color: rgba(148, 163, 184, 0.16) !important;
 	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
+}
+
+[data-theme="dark"] .tvx-desk-hub-core-inner,
+[data-theme="dark"] .tvx-desk-hub-card {
+	background: rgba(23, 31, 46, 0.95) !important;
+	border-color: rgba(148, 163, 184, 0.16) !important;
+	color: var(--text-color, #dbe5f1) !important;
+}
+
+[data-theme="dark"] .tvx-desk-hub-copy strong,
+[data-theme="dark"] .tvx-desk-hub-core-inner strong,
+[data-theme="dark"] .tvx-welcome-user {
+	color: var(--text-color, #dbe5f1) !important;
+}
+
+[data-theme="dark"] .tvx-desk-hub-copy small,
+[data-theme="dark"] .tvx-desk-hub-core-inner span,
+[data-theme="dark"] .tvx-welcome-sub,
+[data-theme="dark"] .tvx-welcome-hello {
+	color: var(--text-muted, #94a3b8) !important;
 }
 
 [data-theme="dark"] .desktop-wrapper.tvx-desktop {
@@ -2300,14 +2806,14 @@ body.tvx-readable.tvx-has-watermark {
 body.tvx-readable #tvx-watermark {
 	opacity: 0.78 !important;
 	filter: none !important;
-	background: rgba(255, 255, 255, 0.92) !important;
-	border: 1px solid #cbd5e1 !important;
+	background: var(--tvx-surface) !important;
+	border: 1px solid var(--tvx-border) !important;
 	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
 }
 
 body.tvx-readable #tvx-watermark .tvx-wm-text {
 	font-size: 14px !important;
-	color: #14532d !important;
+	color: var(--tvx-green) !important;
 	font-weight: 750 !important;
 }
 
@@ -2391,7 +2897,7 @@ body.tvx-readable .page-title .title-text:not(.page-head.tvx-page-head .title-te
 body.tvx-readable .workspace-title {
 	font-size: 1.2rem !important;
 	font-weight: 700 !important;
-	color: #0f172a !important;
+	color: var(--tvx-ink) !important;
 }
 
 /* Form labels — uniform caps style (matches list filter / page-head hierarchy) */
@@ -2403,7 +2909,7 @@ body.tvx-readable label.control-label {
 	font-weight: 750 !important;
 	letter-spacing: 0.07em !important;
 	text-transform: uppercase !important;
-	color: #64748b !important;
+	color: var(--tvx-muted) !important;
 	line-height: 1.35 !important;
 	margin-bottom: 6px !important;
 }
@@ -2422,7 +2928,7 @@ body.tvx-readable .frappe-control[data-fieldtype="Check"] .checkbox label {
 	letter-spacing: 0.01em !important;
 	font-size: var(--tvx-body-size) !important;
 	font-weight: 600 !important;
-	color: #0f172a !important;
+	color: var(--tvx-ink) !important;
 	line-height: 1.45 !important;
 	white-space: normal !important;
 }
@@ -2433,7 +2939,7 @@ body.tvx-readable .grid-heading-row .grid-static-col {
 	font-weight: 750 !important;
 	letter-spacing: 0.06em !important;
 	text-transform: uppercase !important;
-	color: #64748b !important;
+	color: var(--tvx-muted) !important;
 	line-height: 1.35 !important;
 }
 
@@ -2443,12 +2949,12 @@ body.tvx-readable .form-section .section-head {
 	font-weight: 750 !important;
 	letter-spacing: -0.01em !important;
 	text-transform: none !important;
-	color: #0f172a !important;
+	color: var(--tvx-ink) !important;
 	line-height: 1.35 !important;
 	padding: 10px 14px !important;
 	margin-bottom: 4px !important;
-	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
-	border-bottom: 2px solid #e2e8f0 !important;
+	background: var(--subtle-fg, linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)) !important;
+	border-bottom: 2px solid var(--tvx-border) !important;
 	border-radius: 10px 10px 0 0 !important;
 }
 
@@ -2457,7 +2963,7 @@ body.tvx-readable .text-muted,
 body.tvx-readable small,
 body.tvx-readable .frappe-control .help {
 	font-size: 12.5px !important;
-	color: #475569 !important;
+	color: var(--tvx-muted) !important;
 	line-height: 1.45 !important;
 }
 
@@ -2475,15 +2981,16 @@ body.tvx-readable .frappe-control .control-input-wrapper {
 }
 
 /* Editable inputs only — do NOT style .control-value when an input exists (prevents double boxes) */
-body.tvx-readable .frappe-control input.form-control:not([type="checkbox"]):not([type="radio"]),
-body.tvx-readable .frappe-control input.input-with-feedback:not([type="checkbox"]):not([type="radio"]),
-body.tvx-readable .frappe-control textarea,
-body.tvx-readable .frappe-control select:not(.ql-toolbar select),
-body.tvx-readable .frappe-control .awesomplete > input {
+/* Exclude Text Editor / Quill so toolbar is not painted as form fields */
+body.tvx-readable .frappe-control:not([data-fieldtype="Text Editor"]) input.form-control:not([type="checkbox"]):not([type="radio"]),
+body.tvx-readable .frappe-control:not([data-fieldtype="Text Editor"]) input.input-with-feedback:not([type="checkbox"]):not([type="radio"]),
+body.tvx-readable .frappe-control:not([data-fieldtype="Text Editor"]) textarea,
+body.tvx-readable .frappe-control:not([data-fieldtype="Text Editor"]) select:not(.ql-toolbar select),
+body.tvx-readable .frappe-control:not([data-fieldtype="Text Editor"]) .awesomplete > input {
 	font-size: var(--tvx-body-size) !important;
 	min-height: var(--tvx-field-min-h) !important;
 	padding: var(--tvx-field-padding) !important;
-	color: #0f172a !important;
+	color: var(--tvx-ink) !important;
 	background: var(--tvx-field-bg) !important;
 	border: var(--tvx-field-border) !important;
 	border-radius: var(--tvx-field-radius) !important;
@@ -2500,7 +3007,7 @@ body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, selec
 	font-size: var(--tvx-body-size) !important;
 	min-height: var(--tvx-field-min-h) !important;
 	padding: var(--tvx-field-padding) !important;
-	color: #0f172a !important;
+	color: var(--tvx-ink) !important;
 	font-weight: 550 !important;
 	background: var(--tvx-field-bg) !important;
 	border: var(--tvx-field-border) !important;
@@ -2689,58 +3196,108 @@ body.tvx-readable .layout-side-section .badge {
 body.tvx-readable .dt-scrollable .dt-cell__content,
 body.tvx-readable .datatable .dt-cell__content {
 	font-size: 13.5px !important;
-	color: #0f172a !important;
+	color: var(--tvx-ink) !important;
 }
 
 body.tvx-readable .dt-scrollable .dt-cell__content--header,
 body.tvx-readable .datatable .dt-cell__content--header {
 	font-size: 12px !important;
 	font-weight: 750 !important;
-	color: #334155 !important;
+	color: var(--tvx-muted) !important;
 }
 
-/* Dark mode readability (watermark stays very soft) */
+/* Dark mode readability — tokens already remapped; keep watermark soft */
+html[data-theme="dark"] body.tvx-readable,
 [data-theme="dark"] body.tvx-readable {
-	--tvx-muted: #b6c2d3;
-	--tvx-content-panel: rgba(23, 31, 46, 0.97);
+	--tvx-content-panel: var(--fg-color, #171f2e);
 }
 
+html[data-theme="dark"] body.tvx-readable #tvx-watermark-bg,
 [data-theme="dark"] body.tvx-readable #tvx-watermark-bg {
-	opacity: 0.02 !important;
+	opacity: 0.055 !important;
 }
 
-[data-theme="dark"] body.tvx-readable .frappe-control .control-label,
-[data-theme="dark"] body.tvx-readable label.control-label,
-[data-theme="dark"] body.tvx-readable .section-head {
-	color: #e8eef7 !important;
+html[data-theme="dark"] body.tvx-readable .section-head,
+html[data-theme="dark"] body.tvx-readable .form-section .section-head,
+[data-theme="dark"] body.tvx-readable .section-head,
+[data-theme="dark"] body.tvx-readable .form-section .section-head {
+	background: var(--subtle-fg, rgba(30, 41, 59, 0.95)) !important;
+	border-bottom-color: var(--tvx-border) !important;
 }
 
-[data-theme="dark"] body.tvx-readable .frappe-control input.form-control,
-[data-theme="dark"] body.tvx-readable .frappe-control input.input-with-feedback,
-[data-theme="dark"] body.tvx-readable .frappe-control select,
-[data-theme="dark"] body.tvx-readable .frappe-control textarea,
-[data-theme="dark"] body.tvx-readable .frappe-control .awesomplete > input,
-[data-theme="dark"] body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .control-value {
-	color: #e8eef7 !important;
-	background: rgba(15, 23, 42, 0.85) !important;
-	border-color: rgba(148, 163, 184, 0.35) !important;
-}
-
-[data-theme="dark"] body.tvx-readable .frappe-control .control-label,
-[data-theme="dark"] body.tvx-readable label.control-label {
-	color: #94a3b8 !important;
-}
-
-[data-theme="dark"] body.tvx-readable .section-head {
-	color: #e8eef7 !important;
-	background: linear-gradient(180deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
-	border-bottom-color: rgba(148, 163, 184, 0.25) !important;
-}
-
+html[data-theme="dark"] body.tvx-readable .list-row,
+html[data-theme="dark"] body.tvx-readable .list-row a,
+html[data-theme="dark"] body.tvx-readable .list-row .list-row-col,
 [data-theme="dark"] body.tvx-readable .list-row,
 [data-theme="dark"] body.tvx-readable .list-row a,
 [data-theme="dark"] body.tvx-readable .list-row .list-row-col {
-	color: #e8eef7 !important;
+	color: var(--tvx-ink) !important;
+}
+
+html[data-theme="dark"] .tvx-form-sidebar-toggle,
+[data-theme="dark"] .tvx-form-sidebar-toggle {
+	background: var(--control-bg, #1e293b) !important;
+	border-color: var(--tvx-border) !important;
+	color: var(--tvx-muted) !important;
+}
+
+html[data-theme="dark"] .tvx-form-sidebar-toggle:hover,
+html[data-theme="dark"] .tvx-form-sidebar-toggle.is-open,
+[data-theme="dark"] .tvx-form-sidebar-toggle:hover,
+[data-theme="dark"] .tvx-form-sidebar-toggle.is-open {
+	background: var(--tvx-green-soft) !important;
+	border-color: var(--tvx-green) !important;
+	color: var(--tvx-green-bright) !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head,
+[data-theme="dark"] .page-head.tvx-page-head {
+	background: var(--card-bg, #171f2e) !important;
+	border-color: var(--tvx-border) !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item a,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-area,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-text,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item a,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-area,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-text {
+	color: var(--tvx-ink) !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item:not(:last-child) a,
+[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item:not(:last-child) a {
+	color: var(--tvx-muted) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable,
+html[data-theme="dark"] .main-section,
+html[data-theme="dark"] .layout-main-section,
+html[data-theme="dark"] .page-container,
+html[data-theme="dark"] .content.page-container,
+[data-theme="dark"] body.tvx-readable,
+[data-theme="dark"] .main-section,
+[data-theme="dark"] .layout-main-section,
+[data-theme="dark"] .page-container,
+[data-theme="dark"] .content.page-container {
+	background: var(--tvx-page) !important;
+	color: var(--tvx-ink) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .layout-main-section.frappe-card,
+html[data-theme="dark"] body.tvx-readable .form-layout,
+html[data-theme="dark"] body.tvx-readable .frappe-list .result,
+html[data-theme="dark"] body.tvx-readable .form-section,
+html[data-theme="dark"] body.tvx-readable .widget,
+[data-theme="dark"] body.tvx-readable .layout-main-section.frappe-card,
+[data-theme="dark"] body.tvx-readable .form-layout,
+[data-theme="dark"] body.tvx-readable .frappe-list .result,
+[data-theme="dark"] body.tvx-readable .form-section,
+[data-theme="dark"] body.tvx-readable .widget {
+	background: var(--tvx-content-panel) !important;
+	color: var(--tvx-ink) !important;
 }
 
 @media (max-width: 767px) {
@@ -2748,7 +3305,7 @@ body.tvx-readable .datatable .dt-cell__content--header {
 		opacity: 0.72 !important;
 	}
 	body.tvx-readable #tvx-watermark-bg {
-		opacity: 0.04 !important;
+		opacity: 0.07 !important;
 	}
 }
 
@@ -2857,7 +3414,10 @@ body.tvx-force-fullwidth .form-footer,
 /* Desktop keeps soft page tint + inner breathing room */
 body.tvx-desktop-fit .desktop-wrapper.tvx-desktop,
 .desktop-wrapper.tvx-desktop {
-	background-color: #f4f7fa !important;
+	background:
+		radial-gradient(ellipse 55% 40% at 8% 0%, rgba(56, 189, 248, 0.14), transparent 55%),
+		radial-gradient(ellipse 45% 35% at 95% 10%, rgba(45, 212, 191, 0.12), transparent 55%),
+		linear-gradient(180deg, #f4fbfd 0%, #eef6f3 100%) !important;
 }
 
 .desktop-wrapper .desktop-container {
@@ -2917,7 +3477,73 @@ body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
 	padding-right: 10px !important;
 }
 
-/* ===== Quill / ToDo / Comment editors — undo form-select CSS that breaks toolbars ===== */
+/* ===== Form sections — let Link / awesomplete escape (no clip into next section) ===== */
+.form-section,
+.form-section .section-body,
+.form-section .form-column,
+.std-form-layout .form-layout,
+.std-form-layout .section-body,
+body.tvx-readable .form-section,
+body.tvx-readable .form-section .section-body,
+.modal-dialog .form-layout,
+.modal-body .frappe-control {
+	overflow: visible !important;
+}
+
+.frappe-control[data-fieldtype="Link"],
+.frappe-control[data-fieldtype="Dynamic Link"],
+.frappe-control .awesomplete {
+	position: relative !important;
+	overflow: visible !important;
+	z-index: auto;
+}
+
+.frappe-control .awesomplete > ul,
+.frappe-control .awesomplete > ul[role="listbox"],
+.awesomplete > ul {
+	position: absolute !important;
+	z-index: 1060 !important;
+	max-height: 240px !important;
+	overflow-y: auto !important;
+	background: var(--fg-color, #fff) !important;
+	border: 1px solid var(--border-color, #e2e8f0) !important;
+	box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14) !important;
+}
+
+/* ===== Quill / Text Editor — keep native toolbar; never apply field chrome ===== */
+.frappe-control[data-fieldtype="Text Editor"] .control-input,
+.frappe-control[data-fieldtype="Text Editor"] .control-input-wrapper,
+.modal-dialog .frappe-control[data-fieldtype="Text Editor"] .control-input {
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+	min-height: unset !important;
+	overflow: visible !important;
+}
+
+body.tvx-readable .frappe-control[data-fieldtype="Text Editor"] input.form-control,
+body.tvx-readable .frappe-control[data-fieldtype="Text Editor"] textarea,
+body.tvx-readable .frappe-control[data-fieldtype="Text Editor"] select,
+body.tvx-readable .ql-toolbar input,
+body.tvx-readable .ql-toolbar select,
+body.tvx-readable .ql-toolbar .form-control,
+.modal-dialog .ql-toolbar input,
+.modal-dialog .ql-toolbar select,
+.modal-dialog .ql-toolbar .form-control {
+	min-height: 0 !important;
+	height: auto !important;
+	width: auto !important;
+	max-width: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	display: inline-block !important;
+	border-radius: 0 !important;
+}
+
 .ql-toolbar.ql-snow,
 .ql-toolbar.ql-bubble,
 .comment-input-wrapper .ql-toolbar,
@@ -2928,6 +3554,9 @@ body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
 	gap: 2px 4px !important;
 	padding: 6px 8px !important;
 	border-radius: 8px 8px 0 0 !important;
+	overflow: visible !important;
+	position: relative !important;
+	z-index: 2 !important;
 }
 
 .ql-toolbar .ql-formats {
@@ -2936,6 +3565,7 @@ body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
 	flex-wrap: wrap !important;
 	margin-right: 8px !important;
 	vertical-align: middle !important;
+	overflow: visible !important;
 }
 
 .ql-toolbar button,
@@ -2967,19 +3597,32 @@ body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
 	border: none !important;
 	width: auto !important;
 	min-height: 24px !important;
+	background: transparent !important;
 }
 
-.ql-toolbar .ql-picker-options {
+/* Critical: options panel hidden until picker expanded (stops white bar over toolbar) */
+.ql-toolbar .ql-picker-options,
+.ql-snow .ql-picker-options,
+.modal-dialog .ql-toolbar .ql-picker-options {
+	display: none !important;
 	position: absolute !important;
 	top: 100% !important;
 	left: 0 !important;
-	z-index: 100 !important;
+	z-index: 1200 !important;
 	background: #fff !important;
 	border: 1px solid #e2e8f0 !important;
 	border-radius: 8px !important;
 	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12) !important;
 	min-width: 120px !important;
 	padding: 4px 0 !important;
+	max-height: 220px !important;
+	overflow-y: auto !important;
+}
+
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-options,
+.ql-snow .ql-picker.ql-expanded .ql-picker-options,
+.modal-dialog .ql-toolbar .ql-picker.ql-expanded .ql-picker-options {
+	display: block !important;
 }
 
 .ql-toolbar select,
@@ -3013,7 +3656,6 @@ body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
 	padding: 10px 12px !important;
 }
 
-/* Never apply desk form field chrome inside Quill / comment editors */
 .ql-toolbar select.form-control,
 .ql-toolbar .form-control,
 .modal-dialog .ql-toolbar .form-control {
@@ -3026,3 +3668,263 @@ body.tvx-readable .page-head.tvx-page-head .page-title.tvx-head-left {
 	display: inline-block !important;
 }
 
+/* ============================================================
+   NATIVE FRAPPE DARK MODE (last wins)
+   Stop TripleVox light chrome from painting over Frappe dark.
+   Surfaces / text / controls use Frappe desk CSS variables only.
+   ============================================================ */
+html[data-theme="dark"] body,
+html[data-theme="dark"] body.tvx-readable,
+html[data-theme="dark"] #body_div,
+html[data-theme="dark"] .main-section,
+html[data-theme="dark"] .content.page-container,
+html[data-theme="dark"] .page-container,
+html[data-theme="dark"] .page-body,
+html[data-theme="dark"] .layout-main,
+html[data-theme="dark"] .layout-main-section,
+html[data-theme="dark"] .layout-main-section-wrapper,
+html[data-theme="dark"] .layout-main-section.frappe-card,
+html[data-theme="dark"] .form-layout,
+html[data-theme="dark"] .std-form-layout,
+html[data-theme="dark"] .workspace-body,
+html[data-theme="dark"] .codex-editor {
+	background: var(--bg-color) !important;
+	color: var(--text-color) !important;
+	box-shadow: none !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .layout-main-section.frappe-card,
+html[data-theme="dark"] body.tvx-readable .form-layout,
+html[data-theme="dark"] body.tvx-readable .frappe-list .result,
+html[data-theme="dark"] body.tvx-readable .form-section,
+html[data-theme="dark"] body.tvx-readable .frappe-card,
+html[data-theme="dark"] body.tvx-readable .form-dashboard-section,
+html[data-theme="dark"] body.tvx-readable .widget,
+html[data-theme="dark"] body.tvx-readable .page-head.tvx-page-head,
+html[data-theme="dark"] body.tvx-readable .main-section {
+	background: var(--fg-color) !important;
+	color: var(--text-color) !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head {
+	background: var(--fg-color) !important;
+	border-bottom: 1px solid var(--border-color) !important;
+	box-shadow: none !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head .page-title.tvx-head-left,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left {
+	background: transparent !important;
+	box-shadow: none !important;
+	border: none !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item a,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-area,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .title-text,
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left:not(:has(.breadcrumb)) .title-text {
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item:not(:last-child) a {
+	color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] .page-head.tvx-page-head .tvx-head-left .breadcrumb-item + .breadcrumb-item::before {
+	color: var(--text-muted) !important;
+}
+
+/* Form fields — Frappe control look, not custom white boxes */
+html[data-theme="dark"] body.tvx-readable .frappe-control .control-label,
+html[data-theme="dark"] body.tvx-readable label.control-label,
+html[data-theme="dark"] body.tvx-readable .grid-heading-row,
+html[data-theme="dark"] body.tvx-readable .grid-heading-row .grid-static-col {
+	color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .section-head,
+html[data-theme="dark"] body.tvx-readable .form-section .section-head {
+	color: var(--heading-color, var(--text-color)) !important;
+	background: var(--subtle-fg) !important;
+	border-bottom: 1px solid var(--border-color) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .frappe-control input.form-control:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="dark"] body.tvx-readable .frappe-control input.input-with-feedback:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="dark"] body.tvx-readable .frappe-control textarea,
+html[data-theme="dark"] body.tvx-readable .frappe-control select:not(.ql-toolbar select),
+html[data-theme="dark"] body.tvx-readable .frappe-control .awesomplete > input,
+html[data-theme="dark"] body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .control-value,
+html[data-theme="dark"] body.tvx-readable .frappe-control .control-input:not(:has(input, textarea, select)) .like-disabled-input:not(input),
+html[data-theme="dark"] body.tvx-readable .filter-section input.form-control,
+html[data-theme="dark"] body.tvx-readable .standard-filter-section input.form-control,
+html[data-theme="dark"] body.tvx-readable .list-filters input.form-control,
+html[data-theme="dark"] body.tvx-readable .page-form input.form-control {
+	color: var(--text-color) !important;
+	background: var(--control-bg) !important;
+	border: 1px solid var(--border-color) !important;
+	box-shadow: none !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .frappe-control[data-fieldtype="Check"] .control-label,
+html[data-theme="dark"] body.tvx-readable .frappe-control[data-fieldtype="Check"] label,
+html[data-theme="dark"] body.tvx-readable .help-box,
+html[data-theme="dark"] body.tvx-readable .text-muted,
+html[data-theme="dark"] body.tvx-readable small {
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .list-row,
+html[data-theme="dark"] body.tvx-readable .list-row a,
+html[data-theme="dark"] body.tvx-readable .list-row .list-row-col,
+html[data-theme="dark"] .frappe-list .list-row,
+html[data-theme="dark"] .frappe-list .list-row a {
+	color: var(--text-color) !important;
+	background: transparent !important;
+}
+
+html[data-theme="dark"] .frappe-list .list-row-head,
+html[data-theme="dark"] .list-row-head {
+	background: var(--subtle-fg) !important;
+	color: var(--text-muted) !important;
+	border-color: var(--border-color) !important;
+}
+
+html[data-theme="dark"] .frappe-list .result-container,
+html[data-theme="dark"] .frappe-list .result {
+	background: var(--fg-color) !important;
+	border-color: var(--border-color) !important;
+}
+
+html[data-theme="dark"] .widget,
+html[data-theme="dark"] .widget.shortcut-widget-box,
+html[data-theme="dark"] .widget.links-widget-box,
+html[data-theme="dark"] .widget.number-widget-box,
+html[data-theme="dark"] .widget.quick-list-widget-box,
+html[data-theme="dark"] .widget.dashboard-widget-box {
+	background: var(--card-bg) !important;
+	border: 1px solid var(--border-color) !important;
+	box-shadow: none !important;
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] .widget .widget-title,
+html[data-theme="dark"] .shortcut-widget-box .widget-title,
+html[data-theme="dark"] .links-widget-box .widget-title,
+html[data-theme="dark"] .widget-group-title {
+	color: var(--heading-color, var(--text-color)) !important;
+}
+
+html[data-theme="dark"] .btn-default,
+html[data-theme="dark"] .btn.btn-default,
+html[data-theme="dark"] .filter-button {
+	background: var(--btn-default-bg) !important;
+	color: var(--text-color) !important;
+	border-color: var(--border-color) !important;
+}
+
+html[data-theme="dark"] .tvx-form-sidebar-toggle {
+	background: var(--control-bg) !important;
+	border-color: var(--border-color) !important;
+	color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] .tvx-welcome-card,
+html[data-theme="dark"] .tvx-recent-card,
+html[data-theme="dark"] .desktop-wrapper.tvx-desktop,
+html[data-theme="dark"] .desktop-wrapper .desktop-container > .icons-container {
+	background: var(--fg-color) !important;
+	border-color: var(--border-color) !important;
+	box-shadow: none !important;
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] .tvx-welcome-title,
+html[data-theme="dark"] .desktop-wrapper .icon-title,
+html[data-theme="dark"] .tvx-clock {
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] #tvx-watermark {
+	background: var(--card-bg) !important;
+	border-color: var(--border-color) !important;
+	box-shadow: none !important;
+	opacity: 0.85 !important;
+	filter: none !important;
+}
+
+html[data-theme="dark"] #tvx-watermark .tvx-wm-text {
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] #tvx-footer,
+html[data-theme="dark"] .tvx-footer {
+	background: var(--fg-color) !important;
+	border-top-color: var(--border-color) !important;
+	color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .dt-scrollable .dt-cell__content,
+html[data-theme="dark"] body.tvx-readable .datatable .dt-cell__content {
+	color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] body.tvx-readable .dt-scrollable .dt-cell__content--header,
+html[data-theme="dark"] body.tvx-readable .datatable .dt-cell__content--header {
+	color: var(--text-muted) !important;
+}
+
+/* ===== Workspace Viewer — view/use only, never edit layouts ===== */
+html.tvx-workspace-viewer .btn-edit-workspace,
+html.tvx-workspace-viewer .btn-new-workspace,
+body.tvx-workspace-viewer .btn-edit-workspace,
+body.tvx-workspace-viewer .btn-new-workspace,
+html.tvx-workspace-viewer .edit-mode-actions,
+body.tvx-workspace-viewer .edit-mode-actions,
+html.tvx-workspace-viewer .page-actions .btn-edit-workspace,
+body.tvx-workspace-viewer .codex-editor .ce-toolbar,
+html.tvx-workspace-viewer .codex-editor .ce-toolbar,
+html.tvx-workspace-viewer .workspace-sidebar .btn-edit-workspace,
+body.tvx-workspace-viewer .workspace-sidebar .btn-new-workspace,
+html.tvx-workspace-viewer button[data-page-route="Workspaces"],
+html.tvx-workspace-viewer .dropdown-workspace-edit {
+	display: none !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+body.tvx-workspace-viewer .editor-js-container.edit-mode,
+html.tvx-workspace-viewer .layout-main-section.edit-mode {
+	cursor: default !important;
+}
+
+/* ===== Child-table row editor — stay above freeze / footer / brand pill ===== */
+.grid-row-open .form-in-grid {
+	z-index: 1055 !important;
+	background-color: var(--modal-bg, #ffffff) !important;
+	box-shadow: 0 18px 48px rgba(15, 23, 42, 0.28) !important;
+	pointer-events: auto !important;
+}
+
+/* Soften page under open row editor; keep form sharp */
+body:has(.grid-row-open) #tvx-watermark-bg,
+body:has(#freeze.grid-form.in) #tvx-watermark-bg {
+	opacity: 0 !important;
+	visibility: hidden !important;
+}
+
+body:has(.grid-row-open) #tvx-footer,
+body:has(.grid-row-open) #tvx-watermark,
+body:has(#freeze.grid-form.in) #tvx-footer,
+body:has(#freeze.grid-form.in) #tvx-watermark {
+	z-index: 1010 !important;
+}
+
+/* Link / awesomplete pickers inside open grid rows */
+.grid-row-open .form-in-grid .awesomplete > ul,
+.grid-row-open .form-in-grid .awesomplete > ul[role="listbox"] {
+	z-index: 1060 !important;
+}

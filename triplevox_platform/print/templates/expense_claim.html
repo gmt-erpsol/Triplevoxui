@@ -1,0 +1,64 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{% set currency = doc.currency or "ETB" %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "EXPENSE CLAIM", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Employee</span><span class="tvx-value">{{ doc.employee_name or doc.employee }}</span></td>
+      <td><span class="tvx-label">Expense Approver</span><span class="tvx-value">{{ doc.expense_approver or "—" }}</span></td>
+      <td><span class="tvx-label">Posting Date</span><span class="tvx-value">{{ tvx_date(doc.posting_date or doc.approval_date) }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">Status</span><span class="tvx-value">{{ doc.status or "—" }}</span></td>
+      <td><span class="tvx-label">Payable Account</span><span class="tvx-value">{{ doc.payable_account or "—" }}</span></td>
+      <td colspan="2"><span class="tvx-label">Remark</span><span class="tvx-value">{{ doc.remark or "—" }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Expenses</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th style="width:6%">#</th>
+        <th>Expense Type</th>
+        <th>Description</th>
+        <th class="tvx-amt" style="width:14%">Date</th>
+        <th class="tvx-amt" style="width:18%">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in (doc.expenses or []) %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.expense_type or "—" }}</td>
+        <td>{{ row.description or "—" }}</td>
+        <td class="tvx-amt">{{ tvx_date(row.expense_date) }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.amount or row.sanctioned_amount or 0, currency, doc) }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="tvx-total">
+        <td colspan="4" style="text-align:right">Total Claimed</td>
+        <td class="tvx-amt">{{ tvx_money(doc.total_claimed_amount or doc.grand_total or 0, currency, doc) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tvx-hero">
+    <div class="tvx-hero-left">
+      <div class="tvx-hero-label">Sanctioned / Payable</div>
+    </div>
+    <div class="tvx-hero-right">
+      <div class="tvx-hero-amount">{{ tvx_money(doc.total_sanctioned_amount or doc.total_claimed_amount or 0, currency, doc) }}</div>
+    </div>
+  </div>
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

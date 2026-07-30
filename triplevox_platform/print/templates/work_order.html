@@ -1,0 +1,51 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "WORK ORDER", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Item</span><span class="tvx-value">{{ doc.item_name or doc.production_item }}</span></td>
+      <td><span class="tvx-label">Qty</span><span class="tvx-value">{{ doc.qty }} {{ doc.stock_uom or "" }}</span></td>
+      <td><span class="tvx-label">BOM</span><span class="tvx-value">{{ doc.bom_no or "—" }}</span></td>
+      <td><span class="tvx-label">Status</span><span class="tvx-value">{{ doc.status }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">Sales Order</span><span class="tvx-value">{{ doc.sales_order or "—" }}</span></td>
+      <td><span class="tvx-label">Planned Start</span><span class="tvx-value">{{ tvx_date(doc.planned_start_date) }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+      <td><span class="tvx-label">WIP Warehouse</span><span class="tvx-value">{{ doc.wip_warehouse or "—" }}</span></td>
+    </tr>
+  </table>
+
+  {% if doc.required_items %}
+  <div class="tvx-section">Required Items</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Item</th>
+        <th class="tvx-amt">Required</th>
+        <th class="tvx-amt">Transferred</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.required_items %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.item_name or row.item_code }}</td>
+        <td class="tvx-amt">{{ row.required_qty }}</td>
+        <td class="tvx-amt">{{ row.transferred_qty or 0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

@@ -1,0 +1,54 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "BILL OF MATERIALS", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Item</span><span class="tvx-value">{{ doc.item_name or doc.item }}</span></td>
+      <td><span class="tvx-label">Quantity</span><span class="tvx-value">{{ doc.quantity }} {{ doc.uom or "" }}</span></td>
+      <td><span class="tvx-label">Is Active</span><span class="tvx-value">{{ "Yes" if doc.is_active else "No" }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">With Operations</span><span class="tvx-value">{{ "Yes" if doc.with_operations else "No" }}</span></td>
+      <td><span class="tvx-label">Routing</span><span class="tvx-value">{{ doc.routing or "—" }}</span></td>
+      <td colspan="2"><span class="tvx-label">Remarks</span><span class="tvx-value">{{ doc.remarks or "—" }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Raw Materials / Components</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th style="width:6%">#</th>
+        <th>Item</th>
+        <th>Source Warehouse</th>
+        <th class="tvx-amt" style="width:14%">Qty</th>
+        <th class="tvx-amt" style="width:12%">UOM</th>
+        <th class="tvx-amt" style="width:16%">Rate</th>
+        <th class="tvx-amt" style="width:16%">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in (doc.items or []) %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.item_name or row.item_code }}</td>
+        <td>{{ row.source_warehouse or "—" }}</td>
+        <td class="tvx-amt">{{ row.qty }}</td>
+        <td class="tvx-amt">{{ row.uom or "" }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.rate or 0, "ETB", doc) }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.amount or 0, "ETB", doc) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

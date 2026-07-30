@@ -1,0 +1,90 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{% set currency = doc.currency or "ETB" %}
+{% set party = doc.get("{{PARTY_FIELD}}") or doc.get("customer_name") or doc.get("supplier_name") or "—" %}
+{% set show_money = "{{SHOW_MONEY}}" != "0" %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "{{DOC_TITLE}}", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td>
+        <span class="tvx-label">{{PARTY_LABEL}}</span>
+        <span class="tvx-value">{{ party }}</span>
+      </td>
+      <td>
+        <span class="tvx-label">Date</span>
+        <span class="tvx-value">{{ tvx_date(doc.transaction_date or doc.posting_date or doc.schedule_date) }}</span>
+      </td>
+      <td>
+        <span class="tvx-label">{{META_EXTRA_LABEL or "Status"}}</span>
+        <span class="tvx-value">
+          {% if "{{META_EXTRA_FIELD}}" %}
+            {{ tvx_date(doc.get("{{META_EXTRA_FIELD}}")) if doc.get("{{META_EXTRA_FIELD}}") else (doc.status or "—") }}
+          {% else %}
+            {{ doc.status or "—" }}
+          {% endif %}
+        </span>
+      </td>
+      <td>
+        <span class="tvx-label">Company</span>
+        <span class="tvx-value">{{ doc.company or t.company }}</span>
+      </td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Line Items</div>
+  <table class="tvx-items">
+    <thead>
+      <tr>
+        <th style="width:6%">#</th>
+        <th>Item / Description</th>
+        <th class="tvx-amt" style="width:12%">Qty</th>
+        {% if show_money %}
+        <th class="tvx-amt" style="width:16%">Rate</th>
+        <th class="tvx-amt" style="width:18%">Amount</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in (doc.items or []) %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.item_name or row.item_code or row.description or "—" }}</td>
+        <td class="tvx-amt">{{ row.qty }} {% if row.uom %}{{ row.uom }}{% endif %}</td>
+        {% if show_money %}
+        <td class="tvx-amt">{{ tvx_money(row.rate, currency, doc) }}</td>
+        <td class="tvx-amt">{{ tvx_money(row.amount, currency, doc) }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      {% if show_money %}
+      <tr class="tvx-total">
+        <td colspan="4" style="text-align:right">Grand Total</td>
+        <td class="tvx-amt">{{ tvx_money(doc.grand_total or doc.total or 0, currency, doc) }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  {% if show_money %}
+  <div class="tvx-hero">
+    <div class="tvx-hero-left">
+      <div class="tvx-hero-label">Grand Total</div>
+      <div style="margin-top:4px;font-size:8.5pt;font-style:italic;">
+        {{ doc.in_words or frappe.utils.money_in_words(doc.grand_total or doc.total or 0, currency) }}
+      </div>
+    </div>
+    <div class="tvx-hero-right">
+      <div class="tvx-hero-amount">{{ tvx_money(doc.grand_total or doc.total or 0, currency, doc) }}</div>
+    </div>
+  </div>
+  {% endif %}
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

@@ -14,12 +14,12 @@ TITA_LINKS = (
     {
         "label": "TITA Manufacturing",
         "link_to": "TITA Manufacturing",
-        "icon": "tool",
+        "icon": "factory",
     },
     {
         "label": "TITA Production",
         "link_to": "TITA Production",
-        "icon": "organization",
+        "icon": "factory",
     },
 )
 
@@ -39,8 +39,21 @@ def run():
         return {"ok": False, "reason": "No TITA workspaces found"}
 
     doc = frappe.get_doc("Workspace Sidebar", PARENT_SIDEBAR)
-    by_label = {(row.label or "").strip(): row for row in (doc.items or [])}
     changed = False
+    # Lucide v16: legacy "organization" / "home" / "stock" do not render
+    if getattr(doc, "header_icon", None) in (None, "", "organization", "tool"):
+        doc.header_icon = "factory"
+        changed = True
+    ICON_FIX = {
+        "home": "house",
+        "tool": "factory",
+        "organization": "factory",
+        "stock": "package",
+        "dashboard": "layout-dashboard",
+        "dashboard-list": "layout-dashboard",
+        "chart": "chart-line",
+    }
+    by_label = {(row.label or "").strip(): row for row in (doc.items or [])}
 
     # Ensure / update link rows
     for link in links:
@@ -67,6 +80,18 @@ def run():
                 },
             )
             changed = True
+
+    # Patch broken Lucide names on existing Manufacturing sidebar rows
+    for row in doc.items or []:
+        cur = (getattr(row, "icon", None) or "").strip()
+        if cur in ICON_FIX:
+            row.icon = ICON_FIX[cur]
+            changed = True
+        # TITA nested links always use factory
+        if (row.label or "") in ("TITA Manufacturing", "TITA Production"):
+            if getattr(row, "icon", None) != "factory":
+                row.icon = "factory"
+                changed = True
 
     if TITA_SECTION not in by_label and TITA_SECTION not in {
         (r.label or "").strip() for r in doc.items

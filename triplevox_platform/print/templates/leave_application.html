@@ -1,0 +1,32 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "LEAVE APPLICATION", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Employee</span><span class="tvx-value">{{ doc.employee_name or doc.employee }}</span></td>
+      <td><span class="tvx-label">Leave Type</span><span class="tvx-value">{{ doc.leave_type }}</span></td>
+      <td><span class="tvx-label">From</span><span class="tvx-value">{{ tvx_date(doc.from_date) }}</span></td>
+      <td><span class="tvx-label">To</span><span class="tvx-value">{{ tvx_date(doc.to_date) }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">Total Days</span><span class="tvx-value">{{ doc.total_leave_days or 0 }}</span></td>
+      <td><span class="tvx-label">Status</span><span class="tvx-value">{{ doc.status or ("Submitted" if doc.docstatus == 1 else "Draft") }}</span></td>
+      <td><span class="tvx-label">Company</span><span class="tvx-value">{{ doc.company or t.company }}</span></td>
+      <td><span class="tvx-label">Posting</span><span class="tvx-value">{{ tvx_date(doc.posting_date) }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Reason</div>
+  <div style="border:1px solid {{ t.border }}; border-radius:8px; padding:10px 12px; min-height:48px;">
+    {{ doc.description or doc.leave_approver_comment or "—" }}
+  </div>
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

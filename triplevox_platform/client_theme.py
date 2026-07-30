@@ -24,9 +24,22 @@ HOW TO USE
 
 THEME TOKENS (theme dict)
 -------------------------
-green / green_bright / green_soft  → accent (buttons, chips, selection)
+green / green_bright / green_soft  → accent (buttons, chips, selection, prints)
 sidebar / sidebar_2                → left sidebar gradient ends
 page / surface / ink / muted / border / radius → general chrome
+
+PRINT BRANDING (multi-client)
+-----------------------------
+Print formats ship with triplevox_platform (see print_branding.py).
+Theme resolution order for PDFs:
+  1. Company fields (name, logo, phone, email, address) / Letter Head
+  2. CLIENTS profile "print_logo_url" (company mark for PDFs only — never Desk logo_url)
+  3. Monogram text if no image
+Desk sidebar / login / watermarks use logo_url (TripleVox product mark).
+Optional per-company map in site_config:
+       "triplevox_company_themes": {
+         "Acme Plastics PLC": { "accent": "#0e7490", "factory_area": "..." }
+       }
 """
 
 from copy import deepcopy
@@ -45,8 +58,9 @@ _BASE = {
     "logo_url": "/assets/triplevox_platform/images/triplevox-logo.png",
     "default_app": "titacustom",
     "theme": {
-        "sidebar": "#0b1220",
-        "sidebar_2": "#111827",
+        # Light-mode sidebar (dark mode overrides via CSS [data-theme=dark])
+        "sidebar": "#f8fafc",
+        "sidebar_2": "#f1f5f9",
         "green": "#15803d",
         "green_bright": "#16a34a",
         "green_soft": "#dcfce7",
@@ -70,6 +84,9 @@ CLIENTS = {
         "factory_area": "Wello Dessie — TITA Area",
         "welcome_kicker": "Factory Operations Desk",
         "default_app": "titacustom",
+        # Desk chrome keeps TripleVox (from _BASE.logo_url).
+        # Prints only: company / Letter Head, else this mark (never Desk logo).
+        "print_logo_url": "/assets/titacustom/images/tita-logo.svg",
         "theme": {
             **_BASE["theme"],
             "green": "#15803d",
@@ -94,8 +111,8 @@ CLIENTS = {
             "green": "#0f766e",
             "green_bright": "#14b8a6",
             "green_soft": "#ccfbf1",
-            "sidebar": "#0b1220",
-            "sidebar_2": "#111827",
+            "sidebar": "#f8fafc",
+            "sidebar_2": "#f1f5f9",
         },
     },
 }

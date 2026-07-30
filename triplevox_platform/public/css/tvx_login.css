@@ -1,0 +1,736 @@
+/* TripleVox login — light + dark, single-viewport stage */
+:root {
+	--tvx-ink: #0f1b2d;
+	--tvx-muted: #5a6b7d;
+	--tvx-green: #0f9f6e;
+	--tvx-green-deep: #0b7a55;
+	--tvx-mint: #d8f5e8;
+	--tvx-sky: #d6eef8;
+	--tvx-peach: #ffe8dc;
+	--tvx-login-bg: #eef6f8;
+	--tvx-login-shell-bg:
+		radial-gradient(ellipse 55% 45% at 8% 12%, rgba(56, 189, 248, 0.28), transparent 60%),
+		radial-gradient(ellipse 50% 40% at 92% 18%, rgba(45, 212, 191, 0.26), transparent 58%),
+		radial-gradient(ellipse 45% 35% at 70% 90%, rgba(251, 146, 60, 0.16), transparent 55%),
+		linear-gradient(160deg, #f4fbfd 0%, #eef7f4 45%, #f7f3ee 100%);
+	--tvx-login-card: rgba(255, 255, 255, 0.88);
+	--tvx-login-card-border: rgba(255, 255, 255, 0.85);
+	--tvx-login-hub-card: rgba(255, 255, 255, 0.9);
+	--tvx-login-hub-core: rgba(255, 255, 255, 0.92);
+	--tvx-login-welcome-bg: rgba(216, 245, 232, 0.92);
+	--tvx-login-welcome-text: #0b7a55;
+	--tvx-login-input-bg: #fff;
+	--tvx-login-input-border: #d5e0ea;
+	--tvx-login-foot: #8a9aab;
+}
+
+html.tvx-login[data-tvx-login-theme="dark"],
+html.tvx-login-dark {
+	--tvx-ink: #f1f5f9;
+	--tvx-muted: #94a3b8;
+	--tvx-green: #22c55e;
+	--tvx-green-deep: #4ade80;
+	--tvx-login-bg: #070b14;
+	--tvx-login-shell-bg:
+		radial-gradient(ellipse 50% 40% at 12% 8%, rgba(34, 197, 94, 0.12), transparent 58%),
+		radial-gradient(ellipse 45% 35% at 88% 15%, rgba(56, 189, 248, 0.1), transparent 55%),
+		linear-gradient(165deg, #070b14 0%, #0c1220 48%, #0a1018 100%);
+	--tvx-login-card: rgba(15, 23, 42, 0.82);
+	--tvx-login-card-border: rgba(51, 65, 85, 0.65);
+	--tvx-login-hub-card: rgba(15, 23, 42, 0.78);
+	--tvx-login-hub-core: rgba(15, 23, 42, 0.92);
+	--tvx-login-welcome-bg: rgba(6, 78, 59, 0.55);
+	--tvx-login-welcome-text: #86efac;
+	--tvx-login-input-bg: rgba(15, 23, 42, 0.9);
+	--tvx-login-input-border: rgba(71, 85, 105, 0.75);
+	--tvx-login-foot: #64748b;
+}
+
+html.tvx-login,
+html.tvx-login body,
+body.tvx-login {
+	height: 100% !important;
+	max-height: 100dvh !important;
+	overflow: hidden !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: var(--tvx-login-bg) !important;
+	font-family: "Figtree", system-ui, sans-serif !important;
+}
+
+/* Kill Frappe website chrome that forces scroll */
+body.tvx-login .navbar,
+body.tvx-login .web-footer,
+body.tvx-login footer.web-footer,
+body.tvx-login .page-header-wrapper,
+body.tvx-login .page-breadcrumbs,
+body.tvx-login .hero-and-content > .container,
+body.tvx-login .page-footer,
+body.tvx-login .website-footer {
+	display: none !important;
+}
+
+body.tvx-login .main-section,
+body.tvx-login .page-container,
+body.tvx-login .page_content,
+body.tvx-login .hero-and-content,
+body.tvx-login .from-markdown,
+body.tvx-login #page-login,
+body.tvx-login .website-content {
+	margin: 0 !important;
+	padding: 0 !important;
+	max-width: none !important;
+	width: 100% !important;
+	min-height: 0 !important;
+	height: 100dvh !important;
+	overflow: hidden !important;
+	background: transparent !important;
+}
+
+.tvx-login-shell {
+	box-sizing: border-box;
+	height: 100dvh;
+	max-height: 100dvh;
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	padding: 14px 22px 10px;
+	overflow: hidden;
+	background: var(--tvx-login-shell-bg);
+}
+
+.tvx-login-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-shrink: 0;
+	margin-bottom: 8px;
+}
+
+.tvx-login-brand-lockup {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.tvx-login-mark {
+	width: 40px;
+	height: 40px;
+	object-fit: contain;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.85);
+	padding: 4px;
+	box-shadow: 0 4px 12px rgba(15, 27, 45, 0.08);
+	flex-shrink: 0;
+}
+
+.tvx-login-brand-text {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	min-width: 0;
+}
+
+.tvx-login-product {
+	font-family: "Syne", sans-serif;
+	font-weight: 750;
+	font-size: 1.05rem;
+	color: var(--tvx-ink);
+	letter-spacing: -0.01em;
+	line-height: 1.15;
+}
+
+.tvx-login-client {
+	font-size: 0.72rem;
+	font-weight: 600;
+	color: var(--tvx-muted);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: min(420px, 55vw);
+}
+
+.tvx-login-top-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+.tvx-login-theme-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 1px solid rgba(148, 163, 184, 0.35);
+	background: rgba(255, 255, 255, 0.72);
+	color: var(--tvx-ink);
+	cursor: pointer;
+	transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+html.tvx-login[data-tvx-login-theme="dark"] .tvx-login-theme-toggle,
+html.tvx-login-dark .tvx-login-theme-toggle {
+	background: rgba(15, 23, 42, 0.75);
+	border-color: rgba(71, 85, 105, 0.8);
+	color: #e2e8f0;
+}
+
+.tvx-login-theme-toggle:hover {
+	transform: translateY(-1px);
+	border-color: var(--tvx-green);
+}
+
+.tvx-login-theme-toggle .tvx-icon-moon {
+	display: none;
+}
+
+html.tvx-login[data-tvx-login-theme="dark"] .tvx-login-theme-toggle .tvx-icon-sun,
+html.tvx-login-dark .tvx-login-theme-toggle .tvx-icon-sun {
+	display: none;
+}
+
+html.tvx-login[data-tvx-login-theme="dark"] .tvx-login-theme-toggle .tvx-icon-moon,
+html.tvx-login-dark .tvx-login-theme-toggle .tvx-icon-moon {
+	display: block;
+}
+
+.tvx-login-contact {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 0 18px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, #14b8a6 0%, #0f9f6e 100%);
+	color: #fff !important;
+	font-weight: 700;
+	font-size: 0.88rem;
+	text-decoration: none !important;
+	box-shadow: 0 8px 18px rgba(15, 159, 110, 0.28);
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tvx-login-contact svg {
+	flex-shrink: 0;
+}
+
+.tvx-login-contact:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 12px 22px rgba(15, 159, 110, 0.34);
+	color: #fff !important;
+}
+
+.tvx-login-body {
+	min-height: 0;
+	display: grid;
+	grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+	gap: clamp(20px, 4vw, 48px);
+	align-items: center;
+	overflow: hidden;
+}
+
+.tvx-login-main,
+.tvx-login-stage {
+	min-height: 0;
+	width: 100%;
+}
+
+.tvx-login-stage {
+	animation: tvx-fade-up 0.55s ease-out both;
+}
+
+.tvx-login-welcome {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 12px;
+	padding: 10px 14px;
+	border-radius: 14px;
+	background: var(--tvx-login-welcome-bg);
+	color: var(--tvx-login-welcome-text);
+	font-size: 0.86rem;
+	font-weight: 600;
+	line-height: 1.35;
+	border: 1px solid rgba(15, 159, 110, 0.18);
+}
+
+.tvx-login-welcome-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--tvx-green);
+	flex-shrink: 0;
+	box-shadow: 0 0 0 4px rgba(15, 159, 110, 0.15);
+}
+
+.tvx-login-shell .login-content.page-card {
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	padding: 22px 24px 18px !important;
+	border-radius: 22px !important;
+	border: 1px solid var(--tvx-login-card-border) !important;
+	background: var(--tvx-login-card) !important;
+	box-shadow:
+		0 18px 40px rgba(15, 27, 45, 0.1),
+		0 1px 0 rgba(255, 255, 255, 0.06) inset !important;
+	backdrop-filter: blur(14px);
+}
+
+.tvx-login-shell .page-card-head {
+	display: block !important;
+	text-align: left !important;
+	margin: 0 0 10px !important;
+	padding: 0 !important;
+}
+
+.tvx-login-shell .page-card-head .app-logo {
+	display: none !important;
+}
+
+.tvx-login-shell .page-card-head h4 {
+	font-family: "Syne", sans-serif !important;
+	font-size: 1.45rem !important;
+	font-weight: 750 !important;
+	letter-spacing: -0.02em !important;
+	color: var(--tvx-ink) !important;
+	margin: 0 !important;
+}
+
+.tvx-login-shell .page-card-subtitle {
+	margin: 4px 0 0 !important;
+	color: var(--tvx-muted) !important;
+	font-size: 0.9rem !important;
+	line-height: 1.35 !important;
+}
+
+.tvx-login-shell .page-card-body {
+	padding: 0 !important;
+}
+
+.tvx-login-shell .form-group {
+	margin-bottom: 12px !important;
+}
+
+.tvx-login-shell .form-label {
+	font-size: 0.7rem !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.07em !important;
+	text-transform: uppercase !important;
+	color: #64748b !important;
+	margin-bottom: 4px !important;
+}
+
+.tvx-login-shell .form-control {
+	min-height: 44px !important;
+	height: 44px !important;
+	border-radius: 12px !important;
+	border: 1.5px solid var(--tvx-login-input-border) !important;
+	background: var(--tvx-login-input-bg) !important;
+	font-size: 0.95rem !important;
+	/* leave room for left field icon + right toggle */
+	padding: 8px 44px 8px 42px !important;
+	box-shadow: none !important;
+}
+
+.tvx-login-shell .email-field,
+.tvx-login-shell .password-field {
+	position: relative !important;
+}
+
+.tvx-login-shell .field-icon,
+.tvx-login-shell .email-icon,
+.tvx-login-shell .password-icon {
+	position: absolute !important;
+	left: 14px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	width: 16px !important;
+	height: 16px !important;
+	pointer-events: none !important;
+	opacity: 0.55 !important;
+	z-index: 2 !important;
+}
+
+.tvx-login-shell .toggle-password {
+	position: absolute !important;
+	right: 14px !important;
+	left: auto !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	cursor: pointer !important;
+	opacity: 0.55 !important;
+	z-index: 2 !important;
+}
+
+.tvx-login-shell .form-control:focus {
+	border-color: var(--tvx-green) !important;
+	box-shadow: 0 0 0 3px rgba(15, 159, 110, 0.16) !important;
+}
+
+.tvx-login-shell .forgot-password-message {
+	margin: 6px 0 0 !important;
+	text-align: right !important;
+	font-size: 0.82rem !important;
+}
+
+.tvx-login-shell .page-card-actions {
+	margin-top: 4px !important;
+}
+
+.tvx-login-shell .btn-login,
+.tvx-login-shell .btn-forgot,
+.tvx-login-shell .btn-signup.btn-forgot {
+	min-height: 46px !important;
+	border-radius: 999px !important;
+	border: none !important;
+	font-weight: 700 !important;
+	font-size: 0.95rem !important;
+	background: linear-gradient(135deg, #14b8a6 0%, #0f9f6e 55%, #0b7a55 100%) !important;
+	color: #fff !important;
+	box-shadow: 0 10px 22px rgba(15, 159, 110, 0.28) !important;
+}
+
+.tvx-login-shell .btn-login:hover,
+.tvx-login-shell .btn-forgot:hover {
+	transform: translateY(-1px);
+	color: #fff !important;
+}
+
+.tvx-login-shell .btn-login-option,
+.tvx-login-shell a.btn-login-option {
+	min-height: 44px !important;
+	border-radius: 999px !important;
+	border: 1.5px solid var(--tvx-login-input-border) !important;
+	background: transparent !important;
+	color: var(--tvx-ink) !important;
+	font-weight: 650 !important;
+	box-shadow: none !important;
+	margin-top: 8px !important;
+}
+
+.tvx-login-shell .btn-login-option:hover,
+.tvx-login-shell a.btn-login-option:hover {
+	border-color: var(--tvx-green) !important;
+	color: var(--tvx-green-deep) !important;
+	background: rgba(15, 159, 110, 0.06) !important;
+}
+
+.tvx-login-shell .forgot-password-message a,
+.tvx-login-shell .sign-up-message a {
+	color: var(--tvx-green-deep) !important;
+	font-weight: 650 !important;
+}
+
+.tvx-login-shell .sign-up-message {
+	margin-top: 10px !important;
+	font-size: 0.84rem !important;
+}
+
+.tvx-login-shell .login-error-banner {
+	margin-bottom: 8px !important;
+}
+
+/* ===== Visual hub (right) ===== */
+.tvx-login-visual {
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 18px;
+	padding: 8px 4px;
+	animation: tvx-fade-up 0.65s 0.08s ease-out both;
+}
+
+.tvx-hub {
+	position: relative;
+	width: min(520px, 100%);
+	display: grid;
+	grid-template-columns: 168px minmax(0, 1fr);
+	gap: 18px;
+	align-items: center;
+}
+
+.tvx-hub-core {
+	position: relative;
+	width: 132px;
+	height: 132px;
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+}
+
+.tvx-hub-ring {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background:
+		conic-gradient(from 210deg, #2dd4bf, #38bdf8, #fb923c, #34d399, #2dd4bf);
+	-webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+	mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+	animation: tvx-spin 14s linear infinite;
+}
+
+.tvx-hub-core-inner {
+	position: relative;
+	z-index: 1;
+	width: 102px;
+	height: 102px;
+	border-radius: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background: var(--tvx-login-hub-core);
+	box-shadow: 0 16px 36px rgba(15, 27, 45, 0.12);
+	border: 1px solid var(--tvx-login-card-border);
+}
+
+.tvx-hub-core-inner strong {
+	font-family: "Syne", sans-serif;
+	font-size: 1.05rem;
+	color: var(--tvx-ink);
+	line-height: 1.1;
+}
+
+.tvx-hub-core-inner span {
+	font-size: 0.78rem;
+	color: var(--tvx-muted);
+	margin-top: 2px;
+}
+
+.tvx-hub-cards {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.tvx-hub-card {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	border-radius: 14px;
+	background: var(--tvx-login-hub-card);
+	border: 1px solid var(--tvx-login-card-border);
+	box-shadow: 0 10px 24px rgba(15, 27, 45, 0.08);
+	backdrop-filter: blur(8px);
+	transform: translateX(0);
+	transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tvx-hub-card:nth-child(2) {
+	margin-left: 14px;
+}
+
+.tvx-hub-card:nth-child(3) {
+	margin-left: 28px;
+}
+
+.tvx-hub-card:hover {
+	transform: translateX(4px);
+	box-shadow: 0 14px 28px rgba(15, 27, 45, 0.12);
+}
+
+.tvx-hub-ico {
+	width: 38px;
+	height: 38px;
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	font-size: 1rem;
+	flex-shrink: 0;
+	color: #0f172a;
+}
+
+.tvx-hub-card--mfg .tvx-hub-ico {
+	background: #d8f5e8;
+	color: #0b7a55;
+}
+
+.tvx-hub-card--stock .tvx-hub-ico {
+	background: #ffe8dc;
+	color: #c2410c;
+}
+
+.tvx-hub-card--people .tvx-hub-ico {
+	background: #d6eef8;
+	color: #0369a1;
+}
+
+.tvx-hub-card strong {
+	display: block;
+	font-size: 0.92rem;
+	color: var(--tvx-ink);
+	line-height: 1.2;
+}
+
+.tvx-hub-card p {
+	margin: 2px 0 0;
+	font-size: 0.78rem;
+	color: var(--tvx-muted);
+	line-height: 1.25;
+}
+
+.tvx-login-trust {
+	margin: 0;
+	text-align: center;
+	font-size: 0.84rem;
+	color: var(--tvx-muted);
+}
+
+.tvx-login-foot {
+	flex-shrink: 0;
+	text-align: center;
+	font-size: 0.75rem;
+	color: var(--tvx-login-foot);
+	padding-top: 6px;
+}
+
+/* Auth sections: ONLY one visible — never stack signup/forgot under login */
+.tvx-login-shell section.for-login,
+.tvx-login-shell section.for-signup,
+.tvx-login-shell section.for-forgot,
+.tvx-login-shell section.for-login-with-email-link,
+.tvx-login-shell section.for-email-login {
+	display: none !important;
+}
+
+.tvx-login-shell section.for-login:not(.hide),
+.tvx-login-shell[data-auth="login"] section.for-login,
+.tvx-login-shell section.for-forgot:not(.hide),
+.tvx-login-shell[data-auth="forgot"] section.for-forgot,
+.tvx-login-shell section.for-signup:not(.hide),
+.tvx-login-shell[data-auth="signup"] section.for-signup,
+.tvx-login-shell section.for-login-with-email-link:not(.hide),
+.tvx-login-shell[data-auth="login-with-email-link"] section.for-login-with-email-link,
+.tvx-login-shell section.for-email-login:not(.hide),
+.tvx-login-shell[data-auth="email"] section.for-email-login {
+	display: block !important;
+}
+
+/* Default when Frappe has not toggled yet */
+.tvx-login-shell:not([data-auth]) section.for-login {
+	display: block !important;
+}
+
+.tvx-login-shell:not([data-auth]) section.for-signup,
+.tvx-login-shell:not([data-auth]) section.for-forgot,
+.tvx-login-shell:not([data-auth]) section.for-login-with-email-link,
+.tvx-login-shell:not([data-auth]) section.for-email-login {
+	display: none !important;
+}
+
+@keyframes tvx-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes tvx-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* ===== Tablet / mobile — still compact ===== */
+@media (max-width: 960px) {
+	html.tvx-login body,
+	body.tvx-login {
+		overflow: auto !important;
+		max-height: none !important;
+	}
+
+	body.tvx-login .page_content,
+	body.tvx-login .main-section,
+	body.tvx-login .page-container {
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+	}
+
+	.tvx-login-shell {
+		height: auto;
+		max-height: none;
+		min-height: 100dvh;
+		padding: 14px 16px 18px;
+		overflow: visible;
+	}
+
+	.tvx-login-body {
+		grid-template-columns: 1fr;
+		gap: 18px;
+		align-items: stretch;
+	}
+
+	.tvx-hub {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		width: 100%;
+		max-width: 420px;
+		margin: 0 auto;
+	}
+
+	.tvx-hub-cards {
+		width: 100%;
+	}
+
+	.tvx-hub-card:nth-child(2),
+	.tvx-hub-card:nth-child(3) {
+		margin-left: 0;
+	}
+
+	.tvx-login-visual {
+		order: -1;
+		padding: 0;
+		gap: 12px;
+	}
+
+	.tvx-hub-core {
+		width: 120px;
+		height: 120px;
+	}
+
+	.tvx-hub-core-inner {
+		width: 94px;
+		height: 94px;
+	}
+
+	.tvx-hub-core-inner strong {
+		font-size: 0.9rem;
+	}
+
+	.tvx-login-trust {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.tvx-login-shell .btn-login {
+		min-height: 48px !important;
+	}
+
+	.tvx-login-product {
+		font-size: 0.95rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tvx-hub-ring,
+	.tvx-login-stage,
+	.tvx-login-visual {
+		animation: none !important;
+	}
+}

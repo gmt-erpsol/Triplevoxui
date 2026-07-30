@@ -15,6 +15,18 @@ def apply_branding_settings():
     _system_settings()
     _navbar_settings()
     _website_settings()
+    try:
+        from triplevox_platform.workspace_viewer import run as setup_workspace_viewer
+
+        setup_workspace_viewer()
+    except Exception:
+        frappe.log_error(title="Workspace Viewer setup")
+    try:
+        from triplevox_platform.print_branding import run as setup_print_branding
+
+        setup_print_branding()
+    except Exception:
+        frappe.log_error(title="Print branding setup")
     frappe.db.commit()
 
 
@@ -29,11 +41,25 @@ def _system_settings():
         ("disable_change_log_notification", 1),
         ("disable_product_suggestion", 1),
         ("app_name", profile.get("product_name") or "TripleVox ERP"),
-        ("default_app", profile.get("default_app") or "erpnext"),
     ):
         if ss.meta.get_field(field) and getattr(ss, field, None) != value:
             ss.set(field, value)
             changed = True
+
+    # Default app: only set if missing, and never force titacustom unless installed.
+    # Never touch Global Defaults / default company.
+    if ss.meta.get_field("default_app"):
+        wanted = profile.get("default_app") or "erpnext"
+        if wanted == "titacustom" and "titacustom" not in (frappe.get_installed_apps() or []):
+            wanted = "erpnext"
+        current = getattr(ss, "default_app", None) or ""
+        if not current and wanted:
+            ss.set("default_app", wanted)
+            changed = True
+        elif current == "titacustom" and "titacustom" not in (frappe.get_installed_apps() or []):
+            ss.set("default_app", "erpnext")
+            changed = True
+
     if changed:
         ss.save(ignore_permissions=True)
 

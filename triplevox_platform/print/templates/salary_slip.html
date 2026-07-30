@@ -1,0 +1,77 @@
+{% from "includes/tvx_print_macros.html" import tvx_print_css, tvx_header, tvx_footer, tvx_watermark %}
+{% set t = tvx_print_theme(doc) %}
+{{ tvx_print_css(t) }}
+
+<div class="tvx-doc">
+  {{ tvx_watermark(t) }}
+  <div class="tvx-body">
+  {{ tvx_header(t, "ደመወዝ ደረሰኝ / SALARY PAYSLIP", doc.name) }}
+
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">Employee</span><span class="tvx-value">{{ doc.employee_name }}</span></td>
+      <td><span class="tvx-label">Employee ID</span><span class="tvx-value">{{ frappe.db.get_value("Employee", doc.employee, "employee_number") or doc.employee }}</span></td>
+      <td><span class="tvx-label">Department</span><span class="tvx-value">{{ doc.department or "—" }}</span></td>
+      <td><span class="tvx-label">Designation</span><span class="tvx-value">{{ doc.designation or "—" }}</span></td>
+    </tr>
+    <tr>
+      <td><span class="tvx-label">Period</span><span class="tvx-value">{{ tvx_date(doc.start_date) }} – {{ tvx_date(doc.end_date) }}</span></td>
+      <td><span class="tvx-label">Payment Days</span><span class="tvx-value">{{ doc.payment_days or 0 }} / {{ doc.total_working_days or 0 }}</span></td>
+      <td><span class="tvx-label">OT</span><span class="tvx-value">{{ doc.custom_ot_hours or 0 }} × {{ doc.custom_ot_multiplier or 1.25 }}</span></td>
+      <td><span class="tvx-label">Status</span><span class="tvx-value">{{ doc.status or ("Submitted" if doc.docstatus == 1 else "Draft") }}</span></td>
+    </tr>
+  </table>
+
+  <div class="tvx-section">Earnings &amp; Deductions</div>
+  <table style="width:100%; border-collapse:separate; border-spacing:8px 0;">
+    <tr>
+      <td style="width:50%; vertical-align:top; padding:0;">
+        <table class="tvx-items">
+          <thead><tr><th>Earnings</th><th class="tvx-amt">Amount</th></tr></thead>
+          <tbody>
+            {% for row in doc.earnings if row.amount %}
+            <tr><td>{{ row.salary_component }}</td><td class="tvx-amt">{{ tvx_money(row.amount, doc.currency, doc) }}</td></tr>
+            {% endfor %}
+            <tr class="tvx-total"><td>Gross Pay</td><td class="tvx-amt">{{ tvx_money(doc.gross_pay, doc.currency, doc) }}</td></tr>
+          </tbody>
+        </table>
+      </td>
+      <td style="width:50%; vertical-align:top; padding:0;">
+        <table class="tvx-items">
+          <thead><tr><th>Deductions</th><th class="tvx-amt">Amount</th></tr></thead>
+          <tbody>
+            {% for row in doc.deductions if row.amount %}
+            <tr><td>{{ row.salary_component }}</td><td class="tvx-amt">{{ tvx_money(row.amount, doc.currency, doc) }}</td></tr>
+            {% endfor %}
+            <tr class="tvx-total"><td>Total Deduction</td><td class="tvx-amt">{{ tvx_money(doc.total_deduction, doc.currency, doc) }}</td></tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <div class="tvx-hero">
+    <div class="tvx-hero-left">
+      <div class="tvx-hero-label">Net Pay (Take Home)</div>
+      <div style="margin-top:4px;font-size:8.5pt;font-style:italic;">
+        {{ doc.total_in_words or frappe.utils.money_in_words(doc.net_pay, doc.currency) }}
+      </div>
+    </div>
+    <div class="tvx-hero-right">
+      <div class="tvx-hero-amount">{{ tvx_money(doc.net_pay, doc.currency, doc) }}</div>
+    </div>
+  </div>
+
+  <div class="tvx-section">Payroll Summary</div>
+  <table class="tvx-meta">
+    <tr>
+      <td><span class="tvx-label">GTI</span><span class="tvx-value">{{ tvx_money(doc.custom_gti or 0, doc.currency, doc) }}</span></td>
+      <td><span class="tvx-label">Employer Pension</span><span class="tvx-value">{{ tvx_money(doc.custom_employer_pension or 0, doc.currency, doc) }}</span></td>
+      <td><span class="tvx-label">LWP</span><span class="tvx-value">{{ doc.leave_without_pay or 0 }} day(s)</span></td>
+      <td><span class="tvx-label">Absent</span><span class="tvx-value">{{ doc.absent_days or 0 }}</span></td>
+    </tr>
+  </table>
+
+  {{ tvx_footer(t) }}
+  </div>
+</div>

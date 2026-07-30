@@ -5,6 +5,8 @@ File: triplevox_platform/triplevox_platform/boot.py
 Purpose: boot_session: inject branding, client theme tokens into desk bootinfo.
 """
 """Safe Frappe v16 boot extensions for TripleVox white-label."""
+import frappe
+
 from triplevox_platform.client_theme import get_boot_payload
 
 
@@ -60,6 +62,14 @@ def boot_session(bootinfo):
     _rename_apps_screen_titles(bootinfo)
     _rename_hrms_navigation(bootinfo)
     _scrub_vendor_titles(bootinfo, product)
+
+    # Workspace Viewer: view/use only — never edit layouts
+    try:
+        from triplevox_platform.workspace_viewer import apply_boot_workspace_flags
+
+        apply_boot_workspace_flags(bootinfo)
+    except Exception:
+        frappe.log_error(title="Workspace Viewer boot flags failed")
 
 
 def _scrub_vendor_titles(bootinfo, product="TripleVox ERP"):
