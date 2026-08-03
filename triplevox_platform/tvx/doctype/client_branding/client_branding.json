@@ -1,0 +1,531 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:client_key",
+ "creation": "2026-08-02 08:30:00.000000",
+ "default_view": "List",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "identity_section",
+  "enabled",
+  "is_site_default",
+  "client_key",
+  "client_full_name",
+  "company",
+  "column_break_id",
+  "factory_area",
+  "welcome_kicker",
+  "hub_section",
+  "apps_title",
+  "hub_route",
+  "hub_subtitle",
+  "column_break_hub",
+  "default_app",
+  "hub_icon",
+  "hub_icon_image",
+  "spotlight_tags",
+  "product_section",
+  "product_name",
+  "software_company_name",
+  "partner_name",
+  "sidebar_title",
+  "column_break_product",
+  "product_logo_source",
+  "product_logo_image",
+  "product_logo",
+  "support_section",
+  "support_label",
+  "support_email",
+  "support_url",
+  "client_marks_section",
+  "client_logo_source",
+  "client_logo_image",
+  "client_logo",
+  "column_break_client_marks",
+  "print_logo_source",
+  "print_logo_image",
+  "print_logo",
+  "chrome_section",
+  "favicon_source",
+  "favicon_image",
+  "favicon",
+  "column_break_chrome",
+  "splash_source",
+  "splash_image",
+  "splash",
+  "watermark_section",
+  "watermark_source",
+  "watermark_image",
+  "watermark_url",
+  "column_break_wm",
+  "watermark_dark_source",
+  "watermark_dark_image",
+  "watermark_dark_url",
+  "colors_section",
+  "accent_color",
+  "accent_bright",
+  "accent_soft",
+  "column_break_colors",
+  "sidebar_color",
+  "sidebar_color_2",
+  "sidebar_color_dark",
+  "sidebar_color_2_dark",
+  "help_section",
+  "help_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "1 · Client Identity"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "default": "0",
+   "description": "Used when no session company matches a Client Branding row",
+   "fieldname": "is_site_default",
+   "fieldtype": "Check",
+   "label": "Site Default"
+  },
+  {
+   "description": "Short key for CSS (data-tvx-client), e.g. acme, plant1",
+   "fieldname": "client_key",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Client Key",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "client_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Client Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_id",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "factory_area",
+   "fieldtype": "Data",
+   "label": "Factory / Area Label"
+  },
+  {
+   "default": "Operations Desk",
+   "fieldname": "welcome_kicker",
+   "fieldtype": "Data",
+   "label": "Welcome Kicker"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:!doc.apps_title",
+   "fieldname": "hub_section",
+   "fieldtype": "Section Break",
+   "label": "2 · Desktop Hub Card"
+  },
+  {
+   "default": "Manufacturing",
+   "description": "Primary industry hub title on Desktop home",
+   "fieldname": "apps_title",
+   "fieldtype": "Data",
+   "label": "Industry / Hub Title"
+  },
+  {
+   "description": "Desktop icon or workspace the hub opens (falls back to Hub Title)",
+   "fieldname": "hub_route",
+   "fieldtype": "Data",
+   "label": "Hub Route"
+  },
+  {
+   "description": "Subtitle under the industry hub card",
+   "fieldname": "hub_subtitle",
+   "fieldtype": "Small Text",
+   "label": "Hub Subtitle"
+  },
+  {
+   "fieldname": "column_break_hub",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Optional Frappe app name for default launcher (e.g. titacustom)",
+   "fieldname": "default_app",
+   "fieldtype": "Data",
+   "label": "Default App"
+  },
+  {
+   "default": "Manufacturing",
+   "fieldname": "hub_icon",
+   "fieldtype": "Select",
+   "label": "Hub Icon Style",
+   "options": "Manufacturing\nEducation\nHealthcare\nRetail\nServices\nGeneric\nCustom"
+  },
+  {
+   "depends_on": "eval:doc.hub_icon==\"Custom\"",
+   "fieldname": "hub_icon_image",
+   "fieldtype": "Attach Image",
+   "label": "Custom Hub Icon"
+  },
+  {
+   "description": "Comma-separated chips on Desktop home",
+   "fieldname": "spotlight_tags",
+   "fieldtype": "Data",
+   "label": "Spotlight Tags"
+  },
+  {
+   "fieldname": "product_section",
+   "fieldtype": "Section Break",
+   "label": "3 · Product Brand (software / ISV)"
+  },
+  {
+   "default": "TripleVox ERP",
+   "description": "Shown in sidebar subtitle, Support menu, apps screen",
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "label": "Product Name"
+  },
+  {
+   "default": "TripleVox Engineering PLC",
+   "description": "ISV name for footer / About. Falls back to Partner Name.",
+   "fieldname": "software_company_name",
+   "fieldtype": "Data",
+   "label": "Software Company Name"
+  },
+  {
+   "default": "TripleVox Engineering PLC",
+   "fieldname": "partner_name",
+   "fieldtype": "Data",
+   "label": "Partner / Footer Name"
+  },
+  {
+   "default": "TripleVox ERP",
+   "fieldname": "sidebar_title",
+   "fieldtype": "Data",
+   "label": "Sidebar Title"
+  },
+  {
+   "fieldname": "column_break_product",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Logo URL",
+   "description": "Replaces TripleVox mark: sidebar brand, login, apps screen, favicon/splash (unless overridden below). Default is TripleVox — change anytime.",
+   "fieldname": "product_logo_source",
+   "fieldtype": "Select",
+   "label": "Product Logo Source",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.product_logo_source==\"Attach Image\"",
+   "fieldname": "product_logo_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Product Logo"
+  },
+  {
+   "depends_on": "eval:doc.product_logo_source==\"Logo URL\"",
+   "default": "/assets/triplevox_platform/images/triplevox-logo.png",
+   "fieldname": "product_logo",
+   "fieldtype": "Data",
+   "label": "Product Logo URL"
+  },
+  {
+   "fieldname": "support_section",
+   "fieldtype": "Section Break",
+   "label": "3b · Support Link"
+  },
+  {
+   "default": "TripleVox ERP Support",
+   "description": "Menu label (e.g. GMT ERP Support). Blank = \"{Product Name} Support\".",
+   "fieldname": "support_label",
+   "fieldtype": "Data",
+   "label": "Support Label"
+  },
+  {
+   "default": "gemtadebelaa@gmail.com",
+   "description": "Used for mailto / Gmail compose when Support URL is blank",
+   "fieldname": "support_email",
+   "fieldtype": "Data",
+   "label": "Support Email"
+  },
+  {
+   "description": "Optional full URL. Blank = open email compose to Support Email.",
+   "fieldname": "support_url",
+   "fieldtype": "Data",
+   "label": "Support URL"
+  },
+  {
+   "fieldname": "client_marks_section",
+   "fieldtype": "Section Break",
+   "label": "4 · Client Marks"
+  },
+  {
+   "default": "Attach Image",
+   "description": "Navbar header + bottom-left client pill",
+   "fieldname": "client_logo_source",
+   "fieldtype": "Select",
+   "label": "Client Logo Source",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.client_logo_source==\"Attach Image\"",
+   "fieldname": "client_logo_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Client Logo"
+  },
+  {
+   "depends_on": "eval:doc.client_logo_source==\"Logo URL\"",
+   "fieldname": "client_logo",
+   "fieldtype": "Data",
+   "label": "Client Logo URL"
+  },
+  {
+   "fieldname": "column_break_client_marks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Attach Image",
+   "description": "Letter Head / print formats (falls back to Client Logo)",
+   "fieldname": "print_logo_source",
+   "fieldtype": "Select",
+   "label": "Print Logo Source",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.print_logo_source==\"Attach Image\"",
+   "fieldname": "print_logo_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Print Logo"
+  },
+  {
+   "depends_on": "eval:doc.print_logo_source==\"Logo URL\"",
+   "fieldname": "print_logo",
+   "fieldtype": "Data",
+   "label": "Print Logo URL"
+  },
+  {
+   "collapsible": 1,
+   "description": "Leave blank to use Product Logo for browser tab + login splash",
+   "fieldname": "chrome_section",
+   "fieldtype": "Section Break",
+   "label": "5 · Favicon & Splash (optional overrides)"
+  },
+  {
+   "default": "Logo URL",
+   "fieldname": "favicon_source",
+   "fieldtype": "Select",
+   "label": "Favicon Source",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.favicon_source==\"Attach Image\"",
+   "fieldname": "favicon_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Favicon"
+  },
+  {
+   "depends_on": "eval:doc.favicon_source==\"Logo URL\"",
+   "default": "/assets/triplevox_platform/images/triplevox-logo.png",
+   "fieldname": "favicon",
+   "fieldtype": "Data",
+   "label": "Favicon URL"
+  },
+  {
+   "fieldname": "column_break_chrome",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Logo URL",
+   "fieldname": "splash_source",
+   "fieldtype": "Select",
+   "label": "Splash Source",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.splash_source==\"Attach Image\"",
+   "fieldname": "splash_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Splash Image"
+  },
+  {
+   "depends_on": "eval:doc.splash_source==\"Logo URL\"",
+   "default": "/assets/triplevox_platform/images/triplevox-logo.png",
+   "fieldname": "splash",
+   "fieldtype": "Data",
+   "label": "Splash URL"
+  },
+  {
+   "fieldname": "watermark_section",
+   "fieldtype": "Section Break",
+   "label": "6 · Soft Watermark (desk + menus)"
+  },
+  {
+   "default": "Logo URL",
+   "description": "Faint mark on desk background and app-switcher / dropdown shells",
+   "fieldname": "watermark_source",
+   "fieldtype": "Select",
+   "label": "Watermark Source (light)",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.watermark_source==\"Attach Image\"",
+   "fieldname": "watermark_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Watermark (light)"
+  },
+  {
+   "default": "/assets/triplevox_platform/images/triplevox-watermark.png",
+   "depends_on": "eval:doc.watermark_source==\"Logo URL\"",
+   "fieldname": "watermark_url",
+   "fieldtype": "Data",
+   "label": "Watermark URL (light)"
+  },
+  {
+   "fieldname": "column_break_wm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Logo URL",
+   "fieldname": "watermark_dark_source",
+   "fieldtype": "Select",
+   "label": "Watermark Source (dark)",
+   "options": "Attach Image\nLogo URL"
+  },
+  {
+   "depends_on": "eval:doc.watermark_dark_source==\"Attach Image\"",
+   "fieldname": "watermark_dark_image",
+   "fieldtype": "Attach Image",
+   "label": "Upload Watermark (dark)"
+  },
+  {
+   "default": "/assets/triplevox_platform/images/triplevox-watermark-dark.png",
+   "depends_on": "eval:doc.watermark_dark_source==\"Logo URL\"",
+   "fieldname": "watermark_dark_url",
+   "fieldtype": "Data",
+   "label": "Watermark URL (dark)"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "colors_section",
+   "fieldtype": "Section Break",
+   "label": "7 · Theme Colors"
+  },
+  {
+   "default": "#1e4d8c",
+   "description": "Primary accent for buttons, chips, selection, prints",
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "in_list_view": 1,
+   "label": "Accent Color",
+   "reqd": 1
+  },
+  {
+   "default": "#2563ab",
+   "fieldname": "accent_bright",
+   "fieldtype": "Color",
+   "label": "Accent Bright"
+  },
+  {
+   "default": "#dbeafe",
+   "fieldname": "accent_soft",
+   "fieldtype": "Color",
+   "label": "Accent Soft (chips / selection)"
+  },
+  {
+   "fieldname": "column_break_colors",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#f0f7fc",
+   "fieldname": "sidebar_color",
+   "fieldtype": "Color",
+   "label": "Sidebar Color (light)"
+  },
+  {
+   "default": "#e0f0f8",
+   "fieldname": "sidebar_color_2",
+   "fieldtype": "Color",
+   "label": "Sidebar Color 2 (light)"
+  },
+  {
+   "default": "#0f172a",
+   "fieldname": "sidebar_color_dark",
+   "fieldtype": "Color",
+   "label": "Sidebar Color (dark)"
+  },
+  {
+   "default": "#1e293b",
+   "fieldname": "sidebar_color_2_dark",
+   "fieldtype": "Color",
+   "label": "Sidebar Color 2 (dark)"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "help_section",
+   "fieldtype": "Section Break",
+   "label": "Where each logo goes"
+  },
+  {
+   "fieldname": "help_html",
+   "fieldtype": "HTML",
+   "options": "<div class=\"tvx-branding-guide\" style=\"line-height:1.45;color:var(--text-muted)\"><table class=\"table table-bordered\" style=\"margin:0;font-size:12px\"><thead><tr><th>Asset</th><th>Used on</th></tr></thead><tbody><tr><td><b>Product Logo</b></td><td>Sidebar brand, login, apps screen, favicon and splash (when overrides blank)</td></tr><tr><td><b>Client Logo</b></td><td>Navbar header and client pill</td></tr><tr><td><b>Print Logo</b></td><td>Letter Head / PDF prints</td></tr><tr><td><b>Favicon / Splash</b></td><td>Leave blank to follow Product Logo. Stock TripleVox path is ignored.</td></tr><tr><td><b>Support</b></td><td>Account sheet and navbar Support</td></tr><tr><td><b>Software Company Name</b></td><td>About dialog copyright</td></tr><tr><td><b>Soft Watermark</b></td><td>Desk, launchpad, account sheet, native menus</td></tr></tbody></table><p style=\"margin:10px 0 0\">After saving, click <b>Apply to Desk now</b> or hard-refresh (Ctrl+Shift+R).</p></div>"
+  }
+ ],
+ "idx": 0,
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-08-02 15:40:00.000000",
+ "modified_by": "Administrator",
+ "module": "TVX",
+ "name": "Client Branding",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 0,
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "client_full_name",
+ "track_changes": 1
+}

@@ -1,5 +1,6 @@
 /**
- * TripleVox login — auth panels, light/dark theme, single viewport.
+ * TripleVox login — auth panels + light/dark theme.
+ * Company block is a static showcase (no branding switcher).
  */
 (function () {
 	const THEME_KEY = "tvx_login_theme";
@@ -32,6 +33,7 @@
 		const dark = theme === "dark" || (!theme && systemPrefersDark());
 		root.setAttribute("data-tvx-login-theme", dark ? "dark" : "light");
 		root.classList.toggle("tvx-login-dark", dark);
+		root.classList.add("tvx-login");
 	}
 
 	function initTheme() {
@@ -79,11 +81,8 @@
 		Object.keys(map).forEach(function (key) {
 			var el = shell.querySelector(map[key]);
 			if (!el) return;
-			if (key === route) {
-				el.classList.remove("hide");
-			} else {
-				el.classList.add("hide");
-			}
+			if (key === route) el.classList.remove("hide");
+			else el.classList.add("hide");
 		});
 
 		var forgotForm = shell.querySelector(".form-forgot");

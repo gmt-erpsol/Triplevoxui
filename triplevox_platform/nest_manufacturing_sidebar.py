@@ -12,20 +12,22 @@ TITA_SECTION = "TITA Apps"
 
 TITA_LINKS = (
     {
-        "label": "TITA Manufacturing",
-        "link_to": "TITA Manufacturing",
-        "icon": "factory",
-    },
-    {
-        "label": "TITA Production",
-        "link_to": "TITA Production",
+        "label": "TITA Factory",
+        "link_to": "TITA Factory",
         "icon": "factory",
     },
 )
 
+# Legacy labels to strip from Manufacturing sidebar
+LEGACY_TITA_LABELS = ("TITA Manufacturing", "TITA Production", "TITA ERP")
+
 
 # EDU: Entry point — run via bench execute (see file header).
 def run():
+    from triplevox_platform.domain_gates import tita_domain_enabled
+
+    if not tita_domain_enabled():
+        return {"ok": False, "skipped": True, "reason": "titacustom not enabled on this site"}
     if not frappe.db.exists("Workspace Sidebar", PARENT_SIDEBAR):
         return {"ok": False, "reason": "Manufacturing sidebar missing"}
 
@@ -40,6 +42,49 @@ def run():
 
     doc = frappe.get_doc("Workspace Sidebar", PARENT_SIDEBAR)
     changed = False
+
+    # Drop orphan / legacy TITA Workspace links so save does not fail
+    keep_items = []
+    for row in list(doc.items or []):
+        link_type = getattr(row, "link_type", None)
+        link_to = getattr(row, "link_to", None)
+        lab = (row.label or "").strip()
+        if lab in LEGACY_TITA_LABELS or (
+            link_type == "Workspace" and link_to in LEGACY_TITA_LABELS
+        ):
+            changed = True
+            continue
+        if (
+            (getattr(row, "type", None) or "") == "Link"
+            and link_type == "Workspace"
+            and link_to
+            and not frappe.db.exists("Workspace", link_to)
+        ):
+            changed = True
+            continue
+        keep_items.append(row)
+    if len(keep_items) != len(doc.items or []):
+        doc.set("items", [])
+        for row in keep_items:
+            doc.append(
+                "items",
+                {
+                    "label": row.label,
+                    "type": row.type,
+                    "link_type": getattr(row, "link_type", None),
+                    "link_to": getattr(row, "link_to", None),
+                    "icon": getattr(row, "icon", None),
+                    "url": getattr(row, "url", None),
+                    "child": getattr(row, "child", 0),
+                    "indent": getattr(row, "indent", 0),
+                    "collapsible": getattr(row, "collapsible", 0),
+                    "keep_closed": getattr(row, "keep_closed", 0),
+                    "show_arrow": getattr(row, "show_arrow", 0),
+                    "filters": getattr(row, "filters", None),
+                    "route_options": getattr(row, "route_options", None),
+                },
+            )
+
     # Lucide v16: legacy "organization" / "home" / "stock" do not render
     if getattr(doc, "header_icon", None) in (None, "", "organization", "tool"):
         doc.header_icon = "factory"
@@ -87,8 +132,8 @@ def run():
         if cur in ICON_FIX:
             row.icon = ICON_FIX[cur]
             changed = True
-        # TITA nested links always use factory
-        if (row.label or "") in ("TITA Manufacturing", "TITA Production"):
+        # TITA nested link
+        if (row.label or "") == "TITA Factory":
             if getattr(row, "icon", None) != "factory":
                 row.icon = "factory"
                 changed = True
@@ -146,8 +191,15 @@ def run():
         changed = True
 
     if changed:
-        doc.save(ignore_permissions=True)
-        frappe.db.commit()
+        # Never export into erpnext/frappe fixtures (developer_mode would otherwise
+        # write TITA rows into apps/erpnext/.../manufacturing.json).
+        prev_import = getattr(frappe.flags, "in_import", False)
+        frappe.flags.in_import = True
+        try:
+            doc.save(ignore_permissions=True)
+            frappe.db.commit()
+        finally:
+            frappe.flags.in_import = prev_import
         try:
             frappe.cache().delete_keys("workspace*")
             frappe.cache().delete_keys("boot*")

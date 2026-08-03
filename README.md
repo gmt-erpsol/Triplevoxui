@@ -1,67 +1,87 @@
-# TripleVox Platform (TITA / multi-client Desk UI)
+# TripleVox Platform (reusable parent Desk UI)
 
-White-label **Frappe v16** Desk shell: CSS/JS, client themes, workspaces, branded prints, Workspace Viewer.
+White-label **Frappe v16** Desk shell: CSS/JS, **Client Branding** DocType, workspaces, branded prints, Workspace Viewer.
+
+Same app code on every site. Logos, colors, and names live in **that site’s database** — not in Python catalogs.
 
 This app is **separate** from `titacustom`. You do **not** need `titacustom` to run the UI.
 
 ## Dependencies
 
 - `frappe`, `erpnext`, `hrms` (v16)
-- `titacustom` — **optional** (only for TITA manufacturing features)
+- `titacustom` — **optional** (plastics / MES features only)
 
-## Install from GitHub (recommended)
+## Install matrix
 
-Full guide: [`docs/Deploy_UI_App_From_GitHub.md`](../../docs/Deploy_UI_App_From_GitHub.md)
+| Site type | Install | Branding |
+|-----------|---------|----------|
+| Shell-only (any client) | `triplevox_platform` | Create **Client Branding** + **Company** in Desk |
+| TITA manufacturing | `triplevox_platform` + `titacustom` | Client Branding rows; TITA workspaces/icons migrate only when `titacustom` is installed |
+| Multi-company on one site | `triplevox_platform` only | One Client Branding per company; link `Company` field |
+
+**Warning:** Do **not** install `titacustom` on a shared multi-company site until its domain hooks are company-scoped. Today those hooks are site-wide and would apply to every Company on that site. Prefer **one Frappe site per client** when the domain app is required.
+
+### Optional site_config flags
+
+```json
+{
+  "triplevox_client": "acme",
+  "triplevox_company_profiles": {
+    "Acme Plastics PLC": "acme"
+  },
+  "triplevox_enable_tita_workspaces": 0,
+  "triplevox_seed_demo_branding": 0
+}
+```
+
+- `triplevox_enable_tita_workspaces` — force TITA migrate chrome even without `titacustom` (rare).
+- `triplevox_seed_demo_branding` — create a single neutral Demo Client Branding row on migrate.
+
+## Install from GitHub
+
+Repo: `https://github.com/gmt-erpsol/Triplevoxui`
 
 ```bash
 cd ~/frappe-bench
 
-# 1) Clone UI app
-bench get-app https://github.com/YOUR_ORG/triplevox_platform.git --branch main
+bench get-app https://github.com/gmt-erpsol/Triplevoxui.git --branch main
+mv apps/Triplevoxui apps/triplevox_platform
 
-# 2) Install + migrate
 bench --site YOUR_SITE install-app triplevox_platform
 bench --site YOUR_SITE migrate
-
-# 3) Client theme (example: TITA)
-bench --site YOUR_SITE set-config triplevox_client tita
-bench --site YOUR_SITE execute triplevox_platform.setup.apply_branding_settings
-
-# 4) Cache
-bench build --app triplevox_platform   # optional if Node available
 bench --site YOUR_SITE clear-cache
 ```
 
-Hard-refresh the browser (`Ctrl+Shift+R`).
+Then in Desk: **Setup → Client Branding** → New → set key, name, company, logos, accents → Save. Hard-refresh (`Ctrl+Shift+R`).
 
-### One-shot helper script
+## Theme a client site (DB only)
 
-From the monorepo (or copy the script into the bench):
-
-```bash
-export SITE=YOUR_SITE
-export UI_GIT_URL=https://github.com/YOUR_ORG/triplevox_platform.git
-export CLIENT=tita
-bash dev-scripts/install_ui_from_github.sh
-```
-
-## Update from GitHub
-
-```bash
-cd ~/frappe-bench/apps/triplevox_platform && git pull
-cd ~/frappe-bench
-bench --site YOUR_SITE migrate
-bench --site YOUR_SITE clear-cache
-```
-
-## Theme a client site
-
-1. Add/edit a profile in `triplevox_platform/client_theme.py`.
-2. `bench --site YOUR_SITE set-config triplevox_client your_key`
-3. `bench --site YOUR_SITE execute triplevox_platform.setup.apply_branding_settings`
-4. Clear cache and hard-refresh.
+1. Create/edit **Client Branding** (no code edits).
+2. Link the ERPNext **Company**.
+3. Optional: `bench --site YOUR_SITE set-config triplevox_client your_key`
+4. `bench --site YOUR_SITE execute triplevox_platform.setup.apply_branding_settings`
+5. Clear cache and hard-refresh.
 
 Print logos use **Company logo → client logo → monogram** (never TripleVox product mark on PDFs).
+
+## One site, multiple companies
+
+Desk chrome follows the logged-in user’s company:
+
+1. `Employee.company` if linked  
+2. else User default **Company**  
+3. else Global Defaults company  
+
+Map is automatic from Client Branding.`company`, or override in `site_config.json` via `triplevox_company_profiles`.
+
+Ops helper (optional, not required for parent-app reuse): `triplevox_platform.setup_brg` — sister-company bootstrap scripts.
+
+## Success checklist (parent app)
+
+- Fresh site + platform only → no TITA/BRG rows seeded; no TITA Manufacturing icon unless `titacustom` installed  
+- Admin creates one Client Branding → Desk / login / print pick up logos & colors with no code edit  
+- Second Company + branding row → switcher / login cards work via DB map  
+- Grep runtime for client legal names → should not hit `client_theme.py` catalogs (removed)
 
 ## License
 

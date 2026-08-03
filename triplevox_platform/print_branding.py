@@ -197,9 +197,6 @@ def get_print_theme(company=None, doc=None):
 	  2. client_theme profile (triplevox_client / site_config)
 	  3. Safe TripleVox defaults
 	"""
-	profile = get_client_profile()
-	theme = deepcopy(profile.get("theme") or {})
-
 	company_name = None
 	if doc is not None:
 		company_name = getattr(doc, "company", None) or company
@@ -210,6 +207,10 @@ def get_print_theme(company=None, doc=None):
 		company_name = frappe.defaults.get_global_default("company") or frappe.db.get_value(
 			"Company", {}, "name"
 		)
+
+	# Desk + print share the same company → CLIENTS profile map
+	profile = get_client_profile(company=company_name)
+	theme = deepcopy(profile.get("theme") or {})
 
 	company_row = {}
 	if company_name and frappe.db.exists("Company", company_name):

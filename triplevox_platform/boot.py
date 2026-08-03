@@ -31,6 +31,7 @@ TOP_LEVEL_GROUPS = {
     "Accounting",
     "Sales & Procurement",
     "Inventory & Assets",
+    "Manufacturing",
     "TITA Manufacturing",
     "Manufacturing Workspace",
     "CRM",
@@ -40,26 +41,36 @@ TOP_LEVEL_GROUPS = {
 
 
 def boot_session(bootinfo):
-    # Client identity + theme tokens (see client_theme.py / site_config)
+    # Per-user company → client profile (see client_theme.get_session_company)
     bootinfo.triplevox = get_boot_payload()
 
     bootinfo.disable_change_log_notification = 1
     bootinfo.show_system_update_notification = 0
 
     product = (bootinfo.triplevox or {}).get("product_name") or "TripleVox ERP"
+    apps_title = (bootinfo.triplevox or {}).get("apps_title") or "Manufacturing"
     # Visible product name everywhere Desk reads app_name / sitename
     bootinfo.app_name = product
+    product_logo = (bootinfo.triplevox or {}).get("product_logo_url") or (
+        bootinfo.triplevox or {}
+    ).get("logo_url")
+    if product_logo:
+        try:
+            bootinfo.app_logo_url = product_logo
+        except Exception:
+            pass
     if getattr(bootinfo, "sysdefaults", None) is not None:
         try:
             bootinfo.sysdefaults.app_name = product
         except Exception:
             pass
 
+    _inject_titacustom_apps_screen(bootinfo, apps_title=apps_title)
     _prefer_tita_erp_app(bootinfo)
     _rename_app_launchers_and_fix_parents(bootinfo)
     _nest_orphans_under_app_parents(bootinfo)
     _order_parent_apps(bootinfo)
-    _rename_apps_screen_titles(bootinfo)
+    _rename_apps_screen_titles(bootinfo, apps_title=apps_title)
     _rename_hrms_navigation(bootinfo)
     _scrub_vendor_titles(bootinfo, product)
 
@@ -70,6 +81,35 @@ def boot_session(bootinfo):
         apply_boot_workspace_flags(bootinfo)
     except Exception:
         frappe.log_error(title="Workspace Viewer boot flags failed")
+
+
+def _inject_titacustom_apps_screen(bootinfo, apps_title="Manufacturing"):
+    """Register titacustom on apps screen only when domain is enabled on this site."""
+    try:
+        from triplevox_platform.domain_gates import tita_domain_enabled
+
+        if not tita_domain_enabled():
+            return
+    except Exception:
+        return
+
+    entry = {
+        "name": "titacustom",
+        "logo": "/assets/titacustom/images/tita-logo.svg",
+        "title": apps_title or "Manufacturing",
+        "route": "/desk/tita-manufacturing",
+    }
+    apps = bootinfo.get("apps")
+    if isinstance(apps, list):
+        if not any((a.get("name") if isinstance(a, dict) else None) == "titacustom" for a in apps):
+            apps.append(dict(entry))
+    app_data = bootinfo.get("app_data")
+    if isinstance(app_data, dict) and "titacustom" not in app_data:
+        app_data["titacustom"] = {
+            "app_title": entry["title"],
+            "title": entry["title"],
+            "app_logo_url": entry["logo"],
+        }
 
 
 def _scrub_vendor_titles(bootinfo, product="TripleVox ERP"):
@@ -159,8 +199,13 @@ def _nest_orphans_under_app_parents(bootinfo):
     labels = {
         (icon.get("label") or "").strip()
         for icon in icons
-        if not icon.get("hidden") and (icon.get("icon_type") or "") == "App"
+        if not icon.get("hidden")
+        and (icon.get("icon_type") or "") in ("App", "Folder")
     }
+    if "Other" not in labels and any(
+        (i.get("label") or "") == "Other" for i in icons
+    ):
+        labels.add("Other")
 
     for icon in icons:
         if icon.get("hidden"):
@@ -173,17 +218,19 @@ def _nest_orphans_under_app_parents(bootinfo):
             continue
         app = icon.get("app")
         parent = NEST_APP_TO_PARENT.get(app) if app else None
-        if not parent and (icon.get("label") or "") in (
-            "TITA Production",
-            "Organization",
-            "Subcontracting",
-        ):
+        if not parent:
             parent = "Other"
-        # Never nest TITA Manufacturing under Other / app parents
-        if (icon.get("label") or "") in ("TITA Manufacturing", "Manufacturing Workspace"):
+        # Never nest Manufacturing hub under Other / app parents
+        if (icon.get("label") or "") in (
+            "Manufacturing",
+            "TITA Manufacturing",
+            "Manufacturing Workspace",
+        ):
             continue
-        if parent and parent in labels and (icon.get("label") or "") != parent:
+        if parent in labels and (icon.get("label") or "") != parent:
             icon["parent_icon"] = parent
+        elif "Other" in labels and (icon.get("label") or "") != "Other":
+            icon["parent_icon"] = "Other"
 
 
 def _order_parent_apps(bootinfo):
@@ -194,8 +241,9 @@ def _order_parent_apps(bootinfo):
         "CRM": 4,
         "Sales & Procurement": 5,
         "Inventory & Assets": 6,
+        "Manufacturing": 7,
         "TITA Manufacturing": 7,
-        "Manufacturing Workspace": 8,
+        "Manufacturing Workspace": 7,
         "Other": 9,
         "HRMS": 10,
     }
@@ -207,12 +255,12 @@ def _order_parent_apps(bootinfo):
     icons.sort(key=lambda icon: (icon.get("idx") or 9999, icon.get("label") or ""))
 
 
-def _rename_apps_screen_titles(bootinfo):
+def _rename_apps_screen_titles(bootinfo, apps_title="Manufacturing"):
     title_map = {
         "erpnext": "TripleVox ERP",
         "hrms": "HRMS",
         "frappe": "System Administration",
-        "titacustom": "TITA Manufacturing",
+        "titacustom": apps_title or "Manufacturing",
         "triplevox_platform": "TripleVox ERP",
     }
     for app in bootinfo.get("apps") or []:

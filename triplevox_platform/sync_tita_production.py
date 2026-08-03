@@ -68,6 +68,10 @@ CARDS = (
 # EDU: Entry point — run via bench execute (see file header).
 def run():
     """Replace malformed legacy link blocks with native v16 shortcut/card blocks."""
+    from triplevox_platform.domain_gates import tita_domain_enabled
+
+    if not tita_domain_enabled():
+        return {"ok": False, "skipped": True, "reason": "titacustom not enabled on this site"}
     if not frappe.db.exists("Workspace", WORKSPACE):
         doc = frappe.get_doc(
             {

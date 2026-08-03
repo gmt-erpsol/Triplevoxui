@@ -9,7 +9,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/triplevox_platform/css/tvx_login.css?v=20260728j">
+<script>
+/* Apply saved login theme before paint — kills light flash on dark refresh */
+(function () {
+	try {
+		var t = localStorage.getItem("tvx_login_theme");
+		var dark = t === "dark" || (!t && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+		if (dark) {
+			document.documentElement.classList.add("tvx-login", "tvx-login-dark");
+			document.documentElement.setAttribute("data-tvx-login-theme", "dark");
+		} else {
+			document.documentElement.classList.add("tvx-login");
+			document.documentElement.setAttribute("data-tvx-login-theme", "light");
+		}
+	} catch (e) {
+		document.documentElement.classList.add("tvx-login");
+	}
+})();
+</script>
+<link rel="stylesheet" href="/assets/triplevox_platform/css/tvx_login.css?v=20260802z">
 {% endblock %}
 
 {% macro email_login_body() -%}
@@ -106,13 +124,18 @@
 
 {% block page_content %}
 <div class="tvx-login-shell">
+	<div class="tvx-login-center">
 	<header class="tvx-login-top">
 		<div class="tvx-login-brand-lockup">
-			<img class="tvx-login-mark" src="{{ logo or app_logo or '/assets/triplevox_platform/images/triplevox-logo.png' }}" alt="{{ app_name or 'TripleVox ERP' }}" onerror="this.onerror=null;this.src='/assets/triplevox_platform/images/triplevox-logo.png';">
+			<img class="tvx-login-mark" src="{{ tvx_product_logo or logo or app_logo or '/assets/triplevox_platform/images/triplevox-logo.png' }}" alt="{{ app_name or 'TripleVox ERP' }}" onerror="this.onerror=null;this.src='/assets/triplevox_platform/images/triplevox-logo.png';">
 			<div class="tvx-login-brand-text">
 				<span class="tvx-login-product">{{ app_name or "TripleVox ERP" }}</span>
-				<span class="tvx-login-client">{{ tvx_client_name or "TITA PP Plastic PLC" }}{% if tvx_factory_area %} · {{ tvx_factory_area }}{% endif %}</span>
+				<span class="tvx-login-tagline">Operations desk</span>
 			</div>
+			{% if tvx_client_logo %}
+			<img class="tvx-login-client-mark" src="{{ tvx_client_logo }}" alt="{{ tvx_client_name or 'Client' }}" title="{{ tvx_client_name or 'Client' }}" loading="lazy"
+				onerror="this.style.display='none';">
+			{% endif %}
 		</div>
 		<div class="tvx-login-top-actions">
 			<button type="button" class="tvx-login-theme-toggle" aria-label="Toggle light or dark mode" title="Toggle theme">
@@ -123,7 +146,7 @@
 					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
 				</svg>
 			</button>
-			<a class="tvx-login-contact" href="{{ tvx_contact_url or 'https://mail.google.com/mail/?view=cm&fs=1&to=gemtadebelaa@gmail.com&su=TripleVox%20ERP%20%2F%20TITA%20Support' }}" target="_blank" rel="noopener noreferrer">
+			<a class="tvx-login-contact" href="{{ tvx_contact_url or 'https://mail.google.com/mail/?view=cm&fs=1&to=gemtadebelaa@gmail.com&su=TripleVox%20ERP%20Support' }}" target="_blank" rel="noopener noreferrer">
 				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 					<path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/>
 				</svg>
@@ -142,12 +165,29 @@
 				</noscript>
 
 				<section class='for-login'>
-					<div class="tvx-login-welcome" role="status">
-						<span class="tvx-login-welcome-dot" aria-hidden="true"></span>
-						<span>Welcome back! Sign in to continue to your operations desk.</span>
-					</div>
 					<div class="login-content page-card">
-						{{ logo_section(_('Sign in'), _('Open your factory operations desk.')) }}
+						{{ logo_section(_('Sign in'), _('Sign in to continue.')) }}
+						{% if tvx_login_companies %}
+						<div class="tvx-login-co-showcase">
+							<label class="form-label">{{ _("Companies on this site") }}</label>
+							<div class="tvx-login-co-grid" data-count="{{ tvx_login_companies|length }}" style="--co-n: {{ tvx_login_companies|length }};">
+								{% for c in tvx_login_companies %}
+								<article class="tvx-login-co-card" style="--co-accent: {{ c.accent or '#1e4d8c' }}; --co-soft: {{ c.accent_soft or '#dbeafe' }};">
+									<div class="tvx-login-co-mark">
+										{% if c.client_logo_url %}
+										<img src="{{ c.client_logo_url }}" alt="{{ c.company }}" loading="lazy"
+											onerror="this.style.display='none';var s=this.nextElementSibling;if(s)s.hidden=false;" />
+										<span class="tvx-login-co-fallback" hidden>{{ (c.company or c.key or '?')[:2]|upper }}</span>
+										{% else %}
+										<span class="tvx-login-co-fallback">{{ (c.company or c.key or '?')[:2]|upper }}</span>
+										{% endif %}
+									</div>
+									<span class="tvx-login-co-name">{{ c.company }}</span>
+								</article>
+								{% endfor %}
+							</div>
+						</div>
+						{% endif %}
 						<form class="form-signin form-login" role="form" novalidate>
 							{{ email_login_body() }}
 						</form>
@@ -287,19 +327,20 @@
 					</article>
 				</div>
 			</div>
-			<p class="tvx-login-trust">Built for PP bag plants — clarity at every handoff.</p>
+			<p class="tvx-login-trust">One desk for manufacturing, stock, people, and finance.</p>
 		</aside>
 	</div>
 
 	<footer class="tvx-login-foot">
 		<span>Powered by TripleVox Engineering PLC</span>
 	</footer>
+	</div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script>{% include "templates/includes/login/login.js" %}</script>
-<script src="/assets/triplevox_platform/js/tvx_login.js?v=20260728j"></script>
+<script src="/assets/triplevox_platform/js/tvx_login.js?v=20260802z"></script>
 {% endblock %}
 
 {% block sidebar %}{% endblock %}

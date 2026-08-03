@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TripleVox Platform — Final UI Guide</title>
+<style>
+:root{--accent:#2490ef;--accent-soft:#e8f4fd;--ink:#1f272e;--muted:#6c7680;--border:#e2e6eb;--bg:#fff;--code-bg:#1e293b;--warn-bg:#fff8e6;--warn-border:#f0c14b;--info-bg:#eef7ff;--card:#fafbfc}
+*{box-sizing:border-box}html{font-size:15px}
+body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65}
+.doc-wrap{max-width:920px;margin:0 auto;padding:28px 28px 80px}
+.hero{border:1px solid var(--border);border-radius:10px;padding:32px 28px;background:linear-gradient(180deg,#f7fbff 0%,#fff 70%);margin-bottom:28px}
+.hero .eyebrow{color:var(--accent);font-weight:600;font-size:.85rem;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{margin:8px 0 10px;font-size:2rem;font-weight:700;letter-spacing:-.02em}
+.hero p{margin:0;color:var(--muted);max-width:62ch}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.badge{display:inline-block;padding:4px 10px;border-radius:6px;background:var(--accent-soft);color:#0b5cab;font-size:.8rem;font-weight:600;border:1px solid #cfe6fa}
+.toc{border:1px solid var(--border);border-radius:10px;padding:22px 24px 10px;background:var(--card);margin-bottom:36px}
+.toc h2{margin:0 0 12px;font-size:1.15rem;color:var(--accent)}
+.toc ol{margin:0;padding-left:1.35rem}.toc li{margin:0 0 8px}.toc a{color:var(--ink);text-decoration:none}.toc a:hover{color:var(--accent);text-decoration:underline}
+.chapter{page-break-before:always;break-before:page;margin:0 0 36px;padding-top:8px}
+.chapter:first-of-type{page-break-before:auto;break-before:auto}
+.ch-header{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700;margin-bottom:6px}
+.chapter h2{margin:0 0 14px;font-size:1.55rem;border-bottom:2px solid var(--accent);padding-bottom:10px}
+.chapter h3{margin:22px 0 8px;font-size:1.12rem}.chapter h4{margin:16px 0 6px;font-size:1rem;color:#334155}
+.card{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--card);margin:12px 0 16px}
+table{width:100%;border-collapse:collapse;margin:12px 0 18px;font-size:.92rem}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f1f5f9;font-weight:600}tr:nth-child(even) td{background:#fafbfc}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--code-bg);color:#e2e8f0;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.82rem;line-height:1.5;margin:12px 0 18px;white-space:pre-wrap;word-break:break-word}
+code{font-size:.88em;background:#f1f5f9;padding:1px 5px;border-radius:4px}pre code{background:transparent;padding:0;color:inherit}
+.callout{border-left:4px solid #2490ef;background:var(--info-bg);padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.warn{border-left-color:var(--warn-border);background:var(--warn-bg)}
+.callout .label{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:#0b5cab}
+.callout.warn .label{color:#8a6d1d}
+ul,ol{margin:8px 0 14px;padding-left:1.35rem}li{margin-bottom:5px}
+.steps{counter-reset:step;list-style:none;padding-left:0}
+.steps li{counter-increment:step;position:relative;padding:10px 12px 10px 48px;margin-bottom:8px;border:1px solid var(--border);border-radius:8px;background:#fff}
+.steps li::before{content:counter(step);position:absolute;left:12px;top:10px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:.85rem;line-height:26px;text-align:center}
+.footer-note{margin-top:40px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
+a{color:var(--accent)}
+@media print{body{font-size:11.5pt}.doc-wrap{max-width:none;padding:0}.chapter{page-break-before:always}.chapter:first-of-type{page-break-before:auto}.toc{page-break-after:always}a{color:inherit;text-decoration:none}pre{white-space:pre-wrap}.hero{background:#fff}}
+</style>
+</head>
+<body>
+<div class="doc-wrap">
+  <header class="hero">
+    <div class="eyebrow">TripleVox Platform Documentation</div>
+    <h1>Final UI Guide</h1>
+    <p>Complete reference for installers, System Managers, and support engineers.
+    Preserves the original Complete Guide chapters and adds Client Branding, sticky flyouts,
+    login Product/Client logos, dark Desk shell, and a file-by-file Purpose / What-if map.</p>
+    <div class="meta-row">
+      <span class="badge">App: triplevox_platform</span>
+      <span class="badge">Frappe v16 Desk</span>
+      <span class="badge">GitHub: gmt-erpsol/Triplevoxui</span>
+      <span class="badge">40 chapters</span>
+      <span class="badge">Final Guide 2026-08</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>Table of contents</h2>
+    <ol>
+<li><a href="#ch-01">01. Welcome & what this app is / is not</a></li>
+<li><a href="#ch-02">02. Architecture overview (Desk shell vs titacustom vs ERPNext/HRMS)</a></li>
+<li><a href="#ch-03">03. Prerequisites (hardware, WSL2, Ubuntu, Node optional, Git)</a></li>
+<li><a href="#ch-04">04. Install Frappe Bench from scratch (high-level official steps + links)</a></li>
+<li><a href="#ch-05">05. Create site + install erpnext + hrms</a></li>
+<li><a href="#ch-06">06. Install triplevox_platform from GitHub (gmt-erpsol/Triplevoxui → rename folder)</a></li>
+<li><a href="#ch-07">07. Install from local folder / rsync / Windows path</a></li>
+<li><a href="#ch-08">08. migrate, clear-cache, build, restart — what each does</a></li>
+<li><a href="#ch-09">09. First login, hard refresh, verify branding loaded</a></li>
+<li><a href="#ch-10">10. Optional titacustom install</a></li>
+<li><a href="#ch-11">11. Client theme profiles (tita/brg/demo) in client_theme.py</a></li>
+<li><a href="#ch-12">12. site_config keys reference (triplevox_client, company_profiles, company_themes, theme overrides)</a></li>
+<li><a href="#ch-13">13. Branding model table (Desk logo vs watermark pill vs prints vs login)</a></li>
+<li><a href="#ch-14">14. One site two companies (TITA + BRG) full walkthrough</a></li>
+<li><a href="#ch-15">15. Company switcher (UI location, steps, API, permissions)</a></li>
+<li><a href="#ch-16">16. Onboarding wizard (fields, what it writes, bench alternatives)</a></li>
+<li><a href="#ch-17">17. Role packs (table of packs, assign UI, Workspace Viewer details)</a></li>
+<li><a href="#ch-18">18. Branded login (picker, accents, post-login apply)</a></li>
+<li><a href="#ch-19">19. Print pack + print_branding formats list (all DocTypes), Letter Head chain</a></li>
+<li><a href="#ch-20">20. Desktop home (sidebar hidden, welcome, clock, icons, Recent card scrollable)</a></li>
+<li><a href="#ch-21">21. Recent activity (Desktop + Workspace drawer toggler, max 10, labels, hide elsewhere)</a></li>
+<li><a href="#ch-22">22. Form right rail float toggle + full width reclaim + List gap</a></li>
+<li><a href="#ch-23">23. Left sidebar behavior (desktop hide only; permanent elsewhere)</a></li>
+<li><a href="#ch-24">24. Watermark & footer behavior</a></li>
+<li><a href="#ch-25">25. Employee Checkin geolocation blink fix</a></li>
+<li><a href="#ch-26">26. Dark mode notes</a></li>
+<li><a href="#ch-27">27. after_migrate job list and order</a></li>
+<li><a href="#ch-28">28. Complete file map — purpose & what-if for every key file</a></li>
+<li><a href="#ch-29">29. Bench command cheat sheet (long)</a></li>
+<li><a href="#ch-30">30. Go-live checklist (new PC / new sister company / production)</a></li>
+<li><a href="#ch-31">31. Update / upgrade from GitHub</a></li>
+<li><a href="#ch-32">32. Troubleshooting encyclopedia (blank pages, cache, switcher missing, wrong print logo, migrate sidebar errors, CSRF login…)</a></li>
+<li><a href="#ch-33">33. FAQ</a></li>
+<li><a href="#ch-34">34. Glossary</a></li>
+<li><a href="#ch-35">35. Support / credits</a></li>
+<li><a href="#ch-36">36. Client Branding DocType (source of truth for logos & colors)</a></li>
+<li><a href="#ch-37">37. Desktop grouped icons — sticky flyout (no Launchpad)</a></li>
+<li><a href="#ch-38">38. Desktop navbar, theme toggle, soft canvas & fields</a></li>
+<li><a href="#ch-39">39. Login logos — Product owner + Client (always from form)</a></li>
+<li><a href="#ch-40">40. Dark mode Desk shell notes (2026 refresh)</a></li>
+    </ol>
+  </nav>
+
+<section class="chapter" id="ch-01">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>01. Welcome & what this app is / is not</h2>
+<p><strong>TripleVox Platform</strong> (<code>triplevox_platform</code>) is the white-label Desk shell for Frappe v16 deployments used by TripleVox Engineering PLC and sister factories (TITA, BRG, and future clients).</p>
+<div class="card"><p><strong>Product identity</strong></p><ul><li>App title: TripleVox Platform</li><li>GitHub: <a href="https://github.com/gmt-erpsol/Triplevoxui">https://github.com/gmt-erpsol/Triplevoxui</a></li><li>Installed folder name <em>must</em> be <code>triplevox_platform</code> (not <code>Triplevoxui</code>)</li><li>Static assets: <code>/assets/triplevox_platform/...</code></li><li>Publisher: TripleVox Engineering PLC · License: MIT · Requires: frappe, erpnext, hrms</li></ul></div>
+<h3>What this app is</h3>
+<table><thead><tr><th>Capability</th><th>Examples</th></tr></thead><tbody><tr><td>Desk chrome &amp; theme</td><td>CSS variables, welcome home, clock, module icons, watermark pill, footer</td></tr><tr><td>Multi-company SaaS shell</td><td>Company switcher, onboarding wizard, login company picker</td></tr><tr><td>Client theme profiles</td><td><code>tita</code> / <code>brg</code> / <code>demo</code> in <code>client_theme.py</code></td></tr><tr><td>Print identity</td><td>TripleVox Print Formats, Letter Head pack, Jinja branding helpers</td></tr><tr><td>Role packs</td><td>Shop Floor, QC, Ops Admin, Workspace Viewer</td></tr><tr><td>UX polish</td><td>Recent activity, form float rail, sidebar hide on Desktop, check-in geolocation fix</td></tr></tbody></table>
+<h3>What this app is not</h3>
+<table><thead><tr><th>Not responsible for</th><th>Belongs in</th></tr></thead><tbody><tr><td>MES / factory shop-floor workflows</td><td><code>titacustom</code> (or future BRG domain app)</td></tr><tr><td>Core accounting, stock, CRM logic</td><td>ERPNext</td></tr><tr><td>HR / payroll / leave engines</td><td>HRMS</td></tr><tr><td>Full security matrix for every DocType</td><td>ERPNext roles + Custom DocPerm (packs are starters)</td></tr><tr><td>Infrastructure / backups / SSL</td><td>Bench / nginx / ops runbooks</td></tr></tbody></table>
+<div class="callout"><div class="label">Info</div><p>Think of TripleVox Platform as the <em>skin + sister-company cockpit</em>. Domain features live in ERPNext/HRMS/titacustom; this app makes one bench site feel like a branded multi-factory product.</p></div>
+<h3>Audience for this guide</h3>
+<ul><li>Implementers setting up a new PC or new sister company</li><li>System Managers who assign role packs and print packs</li><li>Support engineers debugging branding, cache, or migrate side-effects</li></ul>
+</section>
+<section class="chapter" id="ch-02">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>02. Architecture overview (Desk shell vs titacustom vs ERPNext/HRMS)</h2>
+<p>A TripleVox production site is a layered Frappe Bench stack. Understanding which layer owns a feature prevents wrong-repo edits and wrong-app tickets.</p>
+<h3>Layer diagram (conceptual)</h3>
+<pre><code>Browser (Desk / login)
+    |
+    v
+triplevox_platform     <- CSS/JS, boot branding, switcher APIs, prints, roles
+    |
+    +-- titacustom     <- TITA manufacturing MES / custom DocTypes (optional)
+    +-- erpnext        <- Accounting, Stock, Selling, Buying, Manufacturing base
+    +-- hrms           <- HR, Payroll, Leave, Employee Checkin
+    +-- frappe         <- Framework, Desk shell, Permissions, Website, Print engine
+         |
+         v
+      MariaDB + Redis + sites/YOURSITE</code></pre>
+<h3>Responsibility matrix</h3>
+<table><thead><tr><th>Concern</th><th>App</th><th>Notes</th></tr></thead><tbody><tr><td>Login accents / company picker</td><td>triplevox_platform</td><td><code>www/login.html</code>, <code>tvx_login.css/js</code></td></tr><tr><td>Desk logo (product)</td><td>triplevox_platform</td><td>Always TripleVox mark via profile <code>logo_url</code></td></tr><tr><td>Watermark pill (client)</td><td>triplevox_platform</td><td><code>client_logo_url</code> / company map</td></tr><tr><td>Work Order / Job Card domain UI</td><td>titacustom + ERPNext</td><td>UI shell nests icons/sidebar</td></tr><tr><td>Employee Checkin geolocation blink</td><td>triplevox_platform</td><td><code>doctype_js</code> for Employee Checkin</td></tr><tr><td>Print PDF company logo</td><td>triplevox_platform print_branding</td><td>Resolves from document Company</td></tr><tr><td>Workspace edit lock</td><td>Workspace Viewer role</td><td>overrides <code>get_workspaces</code></td></tr></tbody></table>
+<h3>Boot payload</h3>
+<p>On every Desk session, <code>boot_session</code> injects <code>frappe.boot.triplevox</code> from <code>client_theme.get_boot_payload()</code>. Front-end scripts (<code>triplevox_desk.js</code>, <code>tvx_saas_ui.js</code>) read that object for theme CSS variables, watermark, welcome copy, and switcher company list.</p>
+<div class="callout warn"><div class="label">Warning</div><p>Do not put sister-company logos into Desk <code>logo_url</code>. Desk product chrome stays TripleVox; client marks go to watermark / prints / login preview.</p></div>
+</section>
+<section class="chapter" id="ch-03">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>03. Prerequisites (hardware, WSL2, Ubuntu, Node optional, Git)</h2>
+<h3>Hardware (developer / single-site)</h3>
+<table><thead><tr><th>Item</th><th>Recommended</th><th>Minimum</th></tr></thead><tbody><tr><td>CPU</td><td>4+ cores</td><td>2 cores</td></tr><tr><td>RAM</td><td>16 GB</td><td>8 GB (tight)</td></tr><tr><td>Disk</td><td>SSD 40+ GB free</td><td>25 GB free</td></tr><tr><td>OS host</td><td>Windows 10/11 + WSL2, or native Ubuntu 22.04/24.04</td><td>Same</td></tr></tbody></table>
+<h3>Software checklist</h3>
+<ol class='steps'><li><strong>WSL2</strong> enabled on Windows (<code>wsl --install</code>), Ubuntu distro set as default.</li><li><strong>Ubuntu packages</strong> for Frappe: python3.11+, mariadb-server, redis-server, nginx (prod), curl, git, wkhtmltopdf (prints), yarn/npm as required by Bench.</li><li><strong>Git</strong> with access to <code>github.com/gmt-erpsol/Triplevoxui</code> (HTTPS token or SSH).</li><li><strong>Node / Yarn</strong> — required for <code>bench build</code> (Bench installer usually pins versions).</li><li><strong>Optional on Windows host:</strong> VS Code / Cursor remote-WSL, Windows Terminal.</li></ol>
+<div class="callout"><div class="label">Info</div><p>Official Frappe install docs: <a href="https://frappeframework.com/docs/user/en/installation">frappeframework.com/docs/user/en/installation</a>. Prefer the official Bench path for your OS.</p></div>
+<h3>Accounts &amp; access you will need</h3>
+<ul><li>MariaDB root / bench DB credentials</li><li>Site administrator password</li><li>GitHub read access to Triplevoxui (and titacustom if used)</li><li>For production: DNS, TLS certificates, backup target</li></ul>
+</section>
+<section class="chapter" id="ch-04">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>04. Install Frappe Bench from scratch (high-level official steps + links)</h2>
+<p>Follow the official Frappe Framework installation guide for your platform. Below is the <strong>shape</strong> of a typical Linux / WSL Ubuntu flow for Frappe v16 — always verify versions against current docs.</p>
+<ol class='steps'><li>Update apt and install OS dependencies listed in the official guide.</li><li>Install and secure MariaDB; create a DB user for Bench if required by your playbook.</li><li>Install Redis, Node (via nvm or nodesource as documented), Yarn.</li><li>Install <code>wkhtmltopdf</code> with patched Qt if you need PDF generation from Desk.</li><li>Install frappe-bench via the documented method (<code>pipx install frappe-bench</code> or equivalent).</li><li><code>bench init --frappe-branch version-16 frappe-bench</code> (confirm branch for your target).</li><li><code>cd frappe-bench &amp;&amp; bench start</code> (dev) or set up production supervisor/systemd + nginx.</li></ol>
+<pre><code># Illustrative only — confirm against official docs
+sudo apt update
+# ... install python, mariadb, redis, curl, git, wkhtmltopdf ...
+pipx install frappe-bench
+bench init --frappe-branch version-16 frappe-bench
+cd frappe-bench
+bench start</code></pre>
+<div class="card"><p><strong>Official references</strong></p><ul><li>Installation: https://frappeframework.com/docs/user/en/installation</li><li>Bench commands: https://frappeframework.com/docs/user/en/bench</li><li>ERPNext: https://docs.erpnext.com/</li></ul></div>
+<div class="callout warn"><div class="label">Warning</div><p>Do not mix random third-party one-click installers with this guide unless you know how they name sites and apps. TripleVox assumes standard Bench: <code>~/frappe-bench/apps/</code>, <code>sites/</code>.</p></div>
+</section>
+<section class="chapter" id="ch-05">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>05. Create site + install erpnext + hrms</h2>
+<ol class='steps'><li>From the bench root: <code>bench new-site your.site.name</code> — set Administrator password when prompted.</li><li>Get ERPNext: <code>bench get-app erpnext --branch version-16</code> (confirm branch).</li><li>Get HRMS: <code>bench get-app hrms --branch version-16</code> (confirm branch).</li><li>Install: <code>bench --site your.site.name install-app erpnext</code> then <code>install-app hrms</code>.</li><li>Create at least one <strong>Company</strong> (e.g. TITA PP Plastic PLC) via Setup wizard or Company list.</li><li>Run <code>migrate</code> and <code>clear-cache</code>.</li></ol>
+<pre><code>cd ~/frappe-bench
+bench new-site erp.local
+bench get-app erpnext --branch version-16
+bench get-app hrms --branch version-16
+bench --site erp.local install-app erpnext
+bench --site erp.local install-app hrms
+bench --site erp.local migrate
+bench --site erp.local clear-cache</code></pre>
+<div class="callout"><div class="label">Info</div><p><code>triplevox_platform</code> declares <code>required_apps = ["frappe", "erpnext", "hrms"]</code>. Install those before TripleVox.</p></div>
+</section>
+<section class="chapter" id="ch-06">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>06. Install triplevox_platform from GitHub (gmt-erpsol/Triplevoxui → rename folder)</h2>
+<p>The GitHub repository is named <strong>Triplevoxui</strong>, but the Frappe app package must live in a folder named <code>triplevox_platform</code>.</p>
+<ol class='steps'><li><code>cd ~/frappe-bench</code></li><li><code>bench get-app https://github.com/gmt-erpsol/Triplevoxui.git --branch main</code></li><li>If Bench cloned into <code>apps/Triplevoxui</code>, rename: <code>mv apps/Triplevoxui apps/triplevox_platform</code></li><li>Confirm <code>apps/triplevox_platform/triplevox_platform/hooks.py</code> exists and <code>app_name = "triplevox_platform"</code>.</li><li><code>bench --site your.site.name install-app triplevox_platform</code></li><li><code>bench --site your.site.name migrate &amp;&amp; bench --site your.site.name clear-cache</code></li><li><code>bench build --app triplevox_platform</code> if assets did not soft-link correctly</li><li>Restart: <code>bench restart</code> (prod) or restart <code>bench start</code> (dev)</li></ol>
+<pre><code>cd ~/frappe-bench
+bench get-app https://github.com/gmt-erpsol/Triplevoxui.git --branch main
+mv apps/Triplevoxui apps/triplevox_platform   # if needed
+bench --site erp.local install-app triplevox_platform
+bench --site erp.local migrate
+bench --site erp.local clear-cache
+bench build --app triplevox_platform
+bench restart</code></pre>
+<div class="callout warn"><div class="label">Warning</div><p>Leaving the folder as <code>Triplevoxui</code> breaks imports and asset URLs. Assets must resolve as <code>/assets/triplevox_platform/...</code>.</p></div>
+</section>
+<section class="chapter" id="ch-07">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>07. Install from local folder / rsync / Windows path</h2>
+<h3>Option A — rsync into apps/</h3>
+<pre><code># From WSL — example Windows Documents path
+rsync -a /mnt/c/Users/Dell/Documents/TITA-ERP-BRD/apps/triplevox_platform/ \
+  ~/frappe-bench/apps/triplevox_platform/
+bench --site erp.local install-app triplevox_platform   # first time only
+bench --site erp.local migrate
+bench --site erp.local clear-cache
+bench build --app triplevox_platform</code></pre>
+<h3>Option B — symlink (dev only)</h3>
+<pre><code>ln -s /mnt/c/Users/Dell/Documents/TITA-ERP-BRD/apps/triplevox_platform \
+  ~/frappe-bench/apps/triplevox_platform</code></pre>
+<div class="callout warn"><div class="label">Warning</div><p>Symlinks across /mnt/c can be slower and occasionally confuse file watchers. Prefer rsync for stable demos.</p></div>
+<h3>Option C — Windows path awareness</h3>
+<ul><li>Edit in Cursor on Windows: <code>C:\Users\Dell\Documents\TITA-ERP-BRD\apps\triplevox_platform</code></li><li>Run Bench commands inside WSL against <code>~/frappe-bench</code></li><li>After CSS/JS edits, bump <code>?v=</code> in <code>hooks.py</code>, then clear-cache + hard refresh</li></ul>
+</section>
+<section class="chapter" id="ch-08">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>08. migrate, clear-cache, build, restart — what each does</h2>
+<table><thead><tr><th>Command</th><th>What it does</th><th>When to run</th></tr></thead><tbody><tr><td><code>bench --site S migrate</code></td><td>Applies patches, syncs DocTypes, runs <code>after_migrate</code> hooks</td><td>After pull/install; when roles/prints missing</td></tr><tr><td><code>bench --site S clear-cache</code></td><td>Clears Redis/website/desk caches so boot &amp; assets refresh</td><td>After theme/site_config/hooks changes</td></tr><tr><td><code>bench build --app triplevox_platform</code></td><td>Bundles/copies public assets into sites/assets</td><td>After public JS/CSS/image changes</td></tr><tr><td><code>bench restart</code></td><td>Restarts gunicorn/workers (production)</td><td>After Python hook/API changes in prod</td></tr><tr><td><code>bench --site S clear-website-cache</code></td><td>Website-specific cache</td><td>Login page CSS not updating</td></tr></tbody></table>
+<pre><code>bench --site erp.local migrate
+bench --site erp.local clear-cache
+bench build --app triplevox_platform
+bench restart</code></pre>
+<div class="callout"><div class="label">Info</div><p>Browser hard refresh (Ctrl+Shift+R) is still required after cache clear — disk cache can keep old JS.</p></div>
+</section>
+<section class="chapter" id="ch-09">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>09. First login, hard refresh, verify branding loaded</h2>
+<ol class='steps'><li>Open <code>http://your.site.name:8000/login</code> (dev) or your HTTPS URL.</li><li>Optionally pick a company in the TripleVox login picker (TITA / BRG).</li><li>Sign in as Administrator or a Desk user.</li><li>Hard refresh: Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (macOS).</li><li>Verify product logo is TripleVox in chrome; watermark pill shows client mark when mapped.</li><li>Open browser console — no 404s for <code>/assets/triplevox_platform/css/triplevox_platform.css</code> and JS.</li><li>In Desk console: confirm <code>frappe.boot.triplevox</code> exists with <code>client_key</code>, theme tokens, logos.</li></ol>
+<h3>Quick verification checklist</h3>
+<table><thead><tr><th>Check</th><th>Expected</th></tr></thead><tbody><tr><td>CSS loaded</td><td><code>triplevox_platform.css?v=...</code> 200</td></tr><tr><td>JS loaded</td><td><code>triplevox_desk.js</code>, <code>tvx_saas_ui.js</code> 200</td></tr><tr><td>Company pill</td><td>Visible top-right when companies mapped</td></tr><tr><td>Desktop home</td><td>Welcome + clock + icons; sidebar hidden on Desktop route</td></tr><tr><td>Cache bump</td><td><code>?v=</code> in hooks matches last UI change</td></tr></tbody></table>
+</section>
+<section class="chapter" id="ch-10">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>10. Optional titacustom install</h2>
+<p><code>titacustom</code> is the TITA manufacturing domain app. TripleVox lists it on the apps screen when present (<code>add_to_apps_screen</code> in hooks).</p>
+<ol class='steps'><li>Obtain titacustom from your private/internal repo (not this public UI repo).</li><li><code>bench get-app &lt;titacustom-url&gt;</code> and ensure folder name <code>titacustom</code>.</li><li><code>bench --site S install-app titacustom</code> then migrate + clear-cache.</li><li>Confirm TITA profile apps title / default_app points at Manufacturing routes as designed.</li><li>TITA print logos typically come from <code>/assets/titacustom/images/tita-logo.svg</code> — titacustom must be installed for those URLs to resolve.</li></ol>
+<div class="callout"><div class="label">Info</div><p>BRG profile does not require titacustom. Demo profile defaults toward erpnext. Sites can run TripleVox + ERPNext + HRMS without titacustom.</p></div>
+</section>
+<section class="chapter" id="ch-11">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>11. Client theme profiles (tita/brg/demo) in client_theme.py</h2>
+<p>Profiles live in <code>triplevox_platform/client_theme.py</code> inside the <code>CLIENTS</code> dict. Shared shell fields come from <code>_BASE</code>.</p>
+<table><thead><tr><th>Key</th><th>Client</th><th>Accent feel</th><th>Print / client logo</th><th>Notes</th></tr></thead><tbody><tr><td><code>tita</code></td><td>TITA PP Plastic PLC</td><td>Blue (#1e4d8c family)</td><td><code>/assets/titacustom/images/tita-logo.svg</code></td><td>default_app titacustom; factory area Wello Dessie</td></tr><tr><td><code>brg</code></td><td>BRG Trading PLC</td><td>Green (#15803d family)</td><td><code>/assets/triplevox_platform/images/brg-logo.png</code></td><td>Medical gauze &amp; silken; no default_app</td></tr><tr><td><code>demo</code></td><td>Demo Client PLC</td><td>Teal (#0f766e)</td><td>TripleVox logo fallback</td><td>Template — copy for new clients</td></tr></tbody></table>
+<h3>Theme tokens</h3>
+<table><thead><tr><th>Token</th><th>Used for</th></tr></thead><tbody><tr><td>green / green_bright / green_soft / green_deep</td><td>Accent buttons, chips, selection, print accents</td></tr><tr><td>sidebar / sidebar_2</td><td>Left sidebar gradient ends</td></tr><tr><td>page / surface / ink / muted / border / radius</td><td>General chrome</td></tr></tbody></table>
+<h3>How to activate a profile</h3>
+<ul><li>Site-wide: <code>"triplevox_client": "tita"</code> in site_config.json (fallback <code>ACTIVE_CLIENT</code> in Python).</li><li>Per company: map Company name → key via <code>triplevox_company_profiles</code> (see chapter 12).</li><li>Optional overlays: <code>triplevox_theme</code> and <code>triplevox_company_themes</code>.</li></ul>
+<pre><code># Excerpt — DEFAULT_COMPANY_PROFILES
+{
+  "TITA PP Plastic PLC": "tita",
+  "BRG Trading PLC": "brg"
+}</code></pre>
+<div class="callout warn"><div class="label">Warning</div><p>After editing CLIENTS or site_config, run clear-cache and hard-refresh Desk.</p></div>
+</section>
+<section class="chapter" id="ch-12">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>12. site_config keys reference (triplevox_client, company_profiles, company_themes, theme overrides)</h2>
+<p>Edit <code>sites/YOURSITE/site_config.json</code> (or use onboarding wizard APIs which write keys safely).</p>
+<table><thead><tr><th>Key</th><th>Type</th><th>Purpose</th></tr></thead><tbody><tr><td><code>triplevox_client</code></td><td>string</td><td>Default profile key when no session company map hits (tita/brg/demo)</td></tr><tr><td><code>triplevox_company_profiles</code></td><td>object</td><td>Map Company display name to profile key</td></tr><tr><td><code>triplevox_company_themes</code></td><td>object</td><td>Per-company overlay (accent, factory_area, logos, etc.)</td></tr><tr><td><code>triplevox_theme</code></td><td>object</td><td>Site-wide deep-merge overrides into the active profile</td></tr></tbody></table>
+<h3>Example site_config fragment</h3>
+<pre><code>{
+  "triplevox_client": "tita",
+  "triplevox_company_profiles": {
+    "TITA PP Plastic PLC": "tita",
+    "BRG Trading PLC": "brg"
+  },
+  "triplevox_company_themes": {
+    "BRG Trading PLC": {
+      "factory_area": "Medical Gauze & Silken",
+      "accent": "#15803d"
+    }
+  },
+  "triplevox_theme": {
+    "partner_name": "TripleVox Engineering PLC"
+  }
+}</code></pre>
+<h3>Resolution order (Desk)</h3>
+<ul><li>Session company from Employee.company, else user default Company, else global default.</li><li>Look up company in <code>triplevox_company_profiles</code> (+ DEFAULT_COMPANY_PROFILES).</li><li>Load CLIENTS[key], deep-merge <code>triplevox_theme</code>, then company theme overlay.</li><li>If no company map: use <code>triplevox_client</code> / ACTIVE_CLIENT.</li></ul>
+<div class="callout"><div class="label">Info</div><p>Onboarding wizard writes profiles/themes for you — prefer it over hand-editing JSON in production.</p></div>
+</section>
+<section class="chapter" id="ch-13">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>13. Branding model table (Desk logo vs watermark pill vs prints vs login)</h2>
+<p>TripleVox deliberately separates <strong>product</strong> branding from <strong>sister-company</strong> branding.</p>
+<table><thead><tr><th>Surface</th><th>Primary source</th><th>Typical asset</th></tr></thead><tbody><tr><td>Desk sidebar / product logo</td><td>profile <code>logo_url</code> (from _BASE)</td><td>/assets/triplevox_platform/images/triplevox-logo.png</td></tr><tr><td>Desk watermark pill (bottom-left)</td><td>client_logo_url / print_logo_url + company name</td><td>TITA SVG or BRG PNG</td></tr><tr><td>Theme accents / CSS variables</td><td>Active CLIENTS theme tokens</td><td>tita blue / brg green</td></tr><tr><td>Login accents + preview logo</td><td>Login company picker key</td><td>Same client logos</td></tr><tr><td>PDF header / soft mark</td><td>Document Company then Letter Head then Company logo then print_logo_url</td><td>Per-document company</td></tr><tr><td>Apps screen TripleVox tile</td><td>hooks add_to_apps_screen</td><td>triplevox-logo.png</td></tr><tr><td>Favicon / splash</td><td>website_context</td><td>triplevox-logo.png</td></tr></tbody></table>
+<div class="callout warn"><div class="label">Warning</div><p>Never set Desk logo_url to a sister-company mark. That breaks white-label product identity across factories.</p></div>
+<h3>Print resolution order</h3>
+<p>Implemented in <code>print_branding.get_print_theme()</code> / Jinja helpers:</p>
+<ul><li>Company fields (name, logo, phone, email, address) and Letter Head</li><li>CLIENTS profile <code>print_logo_url</code> (never Desk logo_url)</li><li>Monogram text if no image</li></ul>
+</section>
+<section class="chapter" id="ch-14">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>14. One site two companies (TITA + BRG) full walkthrough</h2>
+<p>Goal: one Bench site hosts both factories with switchable Desk branding and correct print logos.</p>
+<ol class='steps'><li>Ensure ERPNext Companies exist: <strong>TITA PP Plastic PLC</strong> and <strong>BRG Trading PLC</strong> (exact names).</li><li>Install/migrate <code>triplevox_platform</code> so DEFAULT_COMPANY_PROFILES and roles/prints exist.</li><li>Confirm site_config maps both companies (defaults already include them; onboarding also writes maps).</li><li>Optional BRG helper: <code>bench --site S execute triplevox_platform.setup_brg.ensure_brg_company</code></li><li>Apply print pack for each company (wizard or API).</li><li>Assign users: set Employee.company and/or User default Company appropriately.</li><li>Test login picker for each company, then Desk switcher both ways.</li><li>Print Sales Invoice / Stock Entry for each company using TripleVox formats — verify logo.</li><li>clear-cache + hard refresh after config changes.</li></ol>
+<table><thead><tr><th>Company</th><th>Profile key</th><th>Accent</th><th>Client logo path</th></tr></thead><tbody><tr><td>TITA PP Plastic PLC</td><td>tita</td><td>Blue</td><td>titacustom tita-logo.svg (needs titacustom for asset)</td></tr><tr><td>BRG Trading PLC</td><td>brg</td><td>Green</td><td>triplevox_platform brg-logo.png</td></tr></tbody></table>
+<pre><code>bench --site erp.local execute triplevox_platform.setup_brg.ensure_brg_company
+bench --site erp.local execute triplevox_platform.print_pack.apply_print_pack --kwargs "{'company':'TITA PP Plastic PLC'}"
+bench --site erp.local execute triplevox_platform.print_pack.apply_print_pack --kwargs "{'company':'BRG Trading PLC'}"
+bench --site erp.local clear-cache</code></pre>
+</section>
+<section class="chapter" id="ch-15">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>15. Company switcher (UI location, steps, API, permissions)</h2>
+<h3>UI location</h3>
+<p>Top-right Desk chrome: a <strong>company pill</strong> rendered by <code>public/js/tvx_saas_ui.js</code>. Opening it lists switchable companies and System Manager tools.</p>
+<h3>User steps</h3>
+<ol class='steps'><li>Log into Desk.</li><li>Click the company pill (top-right).</li><li>Choose TITA PP Plastic PLC or BRG Trading PLC (or other mapped companies).</li><li>Theme accents + watermark update; user default Company is set.</li></ol>
+<h3>What the API does</h3>
+<table><thead><tr><th>Method</th><th>Role</th></tr></thead><tbody><tr><td><code>triplevox_platform.api.list_switchable_companies</code></td><td>Lists mapped companies that exist</td></tr><tr><td><code>triplevox_platform.api.set_session_company</code></td><td>Sets user default Company; updates Employee.company when present; returns boot payload</td></tr><tr><td><code>triplevox_platform.api.get_client_boot_payload</code></td><td>Refresh branding payload</td></tr></tbody></table>
+<h3>Permissions</h3>
+<ul><li>Any logged-in Desk user can switch among companies listed for the site.</li><li>Onboarding, role pack assign, and print pack actions require System Manager / Administrator.</li></ul>
+<h3>Menu extras (System Manager)</h3>
+<ul><li>Onboard sister company…</li><li>Apply print pack (current)…</li><li>Assign role pack…</li></ul>
+<div class="callout"><div class="label">Info</div><p>If the pill is missing: hard-refresh; confirm tvx_saas_ui.js is in hooks app_include_js; confirm companies are mapped and exist.</p></div>
+</section>
+<section class="chapter" id="ch-16">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>16. Onboarding wizard (fields, what it writes, bench alternatives)</h2>
+<p>Desk dialog for System Managers to register a new sister company on the same site.</p>
+<h3>Fields</h3>
+<table><thead><tr><th>Field</th><th>Purpose</th></tr></thead><tbody><tr><td>Company name</td><td>Exact legal Company name (creates Company if missing)</td></tr><tr><td>Abbreviation</td><td>Company abbr</td></tr><tr><td>Theme profile</td><td>tita / brg / demo</td></tr><tr><td>Factory / area label</td><td>Shown in welcome / profile factory_area</td></tr><tr><td>Logo URL</td><td>Optional client/print logo</td></tr><tr><td>Apply print pack</td><td>Recommended — Letter Head + formats</td></tr></tbody></table>
+<h3>What it writes</h3>
+<ul><li>Company document (create/update)</li><li><code>triplevox_company_profiles</code> entry in site config</li><li>Optional <code>triplevox_company_themes</code> overlay</li><li>Optional print pack via <code>print_pack.apply_print_pack</code></li></ul>
+<pre><code># API
+triplevox_platform.api.onboard_sister_company(...)
+
+# BRG bench alternative
+bench --site YOUR_SITE execute triplevox_platform.setup_brg.ensure_brg_company</code></pre>
+<p>After onboarding, use the company switcher to activate the new company. Hard-refresh if colors look stale.</p>
+</section>
+<section class="chapter" id="ch-17">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>17. Role packs (table of packs, assign UI, Workspace Viewer details)</h2>
+<p>Ready-made Roles created on migrate — a fast starting point, not a full security product.</p>
+<table><thead><tr><th>Pack key</th><th>Role</th><th>Purpose</th></tr></thead><tbody><tr><td>shop_floor</td><td>TripleVox Shop Floor</td><td>Operators / floor Desk access; pair with Workspace Viewer</td></tr><tr><td>qc</td><td>TripleVox QC</td><td>Quality / inspection Desk access; pair with Viewer</td></tr><tr><td>ops_admin</td><td>TripleVox Ops Admin</td><td>Site champions — not full System Manager</td></tr><tr><td>viewer</td><td>Workspace Viewer</td><td>Open workspaces; cannot edit layouts</td></tr></tbody></table>
+<h3>Assign UI</h3>
+<ol class='steps'><li>Company switcher menu → Assign role pack…</li><li>Pick User and Pack</li><li>Click Assign (System Manager)</li></ol>
+<pre><code>bench --site YOUR_SITE execute triplevox_platform.role_packs.run
+# API: triplevox_platform.api.assign_role_pack / list_role_packs</code></pre>
+<h3>Workspace Viewer details</h3>
+<ul><li>hooks override <code>frappe.desk.desktop.get_workspaces</code></li><li>has_permission + doc_events block Workspace / Sidebar writes for Viewer-only users</li><li>User must not also be Workspace Manager / System Manager if you need a hard read-only layout experience</li></ul>
+<div class="callout warn"><div class="label">Warning</div><p>DocType permissions still come from ERPNext/HRMS + Custom DocPerm. Packs only ensure Desk roles exist and can be assigned quickly.</p></div>
+</section>
+<section class="chapter" id="ch-18">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>18. Branded login (picker, accents, post-login apply)</h2>
+<p>On <code>/login</code>, users pick Company (TITA / BRG). The login card accents and logo preview match that company (<code>tvx_login.css</code> / <code>tvx_login.js</code> / <code>www/login.html</code>).</p>
+<ol class='steps'><li>Open the login page.</li><li>Choose company from the dropdown.</li><li>Sign in as usual.</li><li>Desk applies the chosen company key once (default company + branding).</li><li>Company switcher remains available later.</li></ol>
+<h3>Post-login apply</h3>
+<ul><li>localStorage key <code>tvx_login_company_key</code> remembers picker choice</li><li>sessionStorage apply flag prevents repeated apply loops</li><li>API: <code>triplevox_platform.api.apply_login_company_key</code></li></ul>
+<div class="callout"><div class="label">Info</div><p>Bookmarks can still use one URL for both factories; the picker sets the front-door brand.</p></div>
+<h3>CSRF note</h3>
+<p><code>update_website_context</code> → <code>website_csrf.update_website_context</code> ensures Guest login pages receive a real CSRF token (fixes vague “Something went wrong” on login).</p>
+</section>
+<section class="chapter" id="ch-19">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>19. Print pack + print_branding formats list (all DocTypes), Letter Head chain</h2>
+<p>Print pack prepares customer-facing print identity for a company. Print branding installs Jinja Print Formats prefixed <strong>TripleVox</strong>.</p>
+<h3>Print pack actions</h3>
+<ul><li>Create/update Letter Head named <code>{Company} Letter Head</code></li><li>Set Company logo field when empty / when URL provided</li><li>Set Company <code>default_letter_head</code> when the field exists</li><li>Re-run <code>print_branding.run</code> (idempotent)</li></ul>
+<pre><code># Desk: switcher → Apply print pack (current)…
+# API: triplevox_platform.api.apply_company_print_pack
+bench --site S execute triplevox_platform.print_pack.apply_print_pack --kwargs "{'company':'BRG Trading PLC'}"
+bench --site S execute triplevox_platform.print_branding.run</code></pre>
+<h3>TripleVox Print Formats (FORMAT_PREFIX = TripleVox)</h3>
+<table><thead><tr><th>DocType</th><th>Print Format name</th><th>Template</th></tr></thead><tbody><tr><td>Salary Slip</td><td>TripleVox Payslip</td><td>salary_slip.html</td></tr><tr><td>Sales Invoice</td><td>TripleVox Sales Invoice</td><td>transaction.html</td></tr><tr><td>Sales Order</td><td>TripleVox Sales Order</td><td>transaction.html</td></tr><tr><td>Quotation</td><td>TripleVox Quotation</td><td>transaction.html</td></tr><tr><td>Delivery Note</td><td>TripleVox Delivery Note</td><td>transaction.html</td></tr><tr><td>Purchase Order</td><td>TripleVox Purchase Order</td><td>transaction.html</td></tr><tr><td>Purchase Invoice</td><td>TripleVox Purchase Invoice</td><td>transaction.html</td></tr><tr><td>Purchase Receipt</td><td>TripleVox Purchase Receipt</td><td>transaction.html</td></tr><tr><td>Request for Quotation</td><td>TripleVox Request for Quotation</td><td>transaction.html</td></tr><tr><td>Supplier Quotation</td><td>TripleVox Supplier Quotation</td><td>transaction.html</td></tr><tr><td>Material Request</td><td>TripleVox Material Request</td><td>transaction.html</td></tr><tr><td>Leave Application</td><td>TripleVox Leave Application</td><td>leave_application.html</td></tr><tr><td>Payment Entry</td><td>TripleVox Payment Entry</td><td>payment_entry.html</td></tr><tr><td>Work Order</td><td>TripleVox Work Order</td><td>work_order.html</td></tr><tr><td>Stock Entry</td><td>TripleVox Stock Entry</td><td>stock_entry.html</td></tr><tr><td>Journal Entry</td><td>TripleVox Journal Entry</td><td>journal_entry.html</td></tr><tr><td>Expense Claim</td><td>TripleVox Expense Claim</td><td>expense_claim.html</td></tr><tr><td>Job Card</td><td>TripleVox Job Card</td><td>job_card.html</td></tr><tr><td>BOM</td><td>TripleVox BOM</td><td>bom.html</td></tr></tbody></table>
+<h3>Letter Head chain</h3>
+<p>Document Company → Company default_letter_head → Letter Head image/content → Company logo field → profile print_logo_url → monogram.</p>
+<div class="callout"><div class="label">Info</div><p>Jinja helpers registered in hooks: tvx_print_theme, tvx_money, tvx_date. Print CSS: print/css/tvx_print_style.css.</p></div>
+</section>
+<section class="chapter" id="ch-20">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>20. Desktop home (sidebar hidden, welcome, clock, icons, Recent card scrollable)</h2>
+<p>On the Desk <strong>Desktop</strong> / home route, TripleVox presents a custom home experience driven by <code>triplevox_desk.js</code> + CSS.</p>
+<ul><li><strong>Sidebar hidden</strong> on Desktop only (see chapter 23) — more horizontal room for icons.</li><li><strong>Welcome block</strong> uses profile welcome_kicker, client_full_name, factory_area.</li><li><strong>Clock</strong> shows local time for operators at a glance.</li><li><strong>Module icons</strong> nested/arranged via <code>nest_desktop_icons</code> after_migrate (custom SVG set under public/images/module_icons).</li><li><strong>Recent card</strong> is scrollable so many recent items do not blow the first viewport.</li></ul>
+<h3>Operator tips</h3>
+<ol class='steps'><li>Land on Desktop after login — confirm welcome text matches active company.</li><li>Use module icons for primary apps (Accounting, Manufacturing, HRMS, etc.).</li><li>Scroll the Recent card rather than expecting an infinite list on the page.</li><li>Navigate into a workspace — left sidebar returns (permanent elsewhere).</li></ol>
+</section>
+<section class="chapter" id="ch-21">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>21. Recent activity (Desktop + Workspace drawer toggler, max 10, labels, hide elsewhere)</h2>
+<ul><li>Recent activity surfaces on Desktop and via a Workspace drawer toggler.</li><li>List is capped at about <strong>max 10</strong> items for readability.</li><li>Labels are humanized for common DocTypes.</li><li>Hidden on forms/lists where it would clutter the chrome (show only where designed).</li></ul>
+<div class="callout"><div class="label">Info</div><p>Implementation lives primarily in <code>triplevox_desk.js</code> with supporting CSS in <code>triplevox_platform.css</code>.</p></div>
+<h3>Desktop Recent card</h3>
+<ul><li>Shows the latest documents the user touched, capped near 10 entries.</li><li>Card body scrolls independently so the home welcome/icons stay visible.</li><li>Clicking an item opens the document Form.</li></ul>
+<h3>Workspace drawer toggler</h3>
+<ul><li>From workspace views, a toggler opens a compact Recent drawer.</li><li>Same max-item policy as Desktop for consistency.</li><li>Closed by default on narrow viewports to reduce chrome noise.</li></ul>
+<h3>Where Recent is hidden</h3>
+<p>On Form and dense List contexts the global Recent strip is suppressed so operators focus on the document. If you still see Recent on a Form, hard-refresh — an old JS bundle may be active.</p>
+</section>
+<section class="chapter" id="ch-22">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>22. Form right rail float toggle + full width reclaim + List gap</h2>
+<p>Forms can feel cramped with Frappe's right sidebar. TripleVox adds a float toggle so users reclaim width.</p>
+<ul><li>Toggle floats the right rail / collapses it so the form body expands.</li><li>Full-width reclaim reduces wasted gutter on wide monitors.</li><li>List views get consistent gap/spacing so rows are not stuck to chrome edges.</li></ul>
+<div class="callout warn"><div class="label">Warning</div><p>If a form looks 'broken' after a CSS cache mismatch, hard-refresh and confirm the latest ?v= CSS is loading.</p></div>
+<h3>Why it exists</h3>
+<p>Frappe Forms allocate a right sidebar for connections, comments, and tags. On laptop screens that rail steals horizontal space from long tables (items, operations).</p>
+<h3>Behavior</h3>
+<ul><li>A float / collapse control lets users tuck the rail aside.</li><li>When collapsed, the form container expands toward full width.</li><li>List views get additional horizontal gap so the first column is not flush against the left chrome when the sidebar is open.</li></ul>
+<h3>Support checks</h3>
+<table><thead><tr><th>Symptom</th><th>Check</th></tr></thead><tbody><tr><td>Toggle missing</td><td>CSS/JS ?v= bump; tvx classes present in DOM</td></tr><tr><td>Layout jump on load</td><td>Cached mixed CSS — clear-cache + hard refresh</td></tr><tr><td>Print preview affected</td><td>No — print uses separate templates</td></tr></tbody></table>
+</section>
+<section class="chapter" id="ch-23">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>23. Left sidebar behavior (desktop hide only; permanent elsewhere)</h2>
+<table><thead><tr><th>Route / context</th><th>Left sidebar</th></tr></thead><tbody><tr><td>Desktop / home</td><td>Hidden (by design)</td></tr><tr><td>Workspaces, List, Form, other Desk pages</td><td>Permanent / visible as normal Frappe Desk</td></tr></tbody></table>
+<p>Do not confuse 'sidebar missing on Desktop' with a bug. It is intentional for the home composition. If the sidebar is missing on Forms/Lists, check CSS regressions or cached old builds.</p>
+<h3>Design rationale</h3>
+<p>The Desktop home is a single composition (welcome, clock, icons, Recent). A permanent left sidebar competes with that composition, so TripleVox hides it only on Desktop.</p>
+<h3>Regression checklist</h3>
+<ul><li>Open Desktop — sidebar should be hidden.</li><li>Open Accounting workspace — sidebar visible.</li><li>Open a Sales Invoice Form — sidebar visible.</li><li>Open a List — sidebar visible.</li></ul>
+<pre><code>/* Conceptual — actual selectors live in triplevox_platform.css */
+body[data-route^=Workspaces/] .tvx-desktop-home ...
+/* Desktop-only hide; do not apply globally */</code></pre>
+</section>
+<section class="chapter" id="ch-24">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>24. Watermark & footer behavior</h2>
+<ul><li>Bottom-left <strong>watermark pill</strong> shows sister-company logo + name (client_logo_url / print_logo_url).</li><li>Product footer / copyright uses partner_name and year from profile (footer_text / footer_powered).</li><li>Dark mode may swap watermark asset to <code>triplevox-watermark-dark.png</code> where applicable.</li><li>Watermark is Desk chrome — not printed on PDFs (prints use Letter Head / print theme).</li></ul>
+<h3>Watermark pill</h3>
+<ul><li>Position: bottom-left Desk overlay.</li><li>Content: client logo (client_logo_url or print_logo_url) + company / client display name.</li><li>Updates when company switcher changes session company.</li><li>Not a security control — cosmetic identity only.</li></ul>
+<h3>Footer</h3>
+<ul><li>Uses profile footer_text / footer_powered / copyright with current year.</li><li>Partner defaults to TripleVox Engineering PLC.</li><li>Login page footer styling lives in tvx_login.css separately from Desk.</li></ul>
+<h3>Prints vs watermark</h3>
+<p>PDFs do not include the Desk watermark pill. Printed identity comes from Letter Head + print_branding theme for the document Company.</p>
+</section>
+<section class="chapter" id="ch-25">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>25. Employee Checkin geolocation blink fix</h2>
+<p>HRMS Employee Checkin can flash a geolocation map/section before HR Settings are known, causing a UI 'blink'.</p>
+<ul><li>hooks <code>doctype_js</code> maps Employee Checkin → <code>public/js/tvx_employee_checkin.js</code></li><li>Script hides geolocation UI until HR Settings confirm it should show</li><li>Result: no flash of irrelevant map controls for sites that disable geo check-in</li></ul>
+<pre><code># hooks.py
+doctype_js = {
+  "Employee Checkin": "public/js/tvx_employee_checkin.js",
+}</code></pre>
+<h3>Problem statement</h3>
+<p>Employee Checkin forms briefly render a map / geolocation block before client scripts know whether HR Settings require location. Users see a flash (blink) of controls that then disappear.</p>
+<h3>Fix approach</h3>
+<ol class='steps'><li>hooks doctype_js loads tvx_employee_checkin.js only on Employee Checkin.</li><li>Script starts with geolocation UI hidden.</li><li>After HR Settings (or equivalent flags) resolve, show geo UI only if enabled.</li></ol>
+<h3>Verification</h3>
+<ul><li>Open Employee Checkin with geo disabled in HR Settings — no map flash.</li><li>Enable geo requirement — map/controls appear without prior blink of the opposite state.</li><li>Other DocTypes unchanged (doctype_js scoped).</li></ul>
+</section>
+<section class="chapter" id="ch-26">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>26. Dark mode notes</h2>
+<ul><li>Light-mode sidebar colors come from profile theme tokens (sidebar / sidebar_2).</li><li>Dark mode overrides are applied via CSS selectors such as <code>[data-theme=dark]</code> in triplevox_platform.css.</li><li>Accent greens/blues still follow the active client profile where variables are used.</li><li>Watermark/logo contrast: prefer dark-safe assets when Desk theme is dark.</li><li>After toggling Desk appearance, hard-refresh if variables look stale.</li></ul>
+<div class="callout"><div class="label">Info</div><p>Client profiles document that light-mode sidebar is intentional; dark mode is CSS-driven rather than duplicating full CLIENTS theme dicts.</p></div>
+<h3>How dark mode interacts with profiles</h3>
+<ul><li>Accent tokens (green*) still come from the active client profile variables.</li><li>Sidebar background tokens are overridden under [data-theme=dark] so light greys are not forced.</li><li>Borders/ink/muted may shift for contrast; verify both TITA blue and BRG green accents on dark.</li></ul>
+<h3>QA matrix</h3>
+<table><thead><tr><th>Mode</th><th>Client</th><th>Check</th></tr></thead><tbody><tr><td>Light</td><td>tita</td><td>Blue accents, light sidebar, TITA watermark</td></tr><tr><td>Light</td><td>brg</td><td>Green accents, BRG watermark</td></tr><tr><td>Dark</td><td>tita</td><td>Readable sidebar, blue accents, logo contrast</td></tr><tr><td>Dark</td><td>brg</td><td>Readable sidebar, green accents, logo contrast</td></tr></tbody></table>
+<div class="callout warn"><div class="label">Warning</div><p>If dark mode looks 'half themed', you likely have a stale CSS build — bump ?v= and clear-cache.</p></div>
+</section>
+<section class="chapter" id="ch-27">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>27. after_migrate job list and order</h2>
+<p>From <code>hooks.py</code> — runs automatically after <code>bench migrate</code> in this order:</p>
+<table><thead><tr><th>#</th><th>Callable</th><th>Purpose</th></tr></thead><tbody><tr><td>1</td><td>triplevox_platform.setup.apply_branding_settings</td><td>System/branding settings sync</td></tr><tr><td>2</td><td>triplevox_platform.branding_setup.run</td><td>Website / chrome branding from Client Branding</td></tr><tr><td>3</td><td>triplevox_platform.workspace_viewer.run</td><td>Ensure Workspace Viewer role + guards</td></tr><tr><td>4</td><td>triplevox_platform.role_packs.run</td><td>Ensure Shop Floor / QC / Ops Admin / Viewer roles</td></tr><tr><td>5</td><td>triplevox_platform.print_branding.run</td><td>Install Print Style + TripleVox formats</td></tr><tr><td>6</td><td>triplevox_platform.sync_tita_production.run</td><td>TITA production workspace sync</td></tr><tr><td>7</td><td>triplevox_platform.sync_employee_hub.run</td><td>Employee hub sync</td></tr><tr><td>8</td><td>triplevox_platform.sync_company_saas.run</td><td>Company & SaaS workspace sync</td></tr><tr><td>9</td><td>triplevox_platform.nest_desktop_icons.run</td><td>Desktop icon nesting</td></tr><tr><td>10</td><td>triplevox_platform.nest_manufacturing_sidebar.run</td><td>Manufacturing sidebar nesting</td></tr></tbody></table>
+<div class="callout warn"><div class="label">Warning</div><p>If migrate fails midway, later jobs may not run. Re-run migrate after fixing the error; jobs are designed to be idempotent.</p></div>
+</section>
+<section class="chapter" id="ch-28">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>28. Complete file map — purpose & what-if for every key file</h2>
+<p>Use this chapter when debugging: each path has <strong>Purpose</strong> (what it does) and <strong>What if</strong> (symptoms / when to touch it).</p>
+<table><thead><tr><th>File</th><th>Purpose</th><th>What if</th></tr></thead><tbody><tr><td>hooks.py</td><td>Registers CSS/JS (?v= bumps), after_migrate jobs, boot_session, website context, doctype_js, apps screen</td><td>Stale UI after edit → bump ?v= + clear-cache. New migrate job missing → add here then migrate.</td></tr><tr><td>boot.py</td><td>Injects frappe.boot.triplevox branding payload on Desk load</td><td>Desk logos/theme wrong → check boot payload in browser console; rebuild Client Branding.</td></tr><tr><td>client_theme.py</td><td>Loads Client Branding → profiles, login company options, site default payload, theme tokens</td><td>Login/company logos wrong → fix Client Branding fields; private files auto-publicized.</td></tr><tr><td>website_csrf.py</td><td>Guest CSRF + injects product/client logos into login Jinja context</td><td>Login logos blank/broken → check tvx_product_logo / client_logo_url; clear-website-cache.</td></tr><tr><td>api.py</td><td>Company switcher, onboarding, login company apply, role/print APIs</td><td>Switcher fails → permission / API error in Network tab.</td></tr><tr><td>setup.py / branding_setup.py</td><td>Apply System Settings / website chrome from branding</td><td>Favicon/splash stale after save → re-save Client Branding or run apply_branding_settings.</td></tr><tr><td>tvx/doctype/client_branding/*</td><td>UI form for Product/Client/Print logos, accents, sidebar dark colors, support, watermarks</td><td>Upload logos as Attach Image (auto-public). Empty Product Logo → stock TripleVox mark.</td></tr><tr><td>nest_desktop_icons.py</td><td>Nests Desktop Icons under hubs; clears Desktop Layouts</td><td>Wrong icon parents after migrate → re-run nest_desktop_icons.run.</td></tr><tr><td>nest_manufacturing_sidebar.py</td><td>Manufacturing workspace sidebar nesting</td><td>Mfg sidebar flat → re-run after_migrate job.</td></tr><tr><td>sync_employee_hub.py</td><td>Employee Hub workspace + desktop launcher (no HRMS kids on flyout)</td><td>Hub missing → execute sync_employee_hub.run.</td></tr><tr><td>sync_tita_production.py / sync_company_saas.py</td><td>TITA production workspace / Company & SaaS chrome</td><td>Industry hub missing → re-run corresponding sync.</td></tr><tr><td>print_branding.py / print_pack.py</td><td>Print formats + Letter Head / company print logos</td><td>PDF shows wrong logo → print pack for that Company; never vendor marks.</td></tr><tr><td>role_packs.py / workspace_viewer.py</td><td>Role packs + Workspace Viewer read-only guards</td><td>Users can edit workspaces → ensure Viewer role + workspace_viewer.run.</td></tr><tr><td>public/js/triplevox_desk.js</td><td>Desktop polish, flyouts, theme toggle, clock, watermark, canvas colors, dark tokens</td><td>Flyout blink / wrong theme → bump desk.js ?v=; hard refresh.</td></tr><tr><td>public/js/tvx_shell_panels.js</td><td>Account sheet, About dialog, native menu polish (Launchpad disabled — flyout only)</td><td>Old full-screen picker flashes → CSS hides .desktop-modal on desktop.</td></tr><tr><td>public/js/tvx_saas_ui.js</td><td>Company & SaaS dialogs, switcher, onboarding wizard</td><td>Wizard missing → System Manager + tvx_saas_ui loaded.</td></tr><tr><td>public/js/tvx_login.js</td><td>Login light/dark theme toggle + auth panel routing</td><td>Theme toggle dead → check tvx_login.js include on login.html.</td></tr><tr><td>public/js/tvx_early.js</td><td>Early Desk class hooks before full paint</td><td>Sidebar blink on desktop → early hide classes.</td></tr><tr><td>public/js/tvx_employee_checkin.js</td><td>Hide geolocation until HR Settings ready</td><td>Checkin map blink → doctype_js hook present.</td></tr><tr><td>public/css/triplevox_platform.css</td><td>Desk theme: soft canvas #f6f7f9, gray fields, dark flyout, brand navbar, sidebar select</td><td>Styles not applying → ?v= bump + clear-cache.</td></tr><tr><td>public/css/tvx_login.css</td><td>Login layout, company showcase, product+client marks</td><td>Broken layout → login.css version on login.html.</td></tr><tr><td>www/login.html</td><td>Login template: Product Logo header, Client Logo company tiles</td><td>Wrong marks → Client Branding Product/Client Logo fields.</td></tr><tr><td>print/templates + print/css</td><td>Jinja print chrome</td><td>Print look wrong → print_branding.run.</td></tr><tr><td>public/images/*</td><td>Packaged TripleVox marks, watermarks, Tabler module icons</td><td>404 on assets → bench build / symlink apps.</td></tr><tr><td>docs/TripleVox_UI_Final_Guide.html</td><td>This final guide (all chapters + file what-ifs)</td><td>Regenerate via docs/_generate_complete_guide.py.</td></tr></tbody></table>
+<h3>Asset URL pattern</h3>
+<pre><code>/assets/triplevox_platform/css/triplevox_platform.css?v=20260802x
+/assets/triplevox_platform/js/triplevox_desk.js?v=20260802x
+/assets/triplevox_platform/images/triplevox-logo.png</code></pre>
+<div class="callout"><div class="label">Info</div><p>Bump the ?v= query in hooks.py (and login.html) after every UI change so browsers fetch fresh assets.</p></div>
+</section>
+<section class="chapter" id="ch-29">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>29. Bench command cheat sheet (long)</h2>
+<h3>Site & apps</h3>
+<pre><code>bench new-site erp.local
+bench drop-site erp.local --force          # destructive — care!
+bench get-app https://github.com/gmt-erpsol/Triplevoxui.git --branch main
+bench get-app erpnext --branch version-16
+bench get-app hrms --branch version-16
+bench --site erp.local install-app erpnext
+bench --site erp.local install-app hrms
+bench --site erp.local install-app triplevox_platform
+bench --site erp.local list-apps
+bench --site erp.local uninstall-app triplevox_platform   # rare</code></pre>
+<h3>Migrate / cache / build / process</h3>
+<pre><code>bench --site erp.local migrate
+bench --site erp.local clear-cache
+bench --site erp.local clear-website-cache
+bench build --app triplevox_platform
+bench build
+bench restart
+bench --site erp.local doctor
+bench --site erp.local show-config
+bench --site erp.local set-config triplevox_client tita
+bench --site erp.local console</code></pre>
+<h3>TripleVox execute helpers</h3>
+<pre><code>bench --site erp.local execute triplevox_platform.role_packs.run
+bench --site erp.local execute triplevox_platform.print_branding.run
+bench --site erp.local execute triplevox_platform.print_pack.apply_print_pack --kwargs "{'company':'BRG Trading PLC'}"
+bench --site erp.local execute triplevox_platform.setup_brg.ensure_brg_company
+bench --site erp.local execute triplevox_platform.setup.apply_branding_settings
+bench --site erp.local execute triplevox_platform.workspace_viewer.run
+bench --site erp.local execute triplevox_platform.nest_desktop_icons.run
+bench --site erp.local execute triplevox_platform.nest_manufacturing_sidebar.run
+bench --site erp.local execute triplevox_platform.sync_tita_production.run
+bench --site erp.local execute triplevox_platform.sync_employee_hub.run
+bench --site erp.local execute triplevox_platform.verify_branding.run</code></pre>
+<h3>Users & maintenance</h3>
+<pre><code>bench --site erp.local add-user user@example.com --first-name Ops --last-name User
+bench --site erp.local set-admin-password 'NewStrongPassword'
+bench --site erp.local backup
+bench --site erp.local backup --with-files
+bench --site erp.local partial-restore /path/to/sql.gz
+bench update --reset          # production caution
+bench switch-to-branch version-16 frappe erpnext hrms</code></pre>
+<h3>Dev server</h3>
+<pre><code>bench start
+bench --site erp.local serve --port 8000
+bench watch</code></pre>
+</section>
+<section class="chapter" id="ch-30">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>30. Go-live checklist (new PC / new sister company / production)</h2>
+<h3>A) New PC / new Bench</h3>
+<ol class='steps'><li>Install WSL2 + Ubuntu + Bench prerequisites (ch. 3–4).</li><li>bench init + create site + install erpnext + hrms (ch. 5).</li><li>Install triplevox_platform from GitHub with correct folder name (ch. 6).</li><li>migrate + clear-cache + build + first login verify (ch. 8–9).</li><li>Create Companies; map profiles; apply print packs (ch. 14–19).</li><li>Assign role packs; test login picker + switcher (ch. 15–18).</li><li>Optional: install titacustom for TITA logos/MES (ch. 10).</li><li>Document site URL, admin password location, backup schedule.</li></ol>
+<h3>B) New sister company on existing site</h3>
+<ol class='steps'><li>Onboard via wizard OR setup_brg / manual Company + site_config map.</li><li>Apply print pack for the new company.</li><li>Upload/confirm logo URLs resolve (200).</li><li>Assign users' Employee.company / defaults.</li><li>Test switcher + one PDF per major DocType.</li><li>clear-cache + Ctrl+Shift+R.</li></ol>
+<h3>C) Production hardening</h3>
+<ul><li>DNS + TLS (Let's Encrypt / corporate cert)</li><li>bench setup production + nginx + supervisor/systemd</li><li>Scheduled backups off-box; restore drill once</li><li>Disable developer_mode; review CORS / host_name in site_config</li><li>Monitor disk for sites/*/private/files and logs</li><li>Pin app commits/tags; document upgrade window</li></ul>
+</section>
+<section class="chapter" id="ch-31">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>31. Update / upgrade from GitHub</h2>
+<ol class='steps'><li>cd ~/frappe-bench/apps/triplevox_platform</li><li>git fetch origin && git pull origin main  (or your release branch/tag)</li><li>Confirm folder is still named triplevox_platform</li><li>cd ~/frappe-bench</li><li>bench --site S migrate</li><li>bench --site S clear-cache</li><li>bench build --app triplevox_platform</li><li>Bump ?v= in hooks.py if pull did not already</li><li>bench restart (prod)</li><li>Hard-refresh browsers; spot-check switcher, login, one print</li></ol>
+<pre><code>cd ~/frappe-bench/apps/triplevox_platform
+git pull origin main
+cd ~/frappe-bench
+bench --site erp.local migrate
+bench --site erp.local clear-cache
+bench build --app triplevox_platform
+bench restart</code></pre>
+<div class="callout warn"><div class="label">Warning</div><p>If you maintain a Windows working copy + rsync, pull on the source of truth then rsync into apps/ before migrate.</p></div>
+</section>
+<section class="chapter" id="ch-32">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>32. Troubleshooting encyclopedia (blank pages, cache, switcher missing, wrong print logo, migrate sidebar errors, CSRF login…)</h2>
+<h3>Blank Desk / white page</h3>
+<ul><li>Browser console 404/500 on JS — rebuild assets; check soft-link apps/triplevox_platform</li><li>Python traceback in worker logs — bench --site S console / doctor</li><li>Wrong app folder name (Triplevoxui) — rename to triplevox_platform</li><li>Hard refresh + clear-cache</li></ul>
+<h3>Cache / theme not updating</h3>
+<ul><li>bench --site S clear-cache && clear-website-cache</li><li>Bump hooks ?v= for CSS/JS</li><li>Ctrl+Shift+R; try private window</li><li>Confirm site_config JSON valid (trailing commas break loads)</li></ul>
+<h3>Company switcher missing</h3>
+<ul><li>tvx_saas_ui.js listed in app_include_js and loading 200</li><li>At least one mapped company exists in DB</li><li>User logged into Desk (not website)</li><li>No JS error before saas UI init</li></ul>
+<h3>Wrong print logo</h3>
+<ul><li>Document Company field value</li><li>Letter Head image for that company</li><li>Company logo field</li><li>profile print_logo_url for mapped key</li><li>Re-run print pack + print_branding.run</li><li>User selected a TripleVox … Print Format (not Standard)</li></ul>
+<h3>Migrate / sidebar nesting errors</h3>
+<ul><li>Read traceback — often Workspace Sidebar Item conflicts</li><li>Re-run individual after_migrate jobs via bench execute</li><li>Ensure Workspace Viewer / System Manager not fighting custom sidebars</li><li>Check sync_tita_production / nest_* scripts for missing DocTypes on sites without titacustom</li></ul>
+<h3>CSRF / login “Something went wrong”</h3>
+<ul><li>website_csrf.update_website_context should inject token for Guest</li><li>Confirm update_website_context hook present after pull</li><li>clear-website-cache; retry login</li><li>Clock skew / proxy stripping cookies — check site host_name and HTTPS</li></ul>
+<h3>Login brand not applied after sign-in</h3>
+<ul><li>localStorage tvx_login_company_key</li><li>sessionStorage apply flag stuck — clear site data for origin</li><li>apply_login_company_key API permissions / network tab</li></ul>
+<h3>Role pack “not permitted”</h3>
+<p>Need System Manager / Administrator for assign_role_pack and onboarding.</p>
+<h3>Workspace still editable</h3>
+<p>Assign Workspace Viewer; ensure user is not also Workspace Manager / System Manager.</p>
+<h3>Asset 404 under /assets/triplevox_platform</h3>
+<pre><code>bench build --app triplevox_platform
+ls sites/assets/triplevox_platform
+# fix app folder name if wrong</code></pre>
+</section>
+<section class="chapter" id="ch-33">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>33. FAQ</h2>
+<h3>Can one site serve TITA and BRG?</h3>
+<p>Yes — that is the primary SaaS shell design. Map both Companies to tita/brg profiles and use the switcher.</p>
+<h3>Do I need titacustom for BRG?</h3>
+<p>No. BRG logos ship inside triplevox_platform. titacustom is for TITA MES and TITA SVG logo asset path.</p>
+<h3>Why is the Desk logo still TripleVox after switching to BRG?</h3>
+<p>By design. Product chrome stays TripleVox; watermark/accents/prints follow the sister company.</p>
+<h3>Are role packs full permissions?</h3>
+<p>No — they are Desk roles / starters. Configure DocPerms as needed.</p>
+<h3>Where do I change accent colors?</h3>
+<p>client_theme.py CLIENTS theme dict, or site_config triplevox_theme / triplevox_company_themes overlays.</p>
+<h3>How do I force browsers to load new CSS?</h3>
+<p>Bump ?v= in hooks.py, clear-cache, hard refresh.</p>
+<h3>GitHub repo name vs app name?</h3>
+<p>Repo Triplevoxui → folder/app triplevox_platform.</p>
+<h3>Which Print Format should users pick?</h3>
+<p>Any format named TripleVox … for branded output.</p>
+</section>
+<section class="chapter" id="ch-34">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>34. Glossary</h2>
+<table><thead><tr><th>Term</th><th>Definition</th></tr></thead><tbody><tr><td>Bench</td><td>Frappe command-line tool and project layout managing sites and apps</td></tr><tr><td>Site</td><td>A tenant under sites/ with its own DB and site_config.json</td></tr><tr><td>Desk</td><td>Frappe back-office SPA UI after login</td></tr><tr><td>Company</td><td>ERPNext Company DocType — legal entity / books</td></tr><tr><td>Profile key</td><td>CLIENTS key such as tita, brg, demo</td></tr><tr><td>Watermark pill</td><td>Bottom-left Desk chrome showing sister-company mark</td></tr><tr><td>Print pack</td><td>Letter Head + logo + print_branding refresh for one company</td></tr><tr><td>Role pack</td><td>Assignable TripleVox Desk role bundle</td></tr><tr><td>Workspace Viewer</td><td>Role that can open workspaces but not edit layouts</td></tr><tr><td>after_migrate</td><td>Hook list run at end of bench migrate</td></tr><tr><td>titacustom</td><td>Optional TITA manufacturing domain app</td></tr><tr><td>Cache bump (?v=)</td><td>Query string on asset URLs to bust browser cache</td></tr><tr><td>boot.triplevox</td><td>Branding payload injected into frappe.boot</td></tr><tr><td>Letter Head</td><td>ERPNext header HTML/image used on prints</td></tr><tr><td>WSL2</td><td>Windows Subsystem for Linux used to run Ubuntu Bench on Windows</td></tr></tbody></table>
+</section>
+<section class="chapter" id="ch-35">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>35. Support / credits</h2>
+<div class="card"><p><strong>Support</strong></p><ul><li>Internal: TripleVox Engineering PLC platform team</li><li>Email (hooks metadata): admin@triplevox.com</li><li>GitHub issues (if enabled on repo): https://github.com/gmt-erpsol/Triplevoxui</li></ul></div>
+<div class="card"><p><strong>Credits</strong></p><ul><li>Built on Frappe Framework, ERPNext, and HRMS (open source)</li><li>UI shell & multi-company SaaS features: TripleVox Platform (triplevox_platform)</li><li>Module icon set includes Tabler icons (see public/images/module_icons/tabler/LICENSE.txt)</li><li>Documentation style inspired by frappeframework.com docs</li></ul></div>
+<p>© TripleVox Engineering PLC — Platform UI final guide. App version 1.0.0 (hooks).</p>
+<div class="callout"><div class="label">Info</div><p>Canonical docs: <code>docs/TripleVox_UI_Final_Guide.html</code> (this file). Complete guide copy also kept in sync. USER_GUIDE.md is a short pointer.</p></div>
+</section>
+<section class="chapter" id="ch-36">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>36. Client Branding DocType (source of truth for logos & colors)</h2>
+<p>All sister-company / product-owner marks are edited in Desk: <strong>Client Branding</strong> (not hard-coded in Python).</p>
+<table><thead><tr><th>Field group</th><th>Purpose</th><th>What if empty</th></tr></thead><tbody><tr><td>Product Logo</td><td>Product owner / ISV mark — login header, favicon/splash fallback, Desk product chrome</td><td>Falls back to packaged TripleVox logo</td></tr><tr><td>Client Logo</td><td>Sister company mark — login company tiles, navbar, watermark pill preference</td><td>Company tile shows initials; navbar may use product logo</td></tr><tr><td>Print Logo</td><td>PDF / Letter Head preference</td><td>Print pack uses company Letter Head / company logo chain</td></tr><tr><td>Accent + sidebar (+ dark)</td><td>Desk CSS tokens --tvx-green*, --tvx-sidebar*</td><td>Defaults to TITA-like blue / soft slate</td></tr><tr><td>Watermark light/dark</td><td>Soft full-bleed + flyout / menu backgrounds</td><td>Packaged triplevox-watermark*.png</td></tr><tr><td>Support label/email/URL</td><td>Native menu foot / support chip</td><td>Hidden if blank</td></tr><tr><td>is_site_default</td><td>Which branding Guest login / site payload uses</td><td>First enabled row or neutral shell</td></tr></tbody></table>
+<div class="callout warn"><div class="label">Warning</div><p>Attach Image uploads are forced public so Guest login can load them. Private /private/files URLs break login logos.</p></div>
+<ol class='steps'><li>Open Client Branding → New or edit row</li><li>Set Client Key, Company link, Product Logo, Client Logo, accents</li><li>Save → clear-cache / hard refresh login + Desk</li><li>Confirm login header = Product Logo; company tile = Client Logo</li></ol>
+</section>
+<section class="chapter" id="ch-37">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>37. Desktop grouped icons — sticky flyout (no Launchpad)</h2>
+<p>Grouped Desktop Icons open a <strong>sticky flyout</strong> only. The old folder modal / Launchpad is suppressed.</p>
+<ul><li>Open on hover (or click) of a folder hub</li><li>Stays open until click-outside, Esc, close ×, or hover another desktop icon</li><li>Soft watermark inside the flyout panel (light + dark)</li><li>Employee Hub is a single launcher — no HRMS child strip</li><li>Child-count badges removed</li></ul>
+<h3>What if</h3>
+<ul><li>Blink of old modal → ensure tvx-on-desktop CSS hides .desktop-modal + capture-phase click in triplevox_desk.js</li><li>Flyout white in dark mode → #tvx-folder-flyout dark rules need !important (ID specificity)</li><li>Wrong children → check nest_desktop_icons parent_icon + boot.desktop_icons</li></ul>
+</section>
+<section class="chapter" id="ch-38">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>38. Desktop navbar, theme toggle, soft canvas & fields</h2>
+<table><thead><tr><th>Feature</th><th>Behavior</th><th>What if</th></tr></thead><tbody><tr><td>Brand navbar</td><td>Desktop top bar uses Client Branding accent (--tvx-desktop-nav)</td><td>Still black → theme.green missing on boot.triplevox</td></tr><tr><td>Notification bell</td><td>Forced white strokes on brand navbar</td><td>Invisible → text-muted stripped + SVG stroke CSS</td></tr><tr><td>Half-moon toggle</td><td>Before notifications; toggles light/dark</td><td>Missing → inject_desktop_theme_toggle on desktop</td></tr><tr><td>Work canvas</td><td>Light main area #f6f7f9 (not pure white)</td><td>Too white → check FINAL html:not(dark) --tvx-page overrides</td></tr><tr><td>Form fields</td><td>Light gray #f3f3f3 like Frappe control-bg</td><td>Still white → --tvx-field-bg not applied / tvx-readable</td></tr><tr><td>Dark sidebar select</td><td>Soft tint + brand text (same pattern as light)</td><td>Solid green pill → old dark active CSS; use --tvx-sidebar-active-*</td></tr></tbody></table>
+</section>
+<section class="chapter" id="ch-39">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>39. Login logos — Product owner + Client (always from form)</h2>
+<p>Login never prefers Company.company_logo for showcase marks.</p>
+<table><thead><tr><th>Surface</th><th>Source field</th><th>What if missing</th></tr></thead><tbody><tr><td>Header mark</td><td>Client Branding → Product Logo (site default)</td><td>Packaged TripleVox logo</td></tr><tr><td>Header client chip</td><td>Client Branding → Client Logo (site default)</td><td>Chip hidden</td></tr><tr><td>Company tiles</td><td>Client Branding → Client Logo for mapped company</td><td>Initials fallback</td></tr></tbody></table>
+<pre><code>bench --site S clear-website-cache
+# then hard-refresh /login</code></pre>
+</section>
+<section class="chapter" id="ch-40">
+<div class="ch-header">TripleVox Platform Documentation</div>
+<h2>40. Dark mode Desk shell notes (2026 refresh)</h2>
+<ul><li>html[data-theme=dark] / tvx-frappe-dark: page canvas follows Frappe --bg-color</li><li>Sidebar uses Client Branding sidebar_color_dark / sidebar_color_2_dark when set</li><li>Flyout, About, menus use dark surfaces + dark watermark</li><li>sync_shell_canvas clears forced light inline backgrounds in dark</li></ul>
+<div class="callout warn"><div class="label">Warning</div><p>If automatic theme follows OS, MutationObserver on data-theme re-syncs tokens.</p></div>
+</section>
+
+  <div class="footer-note">
+    TripleVox Platform Documentation — Final UI Guide.
+    Paths: docs/TripleVox_UI_Final_Guide.html (canonical) · docs/TripleVox_UI_App_Complete_Guide.html (synced copy).
+  </div>
+</div>
+</body>
+</html>
